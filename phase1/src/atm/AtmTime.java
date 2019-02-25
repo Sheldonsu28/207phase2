@@ -5,11 +5,12 @@ import java.util.Date;
 
 abstract class AtmTime {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-    private static Date initialTime;
+    private static Date initialTime, currentTime;
     private static long prevMills = -1;
 
     static void setInitialTime(Date start) {
         initialTime = start;
+        currentTime = start;
         prevMills = System.currentTimeMillis();
     }
 
@@ -18,13 +19,13 @@ abstract class AtmTime {
             throw new IllegalStateException("ATM time not initialized by Bank Manager yet");
 
         long currentMills = System.currentTimeMillis();
-        Date newDate = new Date(initialTime.getTime() + (currentMills - prevMills));
+        currentTime = new Date(currentTime.getTime() + (currentMills - prevMills));
         prevMills = currentMills;
-        return newDate;
+        return new Date(currentTime.getTime());
     }
 
     static Date getInitialTime() {
-        return initialTime;
+        return new Date(initialTime.getTime());
     }
 
 }

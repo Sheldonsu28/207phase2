@@ -10,10 +10,13 @@ public class AtmTimeTest {
 
     @Test
     public void testTimeElapse() {
+        Date startTime = new Date();
+        AtmTime.setInitialTime(startTime);
+        long timeElapsed = 0;
+
         for (int repetition = 0; repetition < 5; repetition++) {
-            Date startTime = new Date();
-            AtmTime.setInitialTime(startTime);
             int interval = (int) (Math.random() * 41 + 10);
+            timeElapsed += interval;
 
             try {
                 Thread.sleep(interval);
@@ -22,7 +25,7 @@ public class AtmTimeTest {
             }
 
             long timeDiff = AtmTime.getCurrentTime().getTime() - startTime.getTime();
-            assertTrue(timeDiff >= interval - 2 && timeDiff <= interval + 2);
+            assertTrue(timeDiff >= timeElapsed - 5 && timeDiff <= timeElapsed + 5);
         }
     }
 }
