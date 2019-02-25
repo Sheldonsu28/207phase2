@@ -18,5 +18,5 @@ abstract class Account {
 
     abstract ArrayList<Transaction> getTransactions();
 
-
+    abstract int getNetBalance();
 }

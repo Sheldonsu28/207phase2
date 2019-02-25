@@ -1,5 +1,5 @@
 package atm;
 
-interface Withdrawable {
+interface WithdrawableAccount {
     void withdraw(int amount);
 }

@@ -14,4 +14,13 @@ class User {
     List<Account> getAccounts() {
         return Collections.unmodifiableList(accounts);
     }
+
+    int getNetTotal() {
+        int netTotal = 0;
+
+        for (Account account : accounts)
+            netTotal += account.getNetBalance();
+
+        return netTotal;
+    }
 }

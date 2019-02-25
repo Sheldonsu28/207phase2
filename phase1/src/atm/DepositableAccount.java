@@ -1,5 +1,5 @@
 package atm;
 
-interface Depositable {
+interface DepositableAccount {
     void deposit(int amount);
 }
