@@ -23,8 +23,18 @@ class LineOfCreditAccount extends DebtAccount implements WithdrawableAccount {
     }
 
     @Override
+    public void cancelDeposit(int amount) {
+
+    }
+
+    @Override
     /* TODO Implementation */
     public void withdraw(int amount) {
+
+    }
+
+    @Override
+    public void cancelWithdraw(int amount) {
 
     }
 }

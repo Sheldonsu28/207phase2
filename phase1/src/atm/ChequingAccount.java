@@ -23,8 +23,18 @@ class ChequingAccount extends AssetAccount {
     }
 
     @Override
+    public void cancelDeposit(int amount) {
+
+    }
+
+    @Override
     /* TODO Implementation */
     public void withdraw(int amount) {
+
+    }
+
+    @Override
+    public void cancelWithdraw(int amount) {
 
     }
 }

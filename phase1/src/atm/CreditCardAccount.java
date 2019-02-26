@@ -21,4 +21,9 @@ class CreditCardAccount extends DebtAccount {
     public void deposit(int amount) {
 
     }
+
+    @Override
+    public void cancelDeposit(int amount) {
+
+    }
 }
