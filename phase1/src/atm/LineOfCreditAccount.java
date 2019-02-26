@@ -2,7 +2,7 @@ package atm;
 
 import java.util.ArrayList;
 
-class LineOfCreditAccount extends DebtAccount implements WithdrawableAccount {
+class LineOfCreditAccount extends DebtAccount implements Withdrawable {
 
     @Override
         /* TODO Implementation */

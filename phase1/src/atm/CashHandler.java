@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CashHandler {
+class CashHandler {
     private Map<Integer, Integer> cashStock;
     private Currency currency;
     private int alertLevel;

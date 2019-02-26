@@ -1,8 +1,8 @@
 package atm;
 
-/**
- * Marker interface for all actions that can be cancelled.
- * Classes/interfaces which inherits this class should have their corresponding cancel method.
- */
-interface Cancellable {
+public interface Cancellable extends AccountAction {
+
+    default boolean isCancellable() {
+        return !(this instanceof Account);
+    }
 }
