@@ -3,7 +3,7 @@ package atm;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-abstract class AtmTime {
+public abstract class AtmTime {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     private static Date initialTime, currentTime;
     private static long prevMills = -1;
@@ -14,7 +14,7 @@ abstract class AtmTime {
         prevMills = System.currentTimeMillis();
     }
 
-    static Date getCurrentTime() {
+    public static Date getCurrentTime() {
         if (initialTime == null || prevMills == -1)
             throw new IllegalStateException("ATM time not initialized by Bank Manager yet");
 
@@ -24,7 +24,7 @@ abstract class AtmTime {
         return new Date(currentTime.getTime());
     }
 
-    static Date getInitialTime() {
+    public static Date getInitialTime() {
         return new Date(initialTime.getTime());
     }
 

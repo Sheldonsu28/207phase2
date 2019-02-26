@@ -1,9 +1,13 @@
-package atm;
+package account;
+
+import transaction.Transaction;
 
 import java.util.ArrayList;
 
-class SavingsAccount extends AssetAccount {
+public class LineOfCreditAccount extends DebtAccount implements Withdrawable {
+
     @Override
+    public
         /* TODO Implementation */
     double getBalance() {
         return 0;

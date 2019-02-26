@@ -1,12 +1,14 @@
-package atm;
+package account;
+
+import transaction.Transaction;
 
 import java.util.ArrayList;
 
-class ChequingAccount extends AssetAccount {
+public class ChequingAccount extends AssetAccount {
 
     @Override
-        /* TODO Implementation */
-    double getBalance() {
+    /* TODO Implementation */
+    public double getBalance() {
         return 0;
     }
 

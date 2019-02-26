@@ -1,6 +1,6 @@
-package atm;
+package account;
 
-interface Depositable extends Cancellable {
+public interface Depositable extends Cancellable {
     void deposit(int amount);
 
     void cancelDeposit(int amount);

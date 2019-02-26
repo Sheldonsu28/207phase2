@@ -1,12 +1,14 @@
-package atm;
+package account;
+
+import transaction.Transaction;
 
 import java.util.ArrayList;
 
-class CreditCardAccount extends DebtAccount {
+public class CreditCardAccount extends DebtAccount {
 
     @Override
-        /* TODO Implementation */
-    double getBalance() {
+    /* TODO Implementation */
+    public double getBalance() {
         return 0;
     }
 

@@ -2,7 +2,7 @@ package atm;
 
 import java.util.Map;
 
-class CashShortageException extends Exception {
+public class CashShortageException extends Exception {
     private CashHandler shortageStock;
 
     CashShortageException(CashHandler shortageStock) {

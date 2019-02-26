@@ -1,6 +1,9 @@
-package atm;
+package transaction;
 
-class DepositTransaction extends IntraUserTransaction {
+import account.Depositable;
+import atm.User;
+
+public class DepositTransaction extends IntraUserTransaction {
     private final int depositAmount;
     private final Depositable targetAccount;
 
@@ -15,12 +18,18 @@ class DepositTransaction extends IntraUserTransaction {
     }
 
     @Override
-    void perform() {
+    protected void doPerform() {
         targetAccount.deposit(depositAmount);
     }
 
     @Override
-    void cancel() {
-
+    protected void doCancel() {
+        targetAccount.cancelDeposit(depositAmount);
     }
+
+    @Override
+    public boolean isCancellable() {
+        return true;
+    }
+
 }

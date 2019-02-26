@@ -1,6 +1,8 @@
-package atm;
+package transaction;
 
-abstract class InterUserTransaction extends Transaction {
+import atm.User;
+
+public abstract class InterUserTransaction extends Transaction {
     private final User fromUser, toUser;
 
     InterUserTransaction(User from, User to) {

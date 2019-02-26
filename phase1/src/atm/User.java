@@ -1,10 +1,12 @@
 package atm;
 
+import account.Account;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class User {
+public class User {
     private List<Account> accounts;
     private String username, password;
 
