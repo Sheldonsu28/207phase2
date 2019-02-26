@@ -8,7 +8,7 @@ abstract class DebtAccount extends Account implements DepositableAccount {
 
     @Override
         // TODO confirm what happens when debt is overpayed
-    int getNetBalance() {
+    double getNetBalance() {
         return -getBalance();
     }
 }

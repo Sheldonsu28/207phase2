@@ -3,9 +3,10 @@ package atm;
 import java.util.ArrayList;
 
 class ChequingAccount extends AssetAccount {
+
     @Override
         /* TODO Implementation */
-    int getBalance() {
+    double getBalance() {
         return 0;
     }
 

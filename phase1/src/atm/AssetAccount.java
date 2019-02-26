@@ -6,7 +6,7 @@ abstract class AssetAccount extends Account implements DepositableAccount, Withd
     }
 
     @Override
-    int getNetBalance() {
+    double getNetBalance() {
         return getBalance();
     }
 }

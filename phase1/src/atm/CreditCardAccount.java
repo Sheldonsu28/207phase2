@@ -6,7 +6,7 @@ class CreditCardAccount extends DebtAccount {
 
     @Override
         /* TODO Implementation */
-    int getBalance() {
+    double getBalance() {
         return 0;
     }
 

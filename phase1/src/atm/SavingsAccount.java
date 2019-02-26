@@ -5,7 +5,7 @@ import java.util.ArrayList;
 class SavingsAccount extends AssetAccount {
     @Override
         /* TODO Implementation */
-    int getBalance() {
+    double getBalance() {
         return 0;
     }
 
