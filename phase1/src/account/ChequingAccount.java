@@ -31,7 +31,7 @@ public class ChequingAccount extends AssetAccount {
 
     @Override
     /* TODO Implementation */
-    public void withdraw(int amount) {
+    public void withdraw(int amount) throws WithdrawException {
 
     }
 

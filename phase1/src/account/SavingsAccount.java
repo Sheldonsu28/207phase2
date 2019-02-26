@@ -31,7 +31,7 @@ public class SavingsAccount extends AssetAccount {
 
     @Override
     /* TODO Implementation */
-    public void withdraw(int amount) {
+    public void withdraw(int amount) throws WithdrawException {
 
     }
 

@@ -7,7 +7,7 @@ public class DepositTransaction extends IntraUserTransaction {
     private final int depositAmount;
     private final Depositable targetAccount;
 
-    DepositTransaction(User user, Depositable account, int amount) {
+    public DepositTransaction(User user, Depositable account, int amount) {
         super(user);
 
         if (amount < 0)
@@ -18,13 +18,15 @@ public class DepositTransaction extends IntraUserTransaction {
     }
 
     @Override
-    protected void doPerform() {
+    protected boolean doPerform() {
         targetAccount.deposit(depositAmount);
+        return true;
     }
 
     @Override
-    protected void doCancel() {
+    protected boolean doCancel() {
         targetAccount.cancelDeposit(depositAmount);
+        return true;
     }
 
     @Override

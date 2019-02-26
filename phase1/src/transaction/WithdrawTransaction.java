@@ -1,21 +1,36 @@
 package transaction;
 
+import account.WithdrawException;
+import account.Withdrawable;
 import atm.User;
 
 public class WithdrawTransaction extends IntraUserTransaction {
+    private final int withdrawAmount;
+    private final Withdrawable targetAccount;
 
-    WithdrawTransaction(User user) {
+    public WithdrawTransaction(User user, Withdrawable account, int amount) {
         super(user);
+        withdrawAmount = amount;
+        targetAccount = account;
     }
 
     @Override
-    protected void doPerform() {
+    protected boolean doPerform() {
+        try {
+            targetAccount.withdraw(withdrawAmount);
+            return true;
+        } catch (WithdrawException exception) {
 
+            // TODO exception handling & passing message
+
+            return false;
+        }
     }
 
     @Override
-    protected void doCancel() {
-
+    protected boolean doCancel() {
+        targetAccount.cancelWithdraw(withdrawAmount);
+        return true;
     }
 
     @Override

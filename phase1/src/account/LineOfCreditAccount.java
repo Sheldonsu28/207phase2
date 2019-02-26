@@ -32,7 +32,7 @@ public class LineOfCreditAccount extends DebtAccount implements Withdrawable {
 
     @Override
     /* TODO Implementation */
-    public void withdraw(int amount) {
+    public void withdraw(int amount) throws WithdrawException {
 
     }
 
