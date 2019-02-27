@@ -1,5 +1,6 @@
 package transaction;
 
+//  TODO implement toString and comparison
 public abstract class Transaction {
 
     private boolean performed, cancelled;

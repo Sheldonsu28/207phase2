@@ -1,8 +1,10 @@
 package account;
 
+import transaction.Transaction;
+
 public interface Withdrawable extends Cancellable {
 
-    void withdraw(int amount) throws WithdrawException;
+    void withdraw(double amount, Transaction register) throws WithdrawException;
 
-    void cancelWithdraw(int amount);
+    void cancelWithdraw(double amount);
 }

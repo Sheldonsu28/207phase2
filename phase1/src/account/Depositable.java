@@ -1,7 +1,9 @@
 package account;
 
-public interface Depositable extends Cancellable {
-    void deposit(int amount);
+import transaction.Transaction;
 
-    void cancelDeposit(int amount);
+public interface Depositable extends Cancellable {
+    void deposit(double amount, Transaction register);
+
+    void cancelDeposit(double amount);
 }

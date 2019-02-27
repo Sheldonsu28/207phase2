@@ -17,7 +17,7 @@ public class WithdrawTransaction extends IntraUserTransaction {
     @Override
     protected boolean doPerform() {
         try {
-            targetAccount.withdraw(withdrawAmount);
+            targetAccount.withdraw(withdrawAmount, this);
             return true;
         } catch (WithdrawException exception) {
 

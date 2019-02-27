@@ -21,7 +21,7 @@ public class PayBillTransaction extends IntraUserTransaction {
     @Override
     protected boolean doPerform() {
         try {
-            payer.withdraw(payAmount);
+            payer.withdraw(payAmount, this);
         } catch (WithdrawException exception) {
 
             // TODO exception handling & passing message
@@ -29,7 +29,7 @@ public class PayBillTransaction extends IntraUserTransaction {
             return false;
         }
 
-        payee.receivePay(payAmount);
+        payee.receivePay(payAmount, this);
         return true;
     }
 

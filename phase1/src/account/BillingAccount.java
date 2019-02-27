@@ -2,9 +2,6 @@ package account;
 
 import transaction.Transaction;
 
-import java.util.ArrayList;
-
-//  TODO everything to be implemented
 public class BillingAccount extends Account {
     private final String payeeName;
 
@@ -13,27 +10,23 @@ public class BillingAccount extends Account {
         this.payeeName = payeeName;
     }
 
-    public String getPayeeName() {
-        return payeeName;
-    }
-
-    @Override
-    public double getBalance() {
-        return 0;
-    }
-
-    @Override
-    ArrayList<Transaction> getTransactions() {
-        return null;
+    BillingAccount(String payeeName, double initialBalance) {
+        super(initialBalance);
+        this.payeeName = payeeName;
     }
 
     @Override
     public double getNetBalance() {
-        return 0;
+        return balance;
     }
 
+    public String getPayeeName() {
+        return payeeName;
+    }
 
-    public void receivePay(int amount) {
+    public void receivePay(int amount, Transaction register) {
+        balance += amount;
 
+        registerTransaction(register);
     }
 }

@@ -19,7 +19,7 @@ public class DepositTransaction extends IntraUserTransaction {
 
     @Override
     protected boolean doPerform() {
-        targetAccount.deposit(depositAmount);
+        targetAccount.deposit(depositAmount, this);
         return true;
     }
 
