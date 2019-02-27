@@ -7,7 +7,7 @@ public abstract class AssetAccount extends Account implements Depositable, Withd
         super();
     }
 
-    AssetAccount(int initialBalance) {
+    AssetAccount(double initialBalance) {
         super(initialBalance);
     }
 
@@ -17,12 +17,16 @@ public abstract class AssetAccount extends Account implements Depositable, Withd
     }
 
     @Override
+    //  TODO test
     public void deposit(double amount, Transaction register) {
+        balance += amount;
 
+        registerTransaction(register);
     }
 
     @Override
+    //  TODO test
     public void cancelDeposit(double amount) {
-
+        balance -= amount;
     }
 }

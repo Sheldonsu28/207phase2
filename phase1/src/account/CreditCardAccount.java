@@ -10,4 +10,5 @@ public class CreditCardAccount extends DebtAccount {
     public CreditCardAccount(double debtLimit) {
         super(debtLimit);
     }
+
 }

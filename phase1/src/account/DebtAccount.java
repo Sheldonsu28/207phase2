@@ -31,13 +31,16 @@ public abstract class DebtAccount extends Account implements Depositable, Indebt
     }
 
     @Override
-    /* TODO Implementation */
+    //  TODO test
     public void deposit(double amount, Transaction register) {
         balance -= amount;
+
+        registerTransaction(register);
     }
 
     @Override
+    //  TODO test
     public void cancelDeposit(double amount) {
-
+        balance += amount;
     }
 }

@@ -5,12 +5,12 @@ import transaction.Transaction;
 public class BillingAccount extends Account {
     private final String payeeName;
 
-    BillingAccount(String payeeName) {
+    public BillingAccount(String payeeName) {
         super();
         this.payeeName = payeeName;
     }
 
-    BillingAccount(String payeeName, double initialBalance) {
+    public BillingAccount(String payeeName, double initialBalance) {
         super(initialBalance);
         this.payeeName = payeeName;
     }
@@ -24,6 +24,7 @@ public class BillingAccount extends Account {
         return payeeName;
     }
 
+    // TODO test
     public void receivePay(int amount, Transaction register) {
         balance += amount;
 

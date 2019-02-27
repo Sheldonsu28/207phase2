@@ -9,7 +9,7 @@ public class CashShortageException extends Exception {
         this.shortageStock = shortageStock;
     }
 
-    String getActionMessage() {
+    public String getMessage() {
         Map<Integer, Integer> stock = shortageStock.getCashStock();
         boolean isEmptyStock = true;
 

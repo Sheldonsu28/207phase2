@@ -1,7 +1,11 @@
 package account;
 
-public class WithdrawException extends Exception {
-    WithdrawException(String message) {
-        super(message);
+abstract class WithdrawException extends Exception {
+
+    WithdrawException() {
+        super();
     }
+
+    public abstract String getMessage();
+
 }
