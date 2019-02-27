@@ -1,6 +1,6 @@
 package account;
 
-abstract class WithdrawException extends Exception {
+public abstract class WithdrawException extends Exception {
 
     WithdrawException() {
         super();
