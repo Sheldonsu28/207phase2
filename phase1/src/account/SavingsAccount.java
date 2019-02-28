@@ -2,9 +2,12 @@ package account;
 
 import transaction.Transaction;
 
+import java.util.Observable;
+import java.util.Observer;
+
 
 //  TODO implement saving growth feature
-public class SavingsAccount extends AssetAccount {
+public class SavingsAccount extends AssetAccount implements Observer {
 
     private double monthlyRate;
     private String monthlyGrowthDay;
@@ -74,4 +77,9 @@ public class SavingsAccount extends AssetAccount {
         balance += amount;
     }
 
+    @Override
+    //  TODO savings growth from AtmTime changes
+    public void update(Observable o, Object arg) {
+
+    }
 }

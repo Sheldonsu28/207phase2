@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 //  TODO this needs heavy testing
-public class AccountManager {
+public class AccountStorageManager {
     private Map<Class, ArrayList<Object>> accountMapByType;
 
-    AccountManager() {
+    AccountStorageManager() {
         accountMapByType = new HashMap<>();
     }
 

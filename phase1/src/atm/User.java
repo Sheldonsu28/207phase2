@@ -3,46 +3,59 @@ package atm;
 import account.Account;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class User {
-    private List<Account> accounts;
     private String username, password;
+    private AccountStorageManager accountVaults;
 
     User(String username, String defaultPassword) {
-        accounts = new ArrayList<>();
         password = defaultPassword;
         this.username = username;
+        accountVaults = new AccountStorageManager();
+    }
+
+    public String getUserName() {
+        return username;
     }
 
     List<Account> getAccounts() {
-        return Collections.unmodifiableList(accounts);
+        return accountVaults.getAllAccounts();
     }
 
-    // TODO maybe test required
-    double getNetTotal() {
-        double netTotal = 0;
-
-        for (Account account : accounts)
-            netTotal += account.getNetBalance();
-
-        return netTotal;
+    boolean verifyPassword(String password) {
+        return this.password.equals(password);
     }
 
     void changePassword(String newPassword) {
         password = newPassword;
     }
 
+    // TODO maybe test required
+    double getNetTotal() {
+        double netTotal = 0;
+
+        for (Account account : accountVaults.getAllAccounts())
+            netTotal += account.getNetBalance();
+
+        return netTotal;
+    }
+
+
     //  TODO test required
     String getAccountSummary() {
         StringBuilder summary = new StringBuilder("Account Summary: \n");
 
-        for (Account account : accounts) {
+        for (Account account : accountVaults.getAllAccounts()) {
             summary.append(String.format("ID %s   TYPE %s   BAL $%.2f\n",
                     account.getId(), account.getClass().getSimpleName(), account.getBalance()));
         }
 
         return summary.toString();
+    }
+
+
+    public <T> ArrayList<T> getAccountListOfType(Class<T> klass) {
+        return accountVaults.getAccountListOfType(klass);
     }
 }
