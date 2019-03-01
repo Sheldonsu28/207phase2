@@ -3,50 +3,35 @@ package atm;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.TreeMap;
-
-import static org.junit.Assert.assertEquals;
-
-public class StepCashDistributorTest {
-
-    private StepCashDistributor distributor;
+public class StepCashDistributorTest extends CashDistributorTest {
 
     @Before
     public void before() {
-        distributor = new StepCashDistributor();
+        setDistributor(new StepCashDistributor());
     }
 
     @Test
     public void testPlentyStockDistribute() {
-        TreeMap<Integer, Integer> stock = new TreeMap<>();
+        setStock(100, 100, 100, 100);
 
-        stock.put(5, 100);
-        stock.put(10, 100);
-        stock.put(20, 100);
-        stock.put(50, 100);
-
-        testDifferentParameter(stock, 285, 5, 1, 1, 1);
-        testDifferentParameter(stock, 245, 4, 2, 0, 1);
+        testParam(285, true, 0, 5, 1, 1, 1);
+        testParam(245, true, 0, 4, 2, 0, 1);
     }
 
-    private void testDifferentParameter(TreeMap<Integer, Integer> stock, int amount,
-                                        int expected50, int expected20, int expected10, int expected5) {
-        TreeMap<Integer, Integer> result = new TreeMap<>();
+    @Test
+    public void testShortageStockDistribute() {
+        setStock(3, 1, 10, 5);
 
-        try {
-            result = distributor.distribute(stock, amount);
-        } catch (CashShortageException e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-            System.out.println(e.getResult());
-        }
+        testParam(240, true, 0, 3, 1, 7, 0);
 
-        assertEquals(expected50, (int) result.get(50));
-        assertEquals(expected20, (int) result.get(20));
-        assertEquals(expected10, (int) result.get(10));
-        assertEquals(expected5, (int) result.get(5));
+        setStock(0, 3, 0, 6);
+
+        testParam(85, true, 0, 0, 3, 0, 5);
+        testParam(95, false, 0, 0, -3, 0, 6);
+
+        setStock(100, 100, 100, 0);
+
+        testParam(355, false, 0, -1, 0, 0, 0);
     }
-
-    //  TODO more test cases needed
 
 }

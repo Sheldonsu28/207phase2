@@ -1,76 +1,97 @@
 package atm;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.TreeMap;
 
 class BalancedCashDistributor extends CashDistributor {
+
+    private int[][] getSortedAmountValue(TreeMap<Integer, Integer> stock) {
+        int[] amounts = stock.values().stream().mapToInt(i -> i).toArray();
+        int[] types = stock.keySet().stream().mapToInt(i -> i).toArray();
+
+        int[][] result = new int[2][amounts.length];
+
+        //  selection sort
+        for (int index = 0; index < amounts.length; index++) {
+            int maxIndex = -1;
+            int maxVal = Integer.MIN_VALUE;
+
+            for (int i = index; i < amounts.length; i++) {
+                if (amounts[i] > maxVal) {
+                    maxIndex = i;
+                    maxVal = amounts[i];
+                }
+            }
+
+            if (maxIndex != index) {
+                int temp = amounts[index];
+                amounts[index] = amounts[maxIndex];
+                amounts[maxIndex] = temp;
+
+                temp = types[index];
+                types[index] = types[maxIndex];
+                types[maxIndex] = temp;
+            }
+
+        }
+
+        result[0] = amounts;
+        result[1] = types;
+        return result;
+    }
+
     @Override
-        //  TODO this definitely needs test
     TreeMap<Integer, Integer> distribute(TreeMap<Integer, Integer> orgStock, int amount) throws CashShortageException {
         int balance = amount;
         TreeMap<Integer, Integer> result = getInitializedResultMap(orgStock);
-        TreeMap<Integer, Integer> cashStock = new TreeMap<>(Collections.reverseOrder());
 
-        for (Map.Entry<Integer, Integer> entry : orgStock.entrySet())
-            cashStock.put(entry.getValue(), entry.getKey());
+        int[][] amountsTypes = getSortedAmountValue(orgStock);
 
-        int[] keys = cashStock.keySet().stream().mapToInt(i -> i).toArray();
+        int[] amounts = amountsTypes[0];
+        int[] types = amountsTypes[1];
 
-        int prevBalance = balance;
+        int prevBalance = -1;
         outer:
-        for (int index = 0; index < keys.length; index++) {
-            int currentAmount = keys[index];
-            int currentType = cashStock.get(currentAmount);
-            int nextDiff;
-            boolean isLastItem = index == keys.length - 1;
+        for (int index = 0; index < types.length; index++) {
+            int currentType = types[index];
+            int minAlign = amounts[types.length - 1];
 
-            if (isLastItem)
-                nextDiff = keys[index] - keys[index - 1] + 1;
-            else
-                nextDiff = keys[index] - keys[index + 1] + 1;
+            if (index == types.length - 1) {
+                if (prevBalance == balance) {
+                    TreeMap<Integer, Integer> midstep = new TreeMap<>();
+
+                    for (int key : orgStock.keySet())
+                        midstep.put(key, orgStock.get(key) - result.get(key));
+
+                    TreeMap<Integer, Integer> newResult = (new StepCashDistributor()).distribute(midstep, balance);
+
+                    for (int key : newResult.keySet())
+                        result.put(key, result.get(key) + newResult.get(key));
+
+                    break;
+                } else {
+                    prevBalance = balance;
+                    index = 0;
+                    continue;
+                }
+            }
+
+            int nextDiff = amounts[index] - minAlign;
 
             while (nextDiff > 0) {
                 if (nextDiff * currentType <= balance) {
                     balance -= nextDiff * currentType;
-                    result.put(currentType, nextDiff);
+                    amounts[index] -= nextDiff;
+                    result.put(currentType, result.get(currentType) + nextDiff);
 
                     if (balance == 0)
                         break outer;
 
-                    break;
+                    continue outer;
                 } else {
                     nextDiff--;
                 }
             }
 
-            if (isLastItem) {
-                if (prevBalance == balance) {
-                    TreeMap<Integer, Integer> midstep = new TreeMap<>();
-
-                    for (int key : orgStock.keySet()) {
-                        if (result.containsKey(key))
-                            midstep.put(key, orgStock.get(key) - result.get(key));
-                        else
-                            midstep.put(key, orgStock.get(key) - result.get(key));
-                    }
-
-                    TreeMap<Integer, Integer> newResult = (new StepCashDistributor()).distribute(midstep, balance);
-
-                    for (int key : newResult.keySet()) {
-                        if (result.containsKey(key))
-                            result.put(key, result.get(key) + newResult.get(key));
-                        else
-                            result.put(key, newResult.get(key));
-                    }
-
-                    break;
-                } else {
-                    index = 0;
-                }
-            }
-
-            prevBalance = balance;
         }
 
         return result;

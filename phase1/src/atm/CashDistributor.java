@@ -14,4 +14,5 @@ abstract class CashDistributor {
 
         return result;
     }
+
 }
