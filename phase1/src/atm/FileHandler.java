@@ -48,5 +48,19 @@ public class FileHandler {
         userData.store(newUser,null);
     }
 
+    /**
+     * add a account to user.
+     * @param user The user's username
+     * @param accountType A string represent the account type.
+     * @param balance The balance you want to put in to the account.
+     * @throws Exception
+     * Be aware that if you input the same account twice, it will overrides the first account.
+     * If you want to have multiple cheque account, you can name it as cheque account1 , cheque account2 etc.
+     */
+    public void addAccountToUser(String user,String accountType,String balance) throws Exception{
+        OutputStream newUser = new FileOutputStream(user + ".properties");
+        userData.setProperty(accountType, balance);
+    }
+    //TODO implement setTime(), getTime(),getAccountBalance(), setAccountBalance(), getPassword().
 
 }
