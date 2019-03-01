@@ -33,7 +33,20 @@ public class FileHandler {
         return date.getProperty("date");
     }
 
+    /**
+     * Create a new user.
+     * @param username  User'sname.
+     * @param password  User's password.
+     * @throws Exception Throws I/O exception when there is a problem.
+     * If the User's name is already used, call this method with the same username will completely replace the
+     * original file.
+     */
+    public void createUser(String username, String password) throws Exception{
+        OutputStream newUser = new FileOutputStream(username + ".properties");
+        userData.setProperty("Username",username);
+        userData.setProperty("Password",password);
+        userData.store(newUser,null);
+    }
 
-    //TODO implement setTime(), getTime(),getAccountBalance(), setAccountBalance(), getPassword().
 
 }
