@@ -1,26 +1,30 @@
 package atm;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-class CashHandler {
-    private Map<Integer, Integer> cashStock;
+class CashHandler extends Observable {
+    private TreeMap<Integer, Integer> cashStock;
     private Currency currency;
     private int alertLevel;
 
-    CashHandler(int bill5, int bill10, int bill20, int bill50, Currency currency, int alertLevel) {
+    CashHandler(BankManager manager, int bill5, int bill10, int bill20, int bill50, Currency currency, int alertLevel) {
         this.currency = currency;
-        cashStock = new HashMap<>();
+        cashStock = new TreeMap<>();
         cashStock.put(5, bill5);
         cashStock.put(10, bill10);
         cashStock.put(20, bill20);
         cashStock.put(50, bill50);
         this.alertLevel = alertLevel;
+
+        addObserver(manager);
     }
 
     Currency getCurrency() {
         return currency;
+    }
+
+    int getCashTypeCount() {
+        return cashStock.size();
     }
 
     int getAmount() {
@@ -32,12 +36,12 @@ class CashHandler {
     }
 
     // TODO test required
-    int[] takeAmountOfCash(int amount) throws CashShortageException {
+    HashMap<Integer, Integer> takeAmountOfCash(int amount) throws InsufficientStockException {
         if (amount % 5 != 0)
             throw new IllegalArgumentException("Can't produce amount that is not a multiplier of 5!");
 
         if (getAmount() < amount)
-            throw new CashShortageException(this);
+            throw new InsufficientStockException(this);
 
         return null;
         // TODO best cash take logic to be implemented

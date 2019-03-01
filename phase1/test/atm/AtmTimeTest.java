@@ -11,7 +11,7 @@ public class AtmTimeTest {
     @Test
     public void testTimeElapse() {
         Date startTime = new Date();
-        AtmTime.setInitialTime(startTime);
+        //AtmTime.setInitialTime(startTime);
         long timeElapsed = 0;
 
         for (int repetition = 0; repetition < 5; repetition++) {
