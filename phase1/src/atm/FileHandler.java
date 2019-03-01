@@ -21,6 +21,18 @@ public class FileHandler {
 
     }
 
+    /**
+     * Do not call this method before the time is first set, do so will result in FileNotFoundException.
+     * @return void
+     * @throws Exception Throws I/O Exception if files mot found.
+     *
+     */
+    public String getTime() throws Exception {
+        InputStream Time = new FileInputStream("timeConfig.properties");
+        date.load(Time);
+        return date.getProperty("date");
+    }
+
 
     //TODO implement setTime(), getTime(),getAccountBalance(), setAccountBalance(), getPassword().
 
