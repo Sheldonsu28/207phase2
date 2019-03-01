@@ -28,7 +28,7 @@ public final class AtmTime extends Observable {
     }
 
     //  FIXME how to best synchronize with all savings observers? Is real-time possible?
-    public Date getCurrentTime() {
+    public static Date getCurrentTime() {
         if (initialTime == null || prevMills == -1)
             throw new IllegalStateException("ATM time not initialized by Bank Manager yet");
 
