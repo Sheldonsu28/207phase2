@@ -1,19 +1,21 @@
 package account;
 
-import atm.AtmTime;
+import atm.User;
 import transaction.Transaction;
+
+import java.util.Date;
 
 public abstract class DebtAccount extends Account implements Depositable, Indebtable {
 
     double debtLimit;
 
-    DebtAccount(AtmTime time) {
-        super(time);
+    DebtAccount(Date time, User owner) {
+        super(time, owner);
         debtLimit = DEFAULT_DEBT_LIMIT;
     }
 
-    DebtAccount(AtmTime time, double debtLimit) {
-        super(time);
+    DebtAccount(Date time, User owner, double debtLimit) {
+        super(time, owner);
         this.debtLimit = debtLimit;
     }
 

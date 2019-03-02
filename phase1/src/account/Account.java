@@ -1,6 +1,6 @@
 package account;
 
-import atm.AtmTime;
+import atm.User;
 import transaction.Transaction;
 
 import java.util.Date;
@@ -10,6 +10,7 @@ import java.util.List;
 public abstract class Account {
     private final Date timeCreated;
     private final String id;
+    private final User owner;
     private static int prev_id = 0;
     double balance;
     List<Transaction> transactions;
@@ -18,16 +19,21 @@ public abstract class Account {
         throw new IllegalStateException("Account must be registered with an initial time");
     }
 
-    Account(AtmTime time) {
+    Account(Date time, User owner) {
         id = String.format("A%04d", prev_id);
         prev_id++;
-        timeCreated = time.getCurrentTime();
+        timeCreated = time;
         balance = 0.0;
+        this.owner = owner;
     }
 
-    Account(AtmTime time, double initialBalance) {
-        this(time);
+    Account(Date time, User owner, double initialBalance) {
+        this(time, owner);
         balance = initialBalance;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public String getId() {
