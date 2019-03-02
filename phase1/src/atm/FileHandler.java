@@ -1,6 +1,9 @@
 package atm;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * This class is responsible for handling that need to be save to files outside.
@@ -56,5 +59,23 @@ public class FileHandler {
         }
         return information;
     }
+
+   public void saveto(String filename,String contents){
+
+
+
+
+    }
+
+    public ArrayList readFrom(String filename){
+        ArrayList content = new ArrayList();
+        Scanner scanner = new Scanner(path + filename);
+        while (scanner.hasNextLine()){
+            content.add(scanner.nextLine());
+        }
+        return content;
+    }
+
+
 
 }
