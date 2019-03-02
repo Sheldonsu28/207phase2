@@ -59,5 +59,6 @@ public class FileHandler {
         FileHandler F = new FileHandler();
         BankManager B = new BankManager();
         F.saveFile(B);
+        System.out.println("Fishished");
     }
 }
