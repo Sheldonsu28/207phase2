@@ -1,16 +1,18 @@
 package account;
 
 
-import atm.AtmTime;
+import atm.User;
+
+import java.util.Date;
 
 public class CreditCardAccount extends DebtAccount {
 
-    public CreditCardAccount(AtmTime time) {
-        super(time);
+    public CreditCardAccount(Date time, User owner) {
+        super(time, owner);
     }
 
-    public CreditCardAccount(AtmTime time, double debtLimit) {
-        super(time, debtLimit);
+    public CreditCardAccount(Date time, User owner, double debtLimit) {
+        super(time, owner, debtLimit);
     }
 
 }

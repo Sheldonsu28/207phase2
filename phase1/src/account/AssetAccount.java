@@ -1,15 +1,17 @@
 package account;
 
-import atm.AtmTime;
+import atm.User;
 import transaction.Transaction;
 
+import java.util.Date;
+
 public abstract class AssetAccount extends Account implements Depositable, Withdrawable {
-    AssetAccount(AtmTime time) {
-        super(time);
+    AssetAccount(Date time, User owner) {
+        super(time, owner);
     }
 
-    AssetAccount(AtmTime time, double initialBalance) {
-        super(time, initialBalance);
+    AssetAccount(Date time, User owner, double initialBalance) {
+        super(time, owner, initialBalance);
     }
 
     @Override

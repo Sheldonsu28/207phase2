@@ -1,24 +1,26 @@
 package account;
 
-import atm.AtmTime;
+import atm.User;
 import transaction.Transaction;
+
+import java.util.Date;
 
 public class ChequingAccount extends AssetAccount implements Indebtable {
 
     private double debtLimit;
 
-    public ChequingAccount(AtmTime time) {
-        super(time);
+    public ChequingAccount(Date time, User owner) {
+        super(time, owner);
         debtLimit = 100;
     }
 
-    public ChequingAccount(AtmTime time, double initialBalance) {
-        super(time, initialBalance);
+    public ChequingAccount(Date time, User owner, double initialBalance) {
+        super(time, owner, initialBalance);
         debtLimit = 100;
     }
 
-    public ChequingAccount(AtmTime time, double initialBalance, double debtLimit) {
-        super(time, initialBalance);
+    public ChequingAccount(Date time, User owner, double initialBalance, double debtLimit) {
+        super(time, owner, initialBalance);
         this.debtLimit = debtLimit;
     }
 
