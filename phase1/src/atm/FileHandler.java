@@ -11,7 +11,7 @@ public class FileHandler {
     private FileInputStream fileRead;
     private ObjectInputStream input;
 
-    public void FileHnadler(){
+    public FileHandler(){
         try {
             this.fileSave = new FileOutputStream("Outgoing.txt");
             this.output = new ObjectOutputStream(fileSave);
@@ -41,17 +41,23 @@ public class FileHandler {
      *
      * @return return a Bank manager object.
      */
-    public BankManager readFile(){
+    public BankManager readFile() {
         BankManager information = null;
-        try{
+        try {
             information = (BankManager) input.readObject();
             fileRead.close();
             input.close();
-        }catch(IOException a){
+        } catch (IOException a) {
             System.out.println("There is a problem when reading the file, file information didi not load.");
-        }catch(ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             System.out.println("The require classes is not found");
         }
         return information;
+    }
+
+    public static void main(String[] args) {
+        FileHandler F = new FileHandler();
+        BankManager B = new BankManager();
+        F.saveFile(B);
     }
 }
