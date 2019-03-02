@@ -42,6 +42,10 @@ public class User {
     }
 
 
+    <T> void addAccount(Class<T> klass, T account) {
+        accountVaults.addAccount(klass, account);
+    }
+
     //  TODO test required
     String getAccountSummary() {
         StringBuilder summary = new StringBuilder("Account Summary: \n");

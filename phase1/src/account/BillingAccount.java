@@ -1,17 +1,18 @@
 package account;
 
+import atm.AtmTime;
 import transaction.Transaction;
 
 public class BillingAccount extends Account {
     private final String payeeName;
 
-    public BillingAccount(String payeeName) {
-        super();
+    public BillingAccount(AtmTime time, String payeeName) {
+        super(time);
         this.payeeName = payeeName;
     }
 
-    public BillingAccount(String payeeName, double initialBalance) {
-        super(initialBalance);
+    public BillingAccount(AtmTime time, String payeeName, double initialBalance) {
+        super(time, initialBalance);
         this.payeeName = payeeName;
     }
 

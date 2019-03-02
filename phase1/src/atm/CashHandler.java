@@ -1,20 +1,25 @@
 package atm;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Observable;
+import java.util.TreeMap;
 
 class CashHandler extends Observable {
     private TreeMap<Integer, Integer> cashStock;
     private Currency currency;
     private int alertLevel;
+    private CashDistributor cashDistributor;
 
-    CashHandler(BankManager manager, int bill5, int bill10, int bill20, int bill50, Currency currency, int alertLevel) {
+    CashHandler(BankManager manager, TreeMap<Integer, Integer> cashStock, Currency currency, int alertLevel) {
         this.currency = currency;
-        cashStock = new TreeMap<>();
-        cashStock.put(5, bill5);
-        cashStock.put(10, bill10);
-        cashStock.put(20, bill20);
-        cashStock.put(50, bill50);
         this.alertLevel = alertLevel;
+        this.cashStock = new TreeMap<>();
+        cashDistributor = new StepCashDistributor();
+
+        for (int key : cashStock.keySet()) {
+            this.cashStock.put(key, cashStock.get(key));
+        }
 
         addObserver(manager);
     }
@@ -36,15 +41,19 @@ class CashHandler extends Observable {
     }
 
     // TODO test required
-    HashMap<Integer, Integer> takeAmountOfCash(int amount) throws InsufficientStockException {
+    TreeMap<Integer, Integer> takeAmountOfCash(int amount) throws InsufficientStockException, CashShortageException {
         if (amount % 5 != 0)
             throw new IllegalArgumentException("Can't produce amount that is not a multiplier of 5!");
 
         if (getAmount() < amount)
             throw new InsufficientStockException(this);
 
-        return null;
-        // TODO best cash take logic to be implemented
+        TreeMap<Integer, Integer> take = cashDistributor.distribute(cashStock, amount);
+
+        for (Map.Entry<Integer, Integer> entry : take.entrySet())
+            cashStock.put(entry.getKey(), cashStock.get(entry.getKey()) - entry.getValue());
+
+        return take;
     }
 
     // TODO to be implemented
