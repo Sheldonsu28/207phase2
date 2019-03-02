@@ -37,7 +37,7 @@ public class BankManager implements Observer, Serializable {
     }
 
 
-    AtmMachine addMachine() {
+    public AtmMachine addMachine() {
         checkState();
 
         TreeMap<Integer, Integer> initialStock = new TreeMap<>();
@@ -51,11 +51,11 @@ public class BankManager implements Observer, Serializable {
         return machine;
     }
 
-    List<AtmMachine> getMachineList() {
+    public List<AtmMachine> getMachineList() {
         return Collections.unmodifiableList(machineList);
     }
 
-    <T extends Account> boolean createAccount(User user, Class<T> accountType) {
+    public <T extends Account> boolean createAccount(User user, Class<T> accountType) {
         checkState();
 
         return accountFactory.generateDefaultAccount(user, accountType, commonTime.getCurrentTime());
@@ -67,7 +67,7 @@ public class BankManager implements Observer, Serializable {
      * @param username The username of the user
      * @return The default password for this user
      */
-    String createUser(String username) {
+    public String createUser(String username) {
         checkState();
 
         String password = passwordGenerator.generatePassword();
@@ -76,7 +76,7 @@ public class BankManager implements Observer, Serializable {
         return password;
     }
 
-    User validateLogin(String username, String password) {
+    public User validateLogin(String username, String password) {
         User user = null;
 
         try {
