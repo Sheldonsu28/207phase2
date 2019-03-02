@@ -7,20 +7,16 @@ import java.io.*;
  */
 public class FileHandler {
 
-    private FileOutputStream fileSave;
-    private ObjectOutputStream output;
     private FileInputStream fileRead;
     private ObjectInputStream input;
+    private String path;
 
     public FileHandler() {
-        try {
-            this.fileSave = new FileOutputStream("Outgoing.txt");
-            this.output = new ObjectOutputStream(fileSave);
-            this.fileRead = new FileInputStream("Outgoing.txt");
-            this.input = new ObjectInputStream(fileRead);
-        } catch (IOException e) {
-            System.out.println("FileHandler initialization failed, operation can not be completed");
-        }
+        path = new File("phase1/data/").getAbsolutePath();
+    }
+
+    public String getPath(){
+        return this.path;
     }
 
     /**
@@ -28,8 +24,10 @@ public class FileHandler {
      *
      * @param data A bankManager object.
      */
-    public void saveFile(BankManager data) {
+    public void saveManagerData(BankManager data) {
         try {
+            FileOutputStream fileSave = new FileOutputStream(path + "BankData");
+            ObjectOutputStream output = new ObjectOutputStream(fileSave);
             output.writeObject(data);
             output.close();
             fileSave.close();
@@ -43,9 +41,11 @@ public class FileHandler {
      *
      * @return return a Bank manager object.
      */
-    public BankManager readFile() {
+    public BankManager readManagerData() {
         BankManager information = null;
         try {
+            FileInputStream fileRead = new FileInputStream(path);
+            ObjectInputStream input = new ObjectInputStream(fileRead);
             information = (BankManager) input.readObject();
             fileRead.close();
             input.close();
