@@ -8,6 +8,7 @@ import java.util.*;
 public class BankManager implements Observer, Serializable {
     private AtmTime commonTime;
     private List<AtmMachine> machineList;
+    private AccountFactory accountFactory;
     private UserDatabase userDatabase;
     private RandomPasswordGenerator passwordGenerator;
 
@@ -16,6 +17,7 @@ public class BankManager implements Observer, Serializable {
     BankManager() {
         machineList = new ArrayList<>();
         userDatabase = new UserDatabase();
+        accountFactory = new AccountFactory();
         hasInitialized = false;
         passwordGenerator = new RandomPasswordGenerator(12, 24,
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()");
@@ -34,6 +36,7 @@ public class BankManager implements Observer, Serializable {
             throw new IllegalStateException("Manager not yet initialized!");
     }
 
+
     AtmMachine addMachine() {
         checkState();
 
@@ -48,33 +51,14 @@ public class BankManager implements Observer, Serializable {
         return machine;
     }
 
-    private <T extends Account> T generateDefaultAccount(Class<T> accountType) {
-        T account = null;
-        // FIXME buggggggg
-        try {
-            account = accountType.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            System.out.println("Dont pass abstract!");
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            System.out.println("Constructor access error!");
-        }
-
-        return account;
+    List<AtmMachine> getMachineList() {
+        return Collections.unmodifiableList(machineList);
     }
 
-    <T extends Account> boolean createAccount(String username, Class<T> accountType) {
+    <T extends Account> boolean createAccount(User user, Class<T> accountType) {
         checkState();
 
-        T defaultAccount = generateDefaultAccount(accountType);
-
-        if (defaultAccount != null) {
-            userDatabase.getUser(username).addAccount(accountType, defaultAccount);
-            return true;
-        }
-
-        return false;
+        return accountFactory.generateDefaultAccount(user, accountType, commonTime.getCurrentTime());
     }
 
     /**
@@ -90,6 +74,18 @@ public class BankManager implements Observer, Serializable {
         userDatabase.registerNewUser(username, password);
 
         return password;
+    }
+
+    User validateLogin(String username, String password) {
+        User user = null;
+
+        try {
+            user = userDatabase.loginUser(username, password);
+        } catch (WrongPasswordException | UserNotExistException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return user;
     }
 
     @Override
