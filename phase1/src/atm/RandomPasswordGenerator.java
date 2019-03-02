@@ -1,8 +1,9 @@
 package atm;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class RandomPasswordGenerator {
+public class RandomPasswordGenerator implements Serializable {
     private int leastDigit, mostDigit;
     private char[] allowedChars;
     private Random random;

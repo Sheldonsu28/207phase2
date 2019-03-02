@@ -1,12 +1,13 @@
 package atm;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public final class AtmTime extends Observable {
+public final class AtmTime extends Observable implements Serializable {
     private static boolean hasRunningInstance = false;
     private SimpleDateFormat dateFormat;
     private Date initialTime, currentTime;

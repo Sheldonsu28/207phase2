@@ -1,8 +1,9 @@
 package atm;
 
+import java.io.Serializable;
 import java.util.TreeMap;
 
-public class UserDatabase {
+public class UserDatabase implements Serializable {
     private TreeMap<String, User> users;
 
     UserDatabase() {
