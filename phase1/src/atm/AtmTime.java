@@ -3,38 +3,55 @@ package atm;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public final class AtmTime extends Observable {
+    private static boolean hasRunningInstance = false;
     private SimpleDateFormat dateFormat;
-    private static Date initialTime, currentTime;
-    private static long prevMills = -1;
+    private Date initialTime, currentTime;
+    private long prevMills = -1;
 
-    AtmTime() {
+    AtmTime(Date initialTime) {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        initialize(initialTime);
     }
 
-    AtmTime(SimpleDateFormat dateFormat) {
+    AtmTime(Date initialTime, SimpleDateFormat dateFormat) {
         this.dateFormat = dateFormat;
+        initialize(initialTime);
     }
 
-    void setInitialTime(Date start) {
-        initialTime = start;
-        currentTime = start;
+    private void initialize(Date initialTime) {
+        if (hasRunningInstance)
+            throw new IllegalStateException("Only one Atm Time instance is allowed at one time!");
+        hasRunningInstance = true;
+
+        this.initialTime = initialTime;
+        currentTime = initialTime;
         prevMills = System.currentTimeMillis();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                long currentMills = System.currentTimeMillis();
+                currentTime = new Date(currentTime.getTime() + (currentMills - prevMills));
+                prevMills = currentMills;
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(task, 0L, 100L);
     }
 
     void changeDateFormat(SimpleDateFormat newFormat) {
         dateFormat = newFormat;
     }
 
-    //  FIXME how to best synchronize with all savings observers? Is real-time possible?
-    public static Date getCurrentTime() {
+    public Date getCurrentTime() {
         if (initialTime == null || prevMills == -1)
             throw new IllegalStateException("ATM time not initialized by Bank Manager yet");
 
-        long currentMills = System.currentTimeMillis();
-        currentTime = new Date(currentTime.getTime() + (currentMills - prevMills));
-        prevMills = currentMills;
         return new Date(currentTime.getTime());
     }
 
@@ -49,5 +66,4 @@ public final class AtmTime extends Observable {
     public String getInitialTimeStamp() {
         return dateFormat.format(getInitialTime());
     }
-
 }
