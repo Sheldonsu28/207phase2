@@ -23,7 +23,7 @@ public class FileHandler {
     }
 
     /**
-     * This method will take in a BankManager object and save it to a file.
+     * Serialize the object and save it to a file.
      * @param data A bankManager object.
      */
     public void saveFile(BankManager data){
@@ -37,7 +37,8 @@ public class FileHandler {
     }
 
     /**
-     * This class read the information from the files outside.
+     * Read the object store in the file and deserialize the object.
+     *
      * @return return a Bank manager object.
      */
     public BankManager readFile(){
