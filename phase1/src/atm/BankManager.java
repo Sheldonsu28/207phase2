@@ -50,7 +50,7 @@ public class BankManager implements Observer, Serializable {
 
     private <T extends Account> T generateDefaultAccount(Class<T> accountType) {
         T account = null;
-
+        // FIXME buggggggg
         try {
             account = accountType.newInstance();
         } catch (InstantiationException e) {

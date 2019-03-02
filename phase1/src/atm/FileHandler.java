@@ -1,4 +1,5 @@
 package atm;
+
 import java.io.*;
 
 /**
@@ -11,28 +12,29 @@ public class FileHandler {
     private FileInputStream fileRead;
     private ObjectInputStream input;
 
-    public FileHandler(){
+    public FileHandler() {
         try {
             this.fileSave = new FileOutputStream("Outgoing.txt");
             this.output = new ObjectOutputStream(fileSave);
             this.fileRead = new FileInputStream("Outgoing.txt");
             this.input = new ObjectInputStream(fileRead);
-        }catch( IOException e){
+        } catch (IOException e) {
             System.out.println("FileHandler initialization failed, operation can not be completed");
         }
     }
 
     /**
      * Serialize the object and save it to a file.
+     *
      * @param data A bankManager object.
      */
-    public void saveFile(BankManager data){
+    public void saveFile(BankManager data) {
         try {
             output.writeObject(data);
             output.close();
             fileSave.close();
-        }catch(IOException e){
-            System.out.println("Problem encounter when saving data, files not saved. ");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -55,10 +57,4 @@ public class FileHandler {
         return information;
     }
 
-    public static void main(String[] args) {
-        FileHandler F = new FileHandler();
-        BankManager B = new BankManager();
-        F.saveFile(B);
-        System.out.println("Fishished");
-    }
 }
