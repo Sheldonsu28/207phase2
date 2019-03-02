@@ -1,6 +1,6 @@
 package account;
 
-interface Indebtable {
+public interface Indebtable {
 
     double DEFAULT_DEBT_LIMIT = 1000000.0;
 

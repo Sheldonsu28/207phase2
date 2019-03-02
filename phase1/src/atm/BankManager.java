@@ -1,29 +1,89 @@
 package atm;
 
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+import account.Account;
 
-public class BankManager implements Observer {
+import java.io.Serializable;
+import java.util.*;
+
+public class BankManager implements Observer, Serializable {
     private AtmTime commonTime;
-    private ArrayList<AtmMachine> machineList;
+    private List<AtmMachine> machineList;
+    private UserDatabase userDatabase;
+    private RandomPasswordGenerator passwordGenerator;
 
-    private boolean
+    private boolean hasInitialized;
 
     BankManager() {
-
+        machineList = new ArrayList<>();
+        userDatabase = new UserDatabase();
+        hasInitialized = false;
+        passwordGenerator = new RandomPasswordGenerator(12, 24,
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()");
     }
 
-    void addMachine() {
+    public void initialize(Date initialDate) {
+        commonTime = new AtmTime(initialDate);
 
+        //  TODO more initialization
+
+        hasInitialized = true;
     }
 
-    void createAccount(User user) {
-
+    private void checkState() {
+        if (!hasInitialized)
+            throw new IllegalStateException("Manager not yet initialized!");
     }
 
-    void createUser(String username) {
+    AtmMachine addMachine() {
+        checkState();
 
+        AtmMachine machine = new AtmMachine();
+        machineList.add(machine);
+        return machine;
+    }
+
+    private <T extends Account> T generateDefaultAccount(Class<T> accountType) {
+        T account = null;
+
+        try {
+            account = accountType.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            System.out.println("Dont pass abstract!");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.out.println("Constructor access error!");
+        }
+
+        return account;
+    }
+
+    <T extends Account> boolean createAccount(String username, Class<T> accountType) {
+        checkState();
+
+        T defaultAccount = generateDefaultAccount(accountType);
+
+        if (defaultAccount != null) {
+            userDatabase.getUser(username).addAccount(accountType, defaultAccount);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Create a new user with given username and register it in the database
+     *
+     * @param username The username of the user
+     * @return The default password for this user
+     */
+    String createUser(String username) {
+        checkState();
+
+        String password = passwordGenerator.generatePassword();
+        userDatabase.registerNewUser(username, password);
+
+        return password;
     }
 
     @Override
