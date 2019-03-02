@@ -1,14 +1,15 @@
 package account;
 
+import atm.AtmTime;
 import transaction.Transaction;
 
 public abstract class AssetAccount extends Account implements Depositable, Withdrawable {
-    AssetAccount() {
-        super();
+    AssetAccount(AtmTime time) {
+        super(time);
     }
 
-    AssetAccount(double initialBalance) {
-        super(initialBalance);
+    AssetAccount(AtmTime time, double initialBalance) {
+        super(time, initialBalance);
     }
 
     @Override

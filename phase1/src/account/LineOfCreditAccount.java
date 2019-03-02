@@ -1,11 +1,12 @@
 package account;
 
+import atm.AtmTime;
 import transaction.Transaction;
 
 public class LineOfCreditAccount extends DebtAccount implements Withdrawable {
 
-    LineOfCreditAccount(int debtLimit) {
-        super(debtLimit);
+    LineOfCreditAccount(AtmTime time, int debtLimit) {
+        super(time, debtLimit);
     }
 
     @Override

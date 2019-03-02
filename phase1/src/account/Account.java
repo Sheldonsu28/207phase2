@@ -14,15 +14,19 @@ public abstract class Account {
     double balance;
     List<Transaction> transactions;
 
-    Account() {
+    private Account() {
+        throw new IllegalStateException("Account must be registered with an initial time");
+    }
+
+    Account(AtmTime time) {
         id = String.format("A%04d", prev_id);
         prev_id++;
-        timeCreated = AtmTime.getCurrentTime();
+        timeCreated = time.getCurrentTime();
         balance = 0.0;
     }
 
-    Account(double initialBalance) {
-        this();
+    Account(AtmTime time, double initialBalance) {
+        this(time);
         balance = initialBalance;
     }
 

@@ -1,5 +1,6 @@
 package account;
 
+import atm.AtmTime;
 import transaction.Transaction;
 
 import java.util.Observable;
@@ -12,14 +13,14 @@ public class SavingsAccount extends AssetAccount implements Observer {
     private double monthlyRate;
     private String monthlyGrowthDay;
 
-    SavingsAccount() {
-        super();
+    SavingsAccount(AtmTime time) {
+        super(time);
         monthlyRate = 0.001;
         monthlyGrowthDay = "01";
     }
 
-    SavingsAccount(double monthlyRate, String monthlyGrowthDay) {
-        super();
+    SavingsAccount(AtmTime time, double monthlyRate, String monthlyGrowthDay) {
+        super(time);
         if (monthlyRate < 0)
             throw new IllegalArgumentException("Monthly rate can not be negative!");
 
@@ -27,8 +28,8 @@ public class SavingsAccount extends AssetAccount implements Observer {
         this.monthlyGrowthDay = monthlyGrowthDay;
     }
 
-    SavingsAccount(double monthlyRate, String monthlyGrowthDay, double initialBalance) {
-        super(initialBalance);
+    SavingsAccount(AtmTime time, double monthlyRate, String monthlyGrowthDay, double initialBalance) {
+        super(time, initialBalance);
         if (monthlyRate < 0)
             throw new IllegalArgumentException("Monthly rate can not be negative!");
 

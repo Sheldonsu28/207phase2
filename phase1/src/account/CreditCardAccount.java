@@ -1,14 +1,16 @@
 package account;
 
 
+import atm.AtmTime;
+
 public class CreditCardAccount extends DebtAccount {
 
-    public CreditCardAccount() {
-        super();
+    public CreditCardAccount(AtmTime time) {
+        super(time);
     }
 
-    public CreditCardAccount(double debtLimit) {
-        super(debtLimit);
+    public CreditCardAccount(AtmTime time, double debtLimit) {
+        super(time, debtLimit);
     }
 
 }

@@ -7,11 +7,12 @@ import java.util.Date;
 import static org.junit.Assert.assertTrue;
 
 public class AtmTimeTest {
+    private AtmTime time;
 
     @Test
     public void testTimeElapse() {
         Date startTime = new Date();
-        //AtmTime.setInitialTime(startTime);
+        time = new AtmTime(startTime);
         long timeElapsed = 0;
 
         for (int repetition = 0; repetition < 5; repetition++) {
@@ -24,8 +25,8 @@ public class AtmTimeTest {
                 e.printStackTrace();
             }
 
-            long timeDiff = AtmTime.getCurrentTime().getTime() - startTime.getTime();
-            assertTrue(timeDiff >= timeElapsed - 5 && timeDiff <= timeElapsed + 5);
+            long timeDiff = time.getCurrentTime().getTime() - startTime.getTime();
+            assertTrue(timeDiff >= timeElapsed - 200 && timeDiff <= timeElapsed + 200);
         }
     }
 }

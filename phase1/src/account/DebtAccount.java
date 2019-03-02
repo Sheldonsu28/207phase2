@@ -1,18 +1,19 @@
 package account;
 
+import atm.AtmTime;
 import transaction.Transaction;
 
 public abstract class DebtAccount extends Account implements Depositable, Indebtable {
 
     double debtLimit;
 
-    DebtAccount() {
-        super();
+    DebtAccount(AtmTime time) {
+        super(time);
         debtLimit = DEFAULT_DEBT_LIMIT;
     }
 
-    DebtAccount(double debtLimit) {
-        super();
+    DebtAccount(AtmTime time, double debtLimit) {
+        super(time);
         this.debtLimit = debtLimit;
     }
 

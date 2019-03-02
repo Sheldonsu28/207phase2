@@ -37,7 +37,13 @@ public class BankManager implements Observer, Serializable {
     AtmMachine addMachine() {
         checkState();
 
-        AtmMachine machine = new AtmMachine();
+        TreeMap<Integer, Integer> initialStock = new TreeMap<>();
+        initialStock.put(5, 500);
+        initialStock.put(10, 500);
+        initialStock.put(20, 500);
+        initialStock.put(50, 500);
+
+        AtmMachine machine = new AtmMachine(this, initialStock);
         machineList.add(machine);
         return machine;
     }
