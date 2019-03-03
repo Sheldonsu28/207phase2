@@ -14,7 +14,7 @@ public class FileHandler {
     private String path;
 
     public FileHandler() {
-        path = new File("phase1/data/").getAbsolutePath();
+        path = new File("phase1/data/").getAbsolutePath() + '\\';
     }
 
     public String getPath(){
@@ -28,7 +28,7 @@ public class FileHandler {
      */
     public void saveManagerData(BankManager data) {
         try {
-            FileOutputStream fileSave = new FileOutputStream(path + "BankData");
+            FileOutputStream fileSave = new FileOutputStream(path + "BankData.txt");
             ObjectOutputStream output = new ObjectOutputStream(fileSave);
             output.writeObject(data);
             output.close();
@@ -52,29 +52,51 @@ public class FileHandler {
             fileRead.close();
             input.close();
         } catch (IOException a) {
-            System.out.println("There is a problem when reading the file, file information didi not load.");
+            System.out.println("There is a problem when reading the file, file information did not load.");
         } catch (ClassNotFoundException e) {
             System.out.println("The require classes is not found");
         }
         return information;
     }
 
-   public void saveto(String filename,String contents){
+   public void saveTo(String filename,String contents){
+        ArrayList<String> content;
+        File file = new File(path + filename);
+        if (file.exists()){
+            try {
+                content = readFrom(filename);
+                content.add(contents );
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                for (String item : content) {
+                    writer.write(item);
+                    writer.newLine();
+                }
+                writer.close();
+            }catch(IOException e) {
+                System.out.println("Something went wrong, information not saved.");
+            }
+        }else{
+            try {
+                FileWriter writer = new FileWriter(file);
+                writer.write(contents);
+                writer.close();
+            }catch(IOException e){
+                System.out.println("Something went wrong, information not saved.");
+            }
 
-
-
-
+        }
     }
 
     public ArrayList<String> readFrom(String filename) {
         ArrayList<String> content = new ArrayList<>();
-        Scanner scanner = new Scanner(path + filename);
-        while (scanner.hasNextLine()){
-            content.add(scanner.nextLine());
+        try {
+            Scanner scanner = new Scanner(new File(path + filename));
+            while (scanner.hasNext()) {
+                content.add(scanner.nextLine());
+            }
+        }catch(FileNotFoundException e){
+            System.out.println("File not found, return null");
         }
         return content;
     }
-
-
-
 }
