@@ -49,13 +49,18 @@ public class FileHandler {
             fileRead.close();
             input.close();
         } catch (IOException a) {
-            System.out.println("There is a problem when reading the file, file information did not load.");
+            System.out.println("There is a problem when reading the file, file information failed to load.");
         } catch (ClassNotFoundException e) {
             System.out.println("The require classes is not found");
         }
         return information;
     }
 
+    /**
+     * Save the files to the corresponding file in data folder.
+     * @param filename The name of the file with suffix such as data.txt.
+     * @param contents The information you would like to put in the class.
+     */
    public void saveTo(String filename,String contents){
         ArrayList<String> content;
         File file = new File(path + filename);
@@ -84,6 +89,11 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Reads the file that filename designates. If file not exist, return null.
+     * @param filename Name of the file you want to read from, the file name need to include the suffix such as "data.txt".
+     * @return A ArrayList, each element in the list represent one line in the file, if the file is not found, return null.
+     */
     public ArrayList<String> readFrom(String filename) {
         ArrayList<String> content = new ArrayList<>();
         try {
