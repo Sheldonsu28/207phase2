@@ -23,7 +23,7 @@ public class ChequingAccountTest {
     protected User owner;
 
     @Test
-    public void testwithdrawException(){
+    public void testDebtLimitExceededException(){
         ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
         int amount = 1000;
         WithdrawTransaction register = new WithdrawTransaction(owner, chequingAccount, amount);
@@ -35,16 +35,59 @@ public class ChequingAccountTest {
         }
     }
 
-//    @Test
-//    public void testWithdrawal() throws WithdrawException {
-//        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-//        int amount1 = 50;
-//        WithdrawTransaction register1 = new WithdrawTransaction(owner, chequingAccount, amount1);
-//        chequingAccount.withdraw(amount1, register1);
-//        double balance = chequingAccount.getNetBalance();
-//        System.out.println(balance);
-//        assertTrue(balance == -50);
-//    }
+    @Test
+    public void testInsufficientFundException() {
+        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
+        int amount = 50;
+        WithdrawTransaction register = new WithdrawTransaction(owner, chequingAccount, amount);
+        try {
+            chequingAccount.withdraw(amount, register);
+        } catch (InsufficientFundException d) {
+            d.printStackTrace();
+        } catch (Exception e) {
+            throw new AssertionError();
+        }
+    }
+
+    @Test
+    public void testWithdrawal() throws WithdrawException {
+        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
+        int amount1 = 50;
+        WithdrawTransaction register1 = new WithdrawTransaction(owner, chequingAccount, amount1);
+        chequingAccount.withdraw(amount1, register1);
+        double balance = chequingAccount.getNetBalance();
+        assertTrue(balance == -50);
+    }
+
+    @Test
+    public void testDeposit(){
+        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
+        int amount1 = 50;
+        WithdrawTransaction register1 = new WithdrawTransaction(owner, chequingAccount, amount1);
+        chequingAccount.deposit(amount1, register1);
+        double balance = chequingAccount.getNetBalance();
+        assertTrue(balance == 50);
+    }
+
+
+    @Test
+    public void testCancelWithdrawal() throws WithdrawException {
+        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
+        int amount1 = 50;
+        chequingAccount.cancelWithdraw(amount1);
+        double balance = chequingAccount.getNetBalance();
+        assertTrue(balance == 50);
+    }
+
+    @Test
+    public void testCancelDeposit(){
+        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
+        int amount1 = 50;
+        chequingAccount.cancelDeposit(amount1);
+        double balance = chequingAccount.getNetBalance();
+        assertTrue(balance == -50);
+    }
+
 
 
 }
