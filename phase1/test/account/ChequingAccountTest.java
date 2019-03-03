@@ -10,13 +10,14 @@ import java.util.Date;
 public class ChequingAccountTest {
 
     private Date time;
-    private User owner;
     private double initialBalance;
+
+    @Mock
+    protected User owner;
 
     @Before
     public void setup(){
         time = new Date();
-        owner = new User("csc", "csc207");
         initialBalance = 0;
     }
 
@@ -25,7 +26,6 @@ public class ChequingAccountTest {
         ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
         int amount = 1000;
         WithdrawTransaction register = new WithdrawTransaction(owner, chequingAccount, amount);
-
         try { chequingAccount.withdraw(amount, register);
         } catch (DebtLimitExceededException d){
             d.printStackTrace();
