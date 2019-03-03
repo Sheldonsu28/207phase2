@@ -21,13 +21,15 @@ public class ChequingAccountTest {
 
     @Mock
     protected User owner;
+    WithdrawTransaction register;
+
 
     @Test
     public void testDebtLimitExceededException(){
         ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
         int amount = 1000;
-        WithdrawTransaction register = new WithdrawTransaction(owner, chequingAccount, amount);
-        try { chequingAccount.withdraw(amount, register);
+        double amount1 = 1000;
+        try { chequingAccount.withdraw(amount1, register);
         } catch (DebtLimitExceededException d){
             d.printStackTrace();
         } catch (Exception e) {
@@ -39,7 +41,6 @@ public class ChequingAccountTest {
     public void testInsufficientFundException() {
         ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
         int amount = 50;
-        WithdrawTransaction register = new WithdrawTransaction(owner, chequingAccount, amount);
         try {
             chequingAccount.withdraw(amount, register);
         } catch (InsufficientFundException d) {
@@ -52,9 +53,9 @@ public class ChequingAccountTest {
     @Test
     public void testWithdrawal() throws WithdrawException {
         ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-        int amount1 = 50;
-        WithdrawTransaction register1 = new WithdrawTransaction(owner, chequingAccount, amount1);
-        chequingAccount.withdraw(amount1, register1);
+        int amount = 50;
+        double amount1 = 50;
+        chequingAccount.withdraw(amount1, register);
         double balance = chequingAccount.getNetBalance();
         assertTrue(balance == -50);
     }
@@ -63,8 +64,7 @@ public class ChequingAccountTest {
     public void testDeposit(){
         ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
         int amount1 = 50;
-        WithdrawTransaction register1 = new WithdrawTransaction(owner, chequingAccount, amount1);
-        chequingAccount.deposit(amount1, register1);
+        chequingAccount.deposit(amount1, register);
         double balance = chequingAccount.getNetBalance();
         assertTrue(balance == 50);
     }
