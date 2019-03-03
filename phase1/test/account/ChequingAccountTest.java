@@ -2,6 +2,7 @@ package account;
 import atm.User;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import transaction.WithdrawTransaction;
 import static org.junit.Assert.assertTrue;
 import java.util.Date;
@@ -10,15 +11,16 @@ import java.util.Date;
 public class ChequingAccountTest {
 
     private Date time;
-    private User owner;
     private double initialBalance;
 
     @Before
     public void setup(){
         time = new Date();
-        owner = new User("csc", "csc207");
         initialBalance = 0;
     }
+
+    @Mock
+    protected User owner;
 
     @Test
     public void testwithdrawException(){
@@ -33,17 +35,17 @@ public class ChequingAccountTest {
             throw new AssertionError();
         }
     }
-//
-//    @Test
-//    public void testwithdrawal() throws WithdrawException {
-//        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-//        int amount1 = 50;
-//        WithdrawTransaction register1 = new WithdrawTransaction(owner, chequingAccount, amount1);
-//        chequingAccount.withdraw(amount1, register1);
-//        double balance = chequingAccount.getNetBalance();
-//        System.out.println(balance);
-//        assertTrue(balance == -50);
-//    }
+
+    @Test
+    public void testwithdrawal() throws WithdrawException {
+        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
+        int amount1 = 50;
+        WithdrawTransaction register1 = new WithdrawTransaction(owner, chequingAccount, amount1);
+        chequingAccount.withdraw(amount1, register1);
+        double balance = chequingAccount.getNetBalance();
+        System.out.println(balance);
+        assertTrue(balance == -50);
+    }
 
 
 }
