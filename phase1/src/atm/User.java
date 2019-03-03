@@ -47,7 +47,7 @@ public class User {
     }
 
     //  TODO test required
-    String getAccountSummary() {
+    String getAccountsSummary() {
         StringBuilder summary = new StringBuilder("Account Summary: \n");
 
         for (Account account : accountVaults.getAllAccounts()) {

@@ -1,6 +1,7 @@
 package atm;
 
 import account.Account;
+import transaction.Transaction;
 
 import java.io.Serializable;
 import java.util.*;
@@ -58,7 +59,7 @@ public class BankManager implements Observer, Serializable {
     public <T extends Account> boolean createAccount(User user, Class<T> accountType) {
         checkState();
 
-        return accountFactory.generateDefaultAccount(user, accountType, commonTime.getCurrentTime());
+        return accountFactory.generateDefaultAccount(user, accountType, commonTime);
     }
 
     /**
@@ -86,6 +87,17 @@ public class BankManager implements Observer, Serializable {
         }
 
         return user;
+    }
+
+    public boolean cancelLastTransaction(Account targetAccount) {
+        Transaction transaction = targetAccount.getLastTransaction();
+
+        if (transaction.isCancellable()) {
+            transaction.cancel();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
