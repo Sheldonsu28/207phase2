@@ -10,16 +10,20 @@ import java.util.TimerTask;
 public final class AtmTime extends Observable implements Serializable {
     private static boolean hasRunningInstance = false;
     private SimpleDateFormat dateFormat;
-    private Date initialTime, currentTime;
-    private long prevMills = -1;
+    private final SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+    private Timer timer;
+    private final Date initialTime;
+    private Date currentTime, prevTime;
 
     AtmTime(Date initialTime) {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        this.initialTime = initialTime;
         initialize(initialTime);
     }
 
     AtmTime(Date initialTime, SimpleDateFormat dateFormat) {
         this.dateFormat = dateFormat;
+        this.initialTime = initialTime;
         initialize(initialTime);
     }
 
@@ -28,21 +32,30 @@ public final class AtmTime extends Observable implements Serializable {
             throw new IllegalStateException("Only one Atm Time instance is allowed at one time!");
         hasRunningInstance = true;
 
-        this.initialTime = initialTime;
         currentTime = initialTime;
-        prevMills = System.currentTimeMillis();
+        prevTime = currentTime;
 
-        TimerTask task = new TimerTask() {
+        timer = new Timer();
+        timer.schedule(getTimerTask(), 0L, 100L);
+    }
+
+    private TimerTask getTimerTask() {
+        return new TimerTask() {
             @Override
             public void run() {
                 long currentMills = System.currentTimeMillis();
+                long prevMills = prevTime.getTime();
                 currentTime = new Date(currentTime.getTime() + (currentMills - prevMills));
-                prevMills = currentMills;
+                prevTime = new Date(currentMills);
+
+                String prevDay = dayFormat.format(prevTime);
+                String currDay = dayFormat.format(currentTime);
+                if (!prevDay.equals(currDay)) {
+                    setChanged();
+                    notifyObservers(currDay);
+                }
             }
         };
-
-        Timer timer = new Timer();
-        timer.schedule(task, 0L, 100L);
     }
 
     void changeDateFormat(SimpleDateFormat newFormat) {
@@ -50,7 +63,7 @@ public final class AtmTime extends Observable implements Serializable {
     }
 
     public Date getCurrentTime() {
-        if (initialTime == null || prevMills == -1)
+        if (initialTime == null)
             throw new IllegalStateException("ATM time not initialized by Bank Manager yet");
 
         return new Date(currentTime.getTime());
@@ -67,4 +80,10 @@ public final class AtmTime extends Observable implements Serializable {
     public String getInitialTimeStamp() {
         return dateFormat.format(getInitialTime());
     }
+
+    public void terminate() {
+        timer.cancel();
+        hasRunningInstance = false;
+    }
+
 }
