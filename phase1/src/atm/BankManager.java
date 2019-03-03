@@ -15,7 +15,7 @@ public class BankManager implements Observer, Serializable {
 
     private boolean hasInitialized;
 
-    BankManager() {
+    public BankManager() {
         machineList = new ArrayList<>();
         userDatabase = new UserDatabase();
         accountFactory = new AccountFactory();
