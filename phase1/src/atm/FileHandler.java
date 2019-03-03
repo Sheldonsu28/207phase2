@@ -1,7 +1,6 @@
 package atm;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -67,8 +66,8 @@ public class FileHandler {
 
     }
 
-    public ArrayList readFrom(String filename){
-        ArrayList content = new ArrayList();
+    public ArrayList<String> readFrom(String filename) {
+        ArrayList<String> content = new ArrayList<>();
         Scanner scanner = new Scanner(path + filename);
         while (scanner.hasNextLine()){
             content.add(scanner.nextLine());
