@@ -1,9 +1,10 @@
 package account;
+
 import atm.User;
 import org.junit.Before;
 import org.junit.Test;
 import transaction.WithdrawTransaction;
-import static org.junit.Assert.assertTrue;
+
 import java.util.Date;
 
 
@@ -16,7 +17,7 @@ public class ChequingAccountTest {
     @Before
     public void setup(){
         time = new Date();
-        owner = new User("csc", "csc207");
+        //owner = new User("csc", "csc207");
         initialBalance = 0;
     }
 

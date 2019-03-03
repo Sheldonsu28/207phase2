@@ -3,11 +3,12 @@ package account;
 import atm.User;
 import transaction.Transaction;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 //  TODO implement toString and comparison
-public abstract class Account {
+public abstract class Account implements Serializable {
     private final Date timeCreated;
     private final String id;
     private final User owner;
@@ -54,6 +55,10 @@ public abstract class Account {
 
     void registerTransaction(Transaction transaction) {
         transactions.add(transaction);
+    }
+
+    public Transaction getLastTransaction() {
+        return transactions.get(transactions.size() - 1);
     }
 
     public abstract double getNetBalance();

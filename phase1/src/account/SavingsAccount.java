@@ -5,61 +5,67 @@ import transaction.Transaction;
 
 import java.util.Date;
 import java.util.Observable;
-import java.util.Observer;
 
 
 //  TODO implement saving growth feature
-public class SavingsAccount extends AssetAccount implements Observer {
+public class SavingsAccount extends AssetAccount implements Growable {
 
-    private double monthlyRate;
-    private String monthlyGrowthDay;
+    private double growthRate;
+    private String growthDay;
 
     SavingsAccount(Date time, User owner) {
         super(time, owner);
-        monthlyRate = 0.001;
-        monthlyGrowthDay = "01";
+        growthRate = 0.001;
+        growthDay = "01";
     }
 
-    SavingsAccount(Date time, User owner, double monthlyRate, String monthlyGrowthDay) {
+    SavingsAccount(Date time, User owner, double growthRate, String growthDay) {
         super(time, owner);
-        if (monthlyRate < 0)
+        if (growthRate < 0)
             throw new IllegalArgumentException("Monthly rate can not be negative!");
 
-        this.monthlyRate = monthlyRate;
-        this.monthlyGrowthDay = monthlyGrowthDay;
+        this.growthRate = growthRate;
+        this.growthDay = growthDay;
     }
 
-    SavingsAccount(Date time, User owner, double monthlyRate, String monthlyGrowthDay, double initialBalance) {
+    SavingsAccount(Date time, User owner, double growthRate, String grwothDay, double initialBalance) {
         super(time, owner, initialBalance);
-        if (monthlyRate < 0)
+        if (growthRate < 0)
             throw new IllegalArgumentException("Monthly rate can not be negative!");
 
-        this.monthlyRate = monthlyRate;
-        this.monthlyGrowthDay = monthlyGrowthDay;
+        this.growthRate = growthRate;
+        this.growthDay = grwothDay;
     }
 
-    public void changeMonthlyRate(double newMonthlyRate) {
-        if (newMonthlyRate < 0)
+    public void changeGrowthRate(double newGrwothRate) {
+        if (newGrwothRate < 0)
             throw new IllegalArgumentException("Monthly rate can not be negative!");
 
-        monthlyRate = newMonthlyRate;
-    }
-
-    public double getMonthlyRate() {
-        return monthlyRate;
+        growthRate = newGrwothRate;
     }
 
     //  TODO test growth day validity, maybe separated method needed
-    public void changeMonthlyGrowthDay(String newMonthlyGrowthDay) {
-        if (!newMonthlyGrowthDay.matches("\\d\\d") || Integer.parseInt(newMonthlyGrowthDay) <= 0 &&
-                Integer.parseInt(newMonthlyGrowthDay) > 28)
+    public void changeGrowthDay(String newGrowthDay) {
+        if (!newGrowthDay.matches("\\d\\d") || Integer.parseInt(newGrowthDay) <= 0 &&
+                Integer.parseInt(newGrowthDay) > 28)
             throw new IllegalArgumentException("Illegal format of day. Proper format is \"1\" - \"28\"");
 
-        monthlyGrowthDay = newMonthlyGrowthDay;
+        growthDay = newGrowthDay;
     }
 
-    public String getMonthlyGrowthDay() {
-        return monthlyGrowthDay;
+    @Override
+    public void grow() {
+        balance += balance * growthRate;
+    }
+
+    @Override
+    public double getGrowthRate() {
+        return growthRate;
+    }
+
+    @Override
+    public String getGrowthDay() {
+        return growthDay;
     }
 
     @Override
@@ -79,9 +85,12 @@ public class SavingsAccount extends AssetAccount implements Observer {
         balance += amount;
     }
 
-    @Override
-    //  TODO savings growth from AtmTime changes
-    public void update(Observable o, Object arg) {
 
+    @Override
+    public void update(Observable o, Object arg) {
+        String currDay = (String) arg;
+
+        if (currDay.equals(growthDay))
+            grow();
     }
 }

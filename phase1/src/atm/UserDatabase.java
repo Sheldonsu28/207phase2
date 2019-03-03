@@ -1,6 +1,8 @@
 package atm;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 public class UserDatabase implements Serializable {
@@ -25,6 +27,15 @@ public class UserDatabase implements Serializable {
 
     User getUser(String username) {
         return users.get(username);
+    }
+
+    /**
+     * Return a list containing all user instances saved in this class
+     *
+     * @return
+     */
+    List<User> getUserList() {
+        return new ArrayList<>(users.values());
     }
 
     public User loginUser(String username, String password) throws WrongPasswordException, UserNotExistException {
