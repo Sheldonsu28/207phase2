@@ -8,9 +8,6 @@ import java.util.Scanner;
  * This class is responsible for handling that need to be save to files outside.
  */
 public class FileHandler {
-
-    private FileInputStream fileRead;
-    private ObjectInputStream input;
     private String path;
 
     public FileHandler() {
