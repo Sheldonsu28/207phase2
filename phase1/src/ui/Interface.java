@@ -1,13 +1,14 @@
 package ui;
 
 import atm.BankManager;
+import atm.FileHandler;
 import atm.User;
 
 import java.util.Scanner;
 
 public class Interface {
     private Scanner response = new Scanner(System.in);
-    BankManager newBankManager = new BankManager();
+    BankManager newBankManager = new BankManager(new FileHandler());
     boolean goBack;
     private boolean exit;
 

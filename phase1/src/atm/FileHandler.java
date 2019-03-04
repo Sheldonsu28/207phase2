@@ -66,6 +66,7 @@ public class FileHandler implements Observer {
    public void saveTo(String filename,String contents){
         ArrayList<String> content;
         File file = new File(path + filename);
+
         if (file.exists()){
             try {
                 content = readFrom(filename);
@@ -89,7 +90,8 @@ public class FileHandler implements Observer {
             }
 
         }
-    }
+
+   }
 
     /**
      * Reads the file that filename designates. If file not exist, return null.
@@ -103,6 +105,7 @@ public class FileHandler implements Observer {
             while (scanner.hasNext()) {
                 content.add(scanner.nextLine());
             }
+            scanner.close();
         }catch(FileNotFoundException e){
             System.out.println("File not found, return null");
         }
