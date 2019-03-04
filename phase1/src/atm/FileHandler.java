@@ -106,4 +106,9 @@ public class FileHandler {
         }
         return content;
     }
+
+    public boolean checkFileExist(String filename){
+        File file = new File(path + filename);
+        return file.exists();
+    }
 }

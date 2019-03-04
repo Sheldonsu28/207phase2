@@ -62,4 +62,8 @@ public class User {
     public <T> ArrayList<T> getAccountListOfType(Class<T> klass) {
         return accountVaults.getAccountListOfType(klass);
     }
+
+    public String toString(){
+        return username;
+    }
 }
