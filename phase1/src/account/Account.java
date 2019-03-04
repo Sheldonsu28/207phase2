@@ -64,4 +64,8 @@ public abstract class Account implements Serializable {
     }
 
     public abstract double getNetBalance();
+
+    public String toString(){
+        return "This account is owned by " + this.getOwner() + ", " + "ID: " + this.getId() + '.' + " Balance: " + this.getBalance();
+    }
 }
