@@ -86,4 +86,9 @@ class CashHandler extends Observable {
             notifyObservers(new String[]{"alert.txt", alertMsg.toString()});
         }
     }
+
+    public String toString(){
+        return String.format("Five dollar: %s\nTen dollar: %s\nTwenty dollar: %s\nTotal amount: %s\nCurrency: %s",
+                cashStock.get(5), cashStock.get(10),cashStock.get(20),getAmount(), currency);
+    }
 }
