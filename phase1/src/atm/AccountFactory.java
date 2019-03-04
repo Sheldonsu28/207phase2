@@ -23,7 +23,7 @@ public final class AccountFactory implements Serializable {
         }
 
         if (account != null) {
-            owner.addAccount(accountType, account);
+            owner.addAccount(account);
 
             if (containsInterface(accountType, Growable.class))
                 time.addObserver((Observer) account);

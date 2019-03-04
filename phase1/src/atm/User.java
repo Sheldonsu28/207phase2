@@ -42,8 +42,8 @@ public class User {
     }
 
 
-    <T> void addAccount(Class<T> klass, T account) {
-        accountVaults.addAccount(klass, account);
+    <T extends Account> void addAccount(T account) {
+        accountVaults.addAccount(account);
     }
 
     //  TODO test required

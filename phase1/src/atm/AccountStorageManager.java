@@ -14,8 +14,10 @@ public class AccountStorageManager {
         accountMapByType = new HashMap<>();
     }
 
-    public <T> void addAccount(Class<T> klass, T account) {
+    public <T extends Account> void addAccount(T account) {
+        Class klass = account.getClass();
         add(klass, account);
+
         Class parent = klass.getSuperclass();
 
         while (!parent.equals(Object.class)) {
@@ -23,6 +25,7 @@ public class AccountStorageManager {
             parent = parent.getSuperclass();
         }
 
+        // FIXME Implementation from superclass IS NOT acquired !!!!!
         Class[] interfaces = klass.getInterfaces();
 
         for (Class c : interfaces)
@@ -42,6 +45,9 @@ public class AccountStorageManager {
 
     public <T> ArrayList<T> getAccountListOfType(Class<T> klass) {
         ArrayList<T> result = new ArrayList<>();
+
+        if (!accountMapByType.containsKey(klass))
+            return result;
 
         for (Object obj : accountMapByType.get(klass))
             result.add(klass.cast(obj));
