@@ -11,7 +11,7 @@ public class Interface {
     boolean goBack;
     private boolean exit;
 
-    void activateInterface() {
+    public void activateInterface() {
         while (!exit) {
             //Welcome page
             String intent = welcomePage();

@@ -11,6 +11,8 @@ public class BankManager implements Observer, Serializable {
     private List<AtmMachine> machineList;
     private AccountFactory accountFactory;
     private UserDatabase userDatabase;
+    private boolean hasLoggedin;
+    private String username, password;
     private RandomPasswordGenerator passwordGenerator;
 
     private boolean hasInitialized;
@@ -20,6 +22,9 @@ public class BankManager implements Observer, Serializable {
         userDatabase = new UserDatabase();
         accountFactory = new AccountFactory();
         hasInitialized = false;
+        hasLoggedin = false;
+        username = "admin";
+        password = "CS207fun";
         passwordGenerator = new RandomPasswordGenerator(12, 24,
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()");
     }
@@ -32,9 +37,27 @@ public class BankManager implements Observer, Serializable {
         hasInitialized = true;
     }
 
+    public boolean hasInitialized() {
+        return hasInitialized;
+    }
+
+    public void login(String username, String password) throws WrongPasswordException, UserNotExistException {
+        if (username.equals(this.username)) {
+            if (password.equals(this.password))
+                hasLoggedin = true;
+            else
+                throw new WrongPasswordException(username);
+        } else {
+            throw new UserNotExistException(username);
+        }
+    }
+
     private void checkState() {
         if (!hasInitialized)
             throw new IllegalStateException("Manager not yet initialized!");
+
+        if (!hasLoggedin)
+            throw new IllegalStateException("This manager is not loggedin yet!");
     }
 
 
