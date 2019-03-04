@@ -99,7 +99,7 @@ public class ChequingAccountTest {
         testDeposit();
         chequingAccount.cancelDeposit(50);
 
-        assertEquals(0, chequingAccount.getNetBalance(), 0.0);
+        assertEquals(0, chequingAccount.getBalance(), 0.0);
     }
 
 }
