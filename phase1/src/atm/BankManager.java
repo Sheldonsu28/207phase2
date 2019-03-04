@@ -6,7 +6,7 @@ import transaction.Transaction;
 import java.io.Serializable;
 import java.util.*;
 
-public class BankManager implements Observer, Serializable {
+public class BankManager implements Serializable {
     private AtmTime commonTime;
     private List<AtmMachine> machineList;
     private AccountFactory accountFactory;
@@ -70,7 +70,7 @@ public class BankManager implements Observer, Serializable {
         initialStock.put(20, 500);
         initialStock.put(50, 500);
 
-        AtmMachine machine = new AtmMachine(this, initialStock);
+        AtmMachine machine = new AtmMachine(commonTime, initialStock, new StepCashDistributor());
         machineList.add(machine);
         return machine;
     }
@@ -121,11 +121,6 @@ public class BankManager implements Observer, Serializable {
         }
 
         return false;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-
     }
 
 }

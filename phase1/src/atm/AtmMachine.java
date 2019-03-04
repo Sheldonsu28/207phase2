@@ -1,14 +1,19 @@
 package atm;
 
-
 import java.util.TreeMap;
 
 public class AtmMachine {
-    private BankManager manager;
     private CashHandler cashHandler;
+    private CashDistributor cashDistributor;
+    private AtmTime time;
 
-    AtmMachine(BankManager manager, TreeMap<Integer, Integer> initialStock) {
-        this.manager = manager;
-        cashHandler = new CashHandler(manager, initialStock, Currency.CAD, 20);
+    AtmMachine(AtmTime time, TreeMap<Integer, Integer> initialStock, CashDistributor distributor) {
+        this.time = time;
+        cashHandler = new CashHandler(time, initialStock, Currency.CAD, 20, distributor);
     }
+
+    public void reduceStock(int amount) {
+
+    }
+
 }

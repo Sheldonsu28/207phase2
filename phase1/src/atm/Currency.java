@@ -23,4 +23,5 @@ public enum Currency {
     double convertFromUSD(double amount) {
         return Double.parseDouble(decimalFormat.format(amount / rateToUsd));
     }
+
 }

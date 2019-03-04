@@ -2,12 +2,14 @@ package atm;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Scanner;
 
 /**
  * This class is responsible for handling that need to be save to files outside.
  */
-public class FileHandler {
+public class FileHandler implements Observer {
     private String path;
 
     public FileHandler() {
@@ -110,5 +112,12 @@ public class FileHandler {
     public boolean checkFileExist(String filename){
         File file = new File(path + filename);
         return file.exists();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        String[] args = (String[]) arg;
+
+        saveTo(args[0], args[1]);
     }
 }
