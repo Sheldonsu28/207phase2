@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  * This class is responsible for handling that need to be save to files outside.
  */
-public class FileHandler implements Observer {
+public class FileHandler implements Observer, Serializable {
     private String path;
 
     public FileHandler() {
@@ -45,12 +45,13 @@ public class FileHandler implements Observer {
     public BankManager readManagerData() {
         BankManager information = null;
         try {
-            FileInputStream fileRead = new FileInputStream(path);
+            FileInputStream fileRead = new FileInputStream(path + "BankData.txt");
             ObjectInputStream input = new ObjectInputStream(fileRead);
             information = (BankManager) input.readObject();
             fileRead.close();
             input.close();
         } catch (IOException a) {
+            a.printStackTrace();
             System.out.println("There is a problem when reading the file, file information failed to load.");
         } catch (ClassNotFoundException e) {
             System.out.println("The require classes is not found");

@@ -3,10 +3,12 @@ package atm;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class FileHandlerTest {
     private FileHandler fileHandler;
@@ -31,16 +33,25 @@ public class FileHandlerTest {
         assertEquals(content2, fileHandler.readFrom(filename).get(1));
     }
 
+    @Test
+    public void testBankManagerSerialize() {
+        BankManager manager = Mockito.mock(BankManager.class);
+
+        fileHandler.saveManagerData(manager);
+
+        BankManager retrivedManager = fileHandler.readManagerData();
+
+        assertNotNull(retrivedManager);
+    }
+
     @After
     public void after() {
         File[] files = (new File(path)).listFiles();
 
         if (files != null) {
             for (File file : files) {
-                if (file.getName().contains("test")) {
-                    if (!file.delete())
-                        throw new IllegalStateException("Failed to delete test file: " + file.getAbsolutePath());
-                }
+                if (!file.delete())
+                    throw new IllegalStateException("Failed to delete test file: " + file.getAbsolutePath());
             }
         }
     }
