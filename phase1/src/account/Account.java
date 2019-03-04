@@ -4,6 +4,7 @@ import atm.User;
 import transaction.Transaction;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public abstract class Account implements Serializable {
         prev_id++;
         timeCreated = time;
         balance = 0.0;
+        transactions = new ArrayList<>();
         this.owner = owner;
     }
 

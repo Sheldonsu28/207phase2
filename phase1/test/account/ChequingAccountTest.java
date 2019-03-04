@@ -1,93 +1,105 @@
 package account;
+
 import atm.User;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
+import org.mockito.Mockito;
+import transaction.DepositTransaction;
+import transaction.Transaction;
 import transaction.WithdrawTransaction;
-import static org.junit.Assert.assertTrue;
+
 import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class ChequingAccountTest {
 
     private Date time;
-    private double initialBalance;
+    private User owner;
+    private Transaction register;
+    private ChequingAccount chequingAccount;
 
     @Before
-    public void setup(){
+    public void setup() {
         time = new Date();
-        initialBalance = 0;
+        owner = Mockito.mock(User.class);
     }
-
-    @Mock
-    protected User owner;
-    WithdrawTransaction register;
 
 
     @Test
-    public void testDebtLimitExceededException(){
-        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-        int amount = 1000;
-        double amount1 = 1000;
-        try { chequingAccount.withdraw(amount1, register);
-        } catch (DebtLimitExceededException d){
+    public void testDebtLimitExceededException() {
+        chequingAccount = new ChequingAccount(time, owner, 0);
+        register = Mockito.mock(WithdrawTransaction.class);
+
+        try {
+            chequingAccount.withdraw(1000, register);
+        } catch (DebtLimitExceededException d) {
             d.printStackTrace();
         } catch (Exception e) {
-            throw new AssertionError();
+            e.printStackTrace();
+            throw new AssertionError("Incorrect exception thrown!");
         }
     }
 
     @Test
     public void testInsufficientFundException() {
-        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-        int amount = 50;
+        chequingAccount = new ChequingAccount(time, owner, -0.5);
+        register = Mockito.mock(WithdrawTransaction.class);
+
         try {
-            chequingAccount.withdraw(amount, register);
-        } catch (InsufficientFundException d) {
-            d.printStackTrace();
+            chequingAccount.withdraw(50, register);
+        } catch (InsufficientFundException i) {
+            i.printStackTrace();
         } catch (Exception e) {
-            throw new AssertionError();
+            e.printStackTrace();
+            throw new AssertionError("Incorrect exception thrown!");
         }
     }
 
     @Test
-    public void testWithdrawal() throws WithdrawException {
-        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-        int amount = 50;
-        double amount1 = 50;
-        chequingAccount.withdraw(amount1, register);
-        double balance = chequingAccount.getNetBalance();
-        assertTrue(balance == -50);
+    public void testWithdrawal() {
+        chequingAccount = new ChequingAccount(time, owner, 0);
+        register = Mockito.mock(WithdrawTransaction.class);
+
+        int withdrawAmount = 50;
+
+        try {
+            chequingAccount.withdraw(withdrawAmount, register);
+        } catch (WithdrawException e) {
+            e.printStackTrace();
+            throw new AssertionError("Incorrect exception thrown!");
+        }
+
+        assertEquals(-withdrawAmount, chequingAccount.getBalance(), 0.0);
     }
 
     @Test
-    public void testDeposit(){
-        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-        int amount1 = 50;
-        chequingAccount.deposit(amount1, register);
-        double balance = chequingAccount.getNetBalance();
-        assertTrue(balance == 50);
-    }
+    public void testCancelWithdrawal() {
+        testWithdrawal();
 
+        chequingAccount.cancelWithdraw(50);
 
-    @Test
-    public void testCancelWithdrawal() throws WithdrawException {
-        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-        int amount1 = 50;
-        chequingAccount.cancelWithdraw(amount1);
-        double balance = chequingAccount.getNetBalance();
-        assertTrue(balance == 50);
+        assertEquals(0, chequingAccount.getBalance(), 0.0);
     }
 
     @Test
-    public void testCancelDeposit(){
-        ChequingAccount chequingAccount = new ChequingAccount(time, owner, initialBalance);
-        int amount1 = 50;
-        chequingAccount.cancelDeposit(amount1);
-        double balance = chequingAccount.getNetBalance();
-        assertTrue(balance == -50);
+    public void testDeposit() {
+        chequingAccount = new ChequingAccount(time, owner, 0);
+        register = Mockito.mock(DepositTransaction.class);
+
+        int depositAmount = 50;
+
+        chequingAccount.deposit(depositAmount, register);
+        assertEquals(depositAmount, chequingAccount.getBalance(), 0.0);
     }
 
+    @Test
+    public void testCancelDeposit() {
+        testDeposit();
+        chequingAccount.cancelDeposit(50);
 
+        assertEquals(0, chequingAccount.getNetBalance(), 0.0);
+    }
 
 }

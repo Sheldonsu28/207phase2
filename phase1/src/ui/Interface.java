@@ -1,7 +1,7 @@
 package ui;
-import atm.User;
+
 import atm.BankManager;
-import com.sun.xml.internal.bind.v2.TODO;
+import atm.User;
 
 import java.util.Scanner;
 
