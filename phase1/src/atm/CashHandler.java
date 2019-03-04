@@ -1,9 +1,6 @@
 package atm;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Observable;
-import java.util.TreeMap;
+import java.util.*;
 
 class CashHandler extends Observable {
     private TreeMap<Integer, Integer> cashStock;
@@ -60,5 +57,10 @@ class CashHandler extends Observable {
     // TODO test required
     void sendAlert() {
 
+    }
+
+    public String toString(){
+        return String.format("Five dollar: %s\nTen dollar: %s\nTwenty dollar: %s\nTotal amount: %s\nCurrency: %s",
+                cashStock.get(5), cashStock.get(10),cashStock.get(20),getAmount(), currency);
     }
 }
