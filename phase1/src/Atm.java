@@ -4,13 +4,14 @@ import ui.Interface;
 
 public class Atm {
     public static void main(String[] args) {
-        Interface mainInterface = new Interface();
         FileHandler fileHandler = new FileHandler();
-
         BankManager manager = fileHandler.readManagerData();
 
-        //  TODO manager needs to be passed?
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> fileHandler.saveManagerData(manager)));
 
+
+        //  TODO interface main invoke
+        Interface mainInterface = new Interface();
         mainInterface.activateInterface();
     }
 }
