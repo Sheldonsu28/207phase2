@@ -11,13 +11,15 @@ public class BankManager implements Serializable {
     private List<AtmMachine> machineList;
     private AccountFactory accountFactory;
     private UserDatabase userDatabase;
+    private FileHandler fileHandler;
     private boolean hasLoggedin;
     private String username, password;
     private RandomPasswordGenerator passwordGenerator;
 
     private boolean hasInitialized;
 
-    public BankManager() {
+    public BankManager(FileHandler fileHandler) {
+        this.fileHandler = fileHandler;
         machineList = new ArrayList<>();
         userDatabase = new UserDatabase();
         accountFactory = new AccountFactory();
@@ -70,7 +72,7 @@ public class BankManager implements Serializable {
         initialStock.put(20, 500);
         initialStock.put(50, 500);
 
-        AtmMachine machine = new AtmMachine(commonTime, initialStock, new StepCashDistributor());
+        AtmMachine machine = new AtmMachine(commonTime, fileHandler, initialStock, new StepCashDistributor());
         machineList.add(machine);
         return machine;
     }

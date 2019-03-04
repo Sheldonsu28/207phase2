@@ -2,6 +2,7 @@ package atm;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.TreeMap;
 
@@ -9,19 +10,21 @@ class CashHandler extends Observable {
     private TreeMap<Integer, Integer> cashStock;
     private Currency currency;
     private int alertLevel;
+    private AtmTime time;
     private CashDistributor cashDistributor;
 
-    CashHandler(BankManager manager, TreeMap<Integer, Integer> cashStock, Currency currency, int alertLevel) {
+    CashHandler(AtmTime time, FileHandler fileHandler, TreeMap<Integer, Integer> cashStock, Currency currency,
+                int alertLevel, CashDistributor distributor) {
         this.currency = currency;
         this.alertLevel = alertLevel;
         this.cashStock = new TreeMap<>();
-        cashDistributor = new StepCashDistributor();
+        this.time = time;
+        cashDistributor = distributor;
 
-        for (int key : cashStock.keySet()) {
+        for (int key : cashStock.keySet())
             this.cashStock.put(key, cashStock.get(key));
-        }
 
-        addObserver(manager);
+        addObserver(fileHandler);
     }
 
     Currency getCurrency() {
@@ -32,8 +35,13 @@ class CashHandler extends Observable {
         return cashStock.size();
     }
 
-    int getAmount() {
-        return cashStock.get(5) * 5 + cashStock.get(10) * 10 + cashStock.get(20) * 20 + cashStock.get(50) * 50;
+    int getTotalBalance() {
+        int balance = 0;
+
+        for (Entry<Integer, Integer> entry : cashStock.entrySet())
+            balance += entry.getKey() * entry.getValue();
+
+        return balance;
     }
 
     Map<Integer, Integer> getCashStock() {
@@ -45,20 +53,37 @@ class CashHandler extends Observable {
         if (amount % 5 != 0)
             throw new IllegalArgumentException("Can't produce amount that is not a multiplier of 5!");
 
-        if (getAmount() < amount)
+        if (getTotalBalance() < amount)
             throw new InsufficientStockException(this);
 
         TreeMap<Integer, Integer> take = cashDistributor.distribute(cashStock, amount);
 
-        for (Map.Entry<Integer, Integer> entry : take.entrySet())
+        for (Entry<Integer, Integer> entry : take.entrySet())
             cashStock.put(entry.getKey(), cashStock.get(entry.getKey()) - entry.getValue());
+
+        stockCheck();
 
         return take;
     }
 
-    // TODO to be implemented
     // TODO test required
-    void sendAlert() {
+    public void stockCheck() {
+        StringBuilder alertMsg = new StringBuilder(time + "\tStock shortage: ");
+        boolean hasAlert = false;
 
+        for (Entry<Integer, Integer> entry : cashStock.entrySet()) {
+            int type = entry.getKey();
+            int stock = entry.getValue();
+
+            if (stock < alertLevel) {
+                hasAlert = true;
+                alertMsg.append(String.format("$%d: %d left\t", type, stock));
+            }
+        }
+
+        if (hasAlert) {
+            setChanged();
+            notifyObservers(new String[]{"alert.txt", alertMsg.toString()});
+        }
     }
 }
