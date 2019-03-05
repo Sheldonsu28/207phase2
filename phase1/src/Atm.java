@@ -11,7 +11,7 @@ public class Atm {
 
 
         //  TODO interface main invoke
-        Interface mainInterface = new Interface();
+        Interface mainInterface = new Interface(manager);
         mainInterface.activateInterface();
     }
 }
