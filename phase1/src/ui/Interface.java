@@ -1,25 +1,64 @@
 package ui;
 
-import atm.BankManager;
-import atm.FileHandler;
-import atm.User;
+import account.Withdrawable;
+import atm.*;
+import account.Account;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Interface {
     private Scanner response = new Scanner(System.in);
-    BankManager newBankManager = new BankManager(new FileHandler());
+    private BankManager bankManager;
     boolean goBack;
     private boolean exit;
 
+    public Interface(BankManager m) {
+        bankManager = m;
+    }
+
     public void activateInterface() {
+        if (!bankManager.hasInitialized()) {
+            boolean initialized = false;
+            boolean setDate = false;
+
+            //initialize page
+            while (!initialized) {
+                String[] logInfo = initializePage().split(",");
+                try {
+                    bankManager.login(logInfo[0], logInfo[1]);
+                    System.out.println("Enter Time: yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                    while (!setDate) {
+                        try {
+                            Date date = format.parse(response.nextLine());
+                            bankManager.initialize(date);
+                            setDate = true;
+                        } catch (ParseException e) {
+                            System.out.println("Incorrect format. Try again");
+                        }
+                    }
+                    initialized = true;
+                } catch (WrongPasswordException e) {
+                    System.out.println("The password doesn't match. Try again.");
+                } catch (UserNotExistException i) {
+                    System.out.println("The user doesn't exist. Try again");
+                }
+            }
+
+        }
+
         while (!exit) {
             //Welcome page
             String intent = welcomePage();
 
             if (intent.equals("yes")) {
                 String[] currUser = signInPage().split(",");
-                User user = newBankManager.validateLogin(currUser[0], currUser[1]);
+                //what if incorrect info
+                User user = bankManager.validateLogin(currUser[0], currUser[1]);
 
                 if (user != null) {
                     Outer:
@@ -36,7 +75,7 @@ public class Interface {
                                     String moneyAmount = amountPage();
                                 }
                             case "2":
-                                String withdrawAccount = withdrawPage();
+                                String withdrawAccount = withdrawPage(user);
                             case "3":
                                 String transferAccount = transferPage();
                             case "4":
@@ -49,6 +88,18 @@ public class Interface {
             }
         }
     }
+
+    //TODO different User has different amount accounts
+    //initialize page
+    private String initializePage() {
+        System.out.println("Initialize Page");
+        System.out.println("Enter username:");
+        String userName = response.nextLine();
+        System.out.println("Enter password:");
+        String password = response.nextLine();
+        return userName+","+password;
+    }
+
 
     private String welcomePage() {
         System.out.println("welcome");
@@ -108,12 +159,15 @@ public class Interface {
     }
 
     //withdraw
-    private String withdrawPage() {
-        System.out.println("Select a account\n" +
-                "SAVINGS ACCOUNT\t1\n" +
-                "CHEQUING ACCOUNT\t2\n" +
-                "Previous\t-1\n" +
-                "Homepage\t0\n");
+    private String withdrawPage(User u) {
+        System.out.println("Select a account\n");
+        ArrayList withdrawableAccounts = u.getAccountListOfType(Withdrawable.class);
+        int idx = 1;
+        for (Object obj : withdrawableAccounts) {
+            System.out.println(obj + Integer.toString(idx));
+            idx += 1;
+        }
+        System.out.println("Previous\t-1\n" + "Homepage\t0\n");
         return response.nextLine();
     }
 
@@ -126,6 +180,7 @@ public class Interface {
         return response.nextLine();
     }
 
+    //what's is transferable accounts
     private String transferFromPage() {
         System.out.println("Select a account\n" +
                 "SAVINGS ACCOUNT\t1\n" +
@@ -162,6 +217,29 @@ public class Interface {
                 "Homepage\t0\n");
         return response.nextLine();
     }
+
+    private String accountBalancePage() {
+        System.out.println("Select account\n" +
+                "SAVINGS ACCOUNT\t1\n" +
+                "CHEQUING ACCOUNT\t2\n" +
+                "LINE OF CREDIT ACCOUNT\t3\n" +
+                "CREDIT CARDS ACCOUNT" +
+                "Previous\t-1\n" +
+                "Homepage\t0\n");
+        return response.nextLine();
+    }
+
+    private String creationDatePage() {
+        System.out.println("Select account\n" +
+                "SAVINGS ACCOUNT\t1\n" +
+                "CHEQUING ACCOUNT\t2\n" +
+                "LINE OF CREDIT ACCOUNT\t3\n" +
+                "CREDIT CARDS ACCOUNT" +
+                "Previous\t-1\n" +
+                "Homepage\t0\n");
+        return response.nextLine();
+    }
+
 
 
 //    public static void main(String[] args) {
