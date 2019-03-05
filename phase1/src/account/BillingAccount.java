@@ -23,12 +23,16 @@ public class BillingAccount extends Account {
         return balance;
     }
 
+    public String getId() {
+        return "BILL" + super.getId();
+    }
+
     public String getPayeeName() {
         return payeeName;
     }
 
     // TODO test
-    public void receivePay(int amount, Transaction register) {
+    public void receivePay(double amount, Transaction register) {
         balance += amount;
 
         registerTransaction(register);

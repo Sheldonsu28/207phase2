@@ -3,17 +3,16 @@ package atm;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Observable;
 import java.util.TreeMap;
 
-class CashHandler extends Observable {
+class CashHandler {
     private TreeMap<Integer, Integer> cashStock;
     private Currency currency;
     private int alertLevel;
     private AtmTime time;
     private CashDistributor cashDistributor;
 
-    CashHandler(AtmTime time, FileHandler fileHandler, TreeMap<Integer, Integer> cashStock, Currency currency,
+    CashHandler(AtmTime time, TreeMap<Integer, Integer> cashStock, Currency currency,
                 int alertLevel, CashDistributor distributor) {
         this.currency = currency;
         this.alertLevel = alertLevel;
@@ -23,8 +22,6 @@ class CashHandler extends Observable {
 
         for (int key : cashStock.keySet())
             this.cashStock.put(key, cashStock.get(key));
-
-        addObserver(fileHandler);
     }
 
     Currency getCurrency() {
@@ -88,13 +85,11 @@ class CashHandler extends Observable {
             }
         }
 
-        if (hasAlert) {
-            setChanged();
-            notifyObservers(new String[]{"alert.txt", alertMsg.toString()});
-        }
+        if (hasAlert)
+            (new FileHandler()).saveTo("alert.txt", alertMsg.toString());
     }
 
-    public String toString(){
+    public String toString() {
         return String.format("Five dollar: %s\nTen dollar: %s\nTwenty dollar: %s\nTotal amount: %s\nCurrency: %s",
                 cashStock.get(5), cashStock.get(10), cashStock.get(20), getTotalBalance(), currency);
     }

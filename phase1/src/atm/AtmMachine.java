@@ -8,12 +8,12 @@ public class AtmMachine {
     private static int prev_id = 0;
     private final String id;
 
-    AtmMachine(AtmTime time, FileHandler fileHandler, TreeMap<Integer, Integer> initialStock,
+    AtmMachine(AtmTime time, TreeMap<Integer, Integer> initialStock,
                CashDistributor distributor) {
         this.time = time;
         id = String.format("ATM%04d", prev_id);
         prev_id++;
-        cashHandler = new CashHandler(time, fileHandler, initialStock, Currency.CAD, 20, distributor);
+        cashHandler = new CashHandler(time, initialStock, Currency.CAD, 20, distributor);
     }
 
     public String toString() {

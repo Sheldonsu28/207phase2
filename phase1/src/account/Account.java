@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//  TODO implement toString and comparison
 public abstract class Account implements Serializable {
     private final Date timeCreated;
     private final String id;
@@ -70,6 +69,6 @@ public abstract class Account implements Serializable {
     public abstract double getNetBalance();
 
     public String toString(){
-        return String.format("Owner: %s, ID: %s, Date Created: %s, Balance: %s", owner, id, timeCreated, balance);
+        return String.format("Owner: %s, ID: %s, Date Created: %s, Balance: %s", owner, getId(), timeCreated, balance);
     }
 }

@@ -1,16 +1,18 @@
 package transaction;
 
+import account.Account;
 import account.BillingAccount;
 import account.WithdrawException;
 import account.Withdrawable;
+import atm.FileHandler;
 import atm.User;
 
 public class PayBillTransaction extends IntraUserTransaction {
-    private final int payAmount;
+    private final double payAmount;
     private final BillingAccount payee;
     private final Withdrawable payer;
 
-    PayBillTransaction(User from, Withdrawable payer, BillingAccount payee, int amount) {
+    PayBillTransaction(User from, Withdrawable payer, BillingAccount payee, double amount) {
         super(from);
 
         if (amount < 0)
@@ -25,14 +27,18 @@ public class PayBillTransaction extends IntraUserTransaction {
     protected boolean doPerform() {
         try {
             payer.withdraw(payAmount, this);
-        } catch (WithdrawException exception) {
-
-            // TODO exception handling & passing message
-
+        } catch (WithdrawException e) {
+            System.out.println(e.getMessage());
             return false;
         }
 
         payee.receivePay(payAmount, this);
+
+        String msg = String.format("%s received $%.2f payment from %s",
+                payee.getId(), payAmount, ((Account) payer).getId());
+
+        (new FileHandler()).saveTo("outgoing.txt", msg);
+
         return true;
     }
 
