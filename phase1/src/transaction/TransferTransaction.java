@@ -12,6 +12,10 @@ public class TransferTransaction extends IntraUserTransaction {
 
     public TransferTransaction(User user, Withdrawable fromAccount, Depositable toAccount, int amount) {
         super(user);
+
+        if (amount < 0)
+            throw new IllegalArgumentException("Not allowed to transfer negative amount: " + amount);
+
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
         this.transferAmount = amount;

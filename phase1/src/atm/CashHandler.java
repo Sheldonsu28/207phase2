@@ -48,6 +48,13 @@ class CashHandler extends Observable {
         return Collections.unmodifiableMap(cashStock);
     }
 
+    void storeCashStock(TreeMap<Integer, Integer> stock) {
+        for (int type : stock.keySet()) {
+            if (cashStock.containsKey(type))
+                cashStock.put(type, cashStock.get(type) + stock.get(type));
+        }
+    }
+
     // TODO test required
     TreeMap<Integer, Integer> takeAmountOfCash(int amount) throws InsufficientStockException, CashShortageException {
         if (amount % 5 != 0)

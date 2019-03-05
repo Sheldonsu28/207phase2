@@ -13,6 +13,9 @@ public class PayBillTransaction extends IntraUserTransaction {
     PayBillTransaction(User from, Withdrawable payer, BillingAccount payee, int amount) {
         super(from);
 
+        if (amount < 0)
+            throw new IllegalArgumentException("Not allowed to pay negative amount: " + amount);
+
         payAmount = amount;
         this.payee = payee;
         this.payer = payer;

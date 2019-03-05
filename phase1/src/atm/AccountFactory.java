@@ -19,14 +19,17 @@ public final class AccountFactory implements Serializable {
             account = defaultConstructor.newInstance(time.getCurrentTime(), owner);
         } catch (NoSuchMethodException | InstantiationException |
                 IllegalAccessException | InvocationTargetException e) {
+            System.out.println("Failed to create account");
             e.printStackTrace();
         }
 
         if (account != null) {
             owner.addAccount(account);
 
-            if (containsInterface(accountType, Growable.class))
+            if (account instanceof Growable)
                 time.addObserver((Observer) account);
+
+            //  time-related class can have their observer hook here
 
             return true;
         }
@@ -34,14 +37,14 @@ public final class AccountFactory implements Serializable {
         return false;
     }
 
-    private boolean containsInterface(Class original, Class targetInterface) {
-        Class[] interfaces = original.getInterfaces();
-
-        for (Class klass : interfaces) {
-            if (klass == targetInterface)
-                return true;
-        }
-
-        return false;
-    }
+//    private boolean containsInterface(Class original, Class targetInterface) {
+//        Class[] interfaces = original.getInterfaces();
+//
+//        for (Class klass : interfaces) {
+//            if (klass == targetInterface)
+//                return true;
+//        }
+//
+//        return false;
+//    }
 }

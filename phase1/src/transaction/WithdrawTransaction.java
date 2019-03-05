@@ -2,29 +2,49 @@ package transaction;
 
 import account.WithdrawException;
 import account.Withdrawable;
+import atm.AtmMachine;
+import atm.CashShortageException;
+import atm.InsufficientStockException;
 import atm.User;
+
+import java.util.TreeMap;
 
 public class WithdrawTransaction extends IntraUserTransaction {
     private final int withdrawAmount;
     private final Withdrawable targetAccount;
+    private final AtmMachine machine;
+    private TreeMap<Integer, Integer> stock;
 
-    public WithdrawTransaction(User user, Withdrawable account, int amount) {
+    public WithdrawTransaction(User user, AtmMachine machine, Withdrawable account, int amount) {
         super(user);
+
+        if (amount < 0)
+            throw new IllegalArgumentException("Not allowed to withdraw negative amount: " + amount);
+
         withdrawAmount = amount;
         targetAccount = account;
+        this.machine = machine;
+        stock = null;
     }
 
     @Override
     protected boolean doPerform() {
         try {
             targetAccount.withdraw(withdrawAmount, this);
-            return true;
-        } catch (WithdrawException exception) {
-
-            // TODO exception handling & passing message
-
+        } catch (WithdrawException e) {
+            System.out.println(e.getMessage());
             return false;
         }
+
+        try {
+            stock = machine.reduceStock(withdrawAmount);
+        } catch (InsufficientStockException | CashShortageException e) {
+            System.out.println(e.getMessage());
+            targetAccount.cancelWithdraw(withdrawAmount);
+            return false;
+        }
+
+        return true;
     }
 
     @Override

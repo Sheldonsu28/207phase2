@@ -15,14 +15,10 @@ public abstract class Account implements Serializable {
     private final User owner;
     private static int prev_id = 0;
     double balance;
-    List<Transaction> transactions;
-
-    private Account() {
-        throw new IllegalStateException("Account must be registered with an initial time");
-    }
+    private List<Transaction> transactions;
 
     Account(Date time, User owner) {
-        id = String.format("A%04d", prev_id);
+        id = String.format("ACC%04d", prev_id);
         prev_id++;
         timeCreated = time;
         balance = 0.0;
@@ -60,7 +56,15 @@ public abstract class Account implements Serializable {
     }
 
     public Transaction getLastTransaction() {
-        return transactions.get(transactions.size() - 1);
+
+        for (int index = transactions.size() - 1; index >= 0; index--) {
+            Transaction transaction = transactions.get(index);
+
+            if (!transaction.isCancelled())
+                return transaction;
+        }
+
+        return null;
     }
 
     public abstract double getNetBalance();

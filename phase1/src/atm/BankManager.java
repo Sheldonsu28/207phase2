@@ -117,7 +117,7 @@ public class BankManager implements Serializable {
     public boolean cancelLastTransaction(Account targetAccount) {
         Transaction transaction = targetAccount.getLastTransaction();
 
-        if (transaction.isCancellable()) {
+        if (transaction != null && transaction.isCancellable()) {
             transaction.cancel();
             return true;
         }

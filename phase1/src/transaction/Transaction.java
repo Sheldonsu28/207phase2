@@ -10,7 +10,7 @@ public abstract class Transaction {
     Transaction() {
         performed = false;
         cancelled = false;
-        id = String.format("T%04d", prev_id);
+        id = String.format("TRA%04d", prev_id);
         prev_id++;
     }
 
