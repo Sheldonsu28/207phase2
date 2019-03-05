@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-//  TODO this needs heavy testing
 public class AccountStorageManager {
     private Map<Class, ArrayList<Object>> accountMapByType;
 
@@ -22,10 +21,13 @@ public class AccountStorageManager {
 
         while (!parent.equals(Object.class)) {
             add(parent, account);
+
+            for (Class c : parent.getInterfaces())
+                add(c, account);
+
             parent = parent.getSuperclass();
         }
 
-        // FIXME Implementation from superclass IS NOT acquired !!!!!
         Class[] interfaces = klass.getInterfaces();
 
         for (Class c : interfaces)

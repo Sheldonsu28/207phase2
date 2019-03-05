@@ -36,6 +36,5 @@ public class AccountStorageManagerTest {
         assertTrue(vaults.getAccountListOfType(Withdrawable.class).containsAll(Arrays.asList(ca, sa, lca)));
         assertTrue(vaults.getAccountListOfType(Indebtable.class).containsAll(Arrays.asList(ca, lca, cca)));
         assertTrue(vaults.getAccountListOfType(Growable.class).contains(sa));
-
     }
 }
