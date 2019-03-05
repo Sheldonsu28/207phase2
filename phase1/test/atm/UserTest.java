@@ -1,7 +1,6 @@
 package atm;
 
 import account.Account;
-import account.SavingsAccount;
 import org.junit.Before;
 import org.junit.Test;
 
