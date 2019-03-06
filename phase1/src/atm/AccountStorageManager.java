@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AccountStorageManager {
+final class AccountStorageManager {
     private Map<Class, ArrayList<Object>> accountMapByType;
 
     AccountStorageManager() {

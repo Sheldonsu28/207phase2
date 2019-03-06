@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Observer;
 
-public final class AccountFactory implements Serializable {
+final class AccountFactory implements Serializable {
 
     <T extends Account> boolean generateDefaultAccount(User owner, Class<T> accountType, AtmTime time) {
         T account = null;
@@ -37,14 +37,4 @@ public final class AccountFactory implements Serializable {
         return false;
     }
 
-//    private boolean containsInterface(Class original, Class targetInterface) {
-//        Class[] interfaces = original.getInterfaces();
-//
-//        for (Class klass : interfaces) {
-//            if (klass == targetInterface)
-//                return true;
-//        }
-//
-//        return false;
-//    }
 }

@@ -1,5 +1,6 @@
 package atm;
 
+import java.util.List;
 import java.util.TreeMap;
 
 public class AtmMachine {
@@ -14,6 +15,10 @@ public class AtmMachine {
         id = String.format("ATM%04d", prev_id);
         prev_id++;
         cashHandler = new CashHandler(time, initialStock, Currency.CAD, 20, distributor);
+    }
+
+    public List<Integer> getValidCashTypes() {
+        return cashHandler.getValidCashTypes();
     }
 
     public String toString() {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-public class UserDatabase implements Serializable {
+final class UserDatabase implements Serializable {
     private TreeMap<String, User> users;
 
     UserDatabase() {
