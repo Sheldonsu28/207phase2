@@ -23,9 +23,10 @@ public class Interface {
     }
 
     public void activateInterface() {
-        if (!bankManager.hasInitialized()) {
+        if (bankManager == null) {
             boolean initialized = false;
             boolean setDate = false;
+            bankManager = new BankManager();
 
             //initialize page
             while (!initialized) {
