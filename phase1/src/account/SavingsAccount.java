@@ -42,10 +42,11 @@ public class SavingsAccount extends AssetAccount implements Growable {
     /**
      * Constructs a savings account with given growth rate and date and initial balance
      *
-     * @param time       time of creation
-     * @param owner      owner user
-     * @param growthRate growth rate (must be positive)
-     * @param growthDay  growth day (must be 2-digit number in range 01 - 28)
+     * @param time           time of creation
+     * @param owner          owner user
+     * @param growthRate     growth rate (must be positive)
+     * @param growthDay      growth day (must be 2-digit number in range 01 - 28)
+     * @param initialBalance the initial balance of the account
      * @see Account#Account(Date, User, double)
      */
     SavingsAccount(Date time, User owner, double growthRate, String growthDay, double initialBalance) {
