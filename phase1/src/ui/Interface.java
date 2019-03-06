@@ -1,8 +1,14 @@
 package ui;
 
-import account.*;
-import atm.*;
-import transaction.*;
+import account.Account;
+import account.ChequingAccount;
+import account.Depositable;
+import account.Withdrawable;
+import atm.BankManager;
+import atm.User;
+import atm.UserNotExistException;
+import atm.WrongPasswordException;
+import transaction.Transaction;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -135,9 +141,9 @@ public class Interface {
             ArrayList depositableAccounts = u.getAccountListOfType(Depositable.class);
             for (Object obj: depositableAccounts) {
                 if (obj instanceof ChequingAccount) {
-                    DepositTransaction newDeposit = new DepositTransaction(user, obj, money);
+                    //DepositTransaction newDeposit = new DepositTransaction(user, obj, money);
                     //What to write (From) when its deposit
-                    if (confirmPage(,obj,money, newDeposit)) thankyouPage();
+                    //if (confirmPage(,obj,money, newDeposit)) thankyouPage();
                 }
              }
         }

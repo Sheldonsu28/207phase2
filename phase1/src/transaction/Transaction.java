@@ -26,15 +26,16 @@ public abstract class Transaction {
         return cancelled;
     }
 
-    public void perform() {
+    public boolean perform() {
         if (performed || cancelled)
             throw new IllegalStateException("You can not perform a transaction that has already been performed!");
 
-        if (doPerform())
-            performed = true;
+        performed = doPerform();
+
+        return performed;
     }
 
-    public void cancel() {
+    public boolean cancel() {
         if (!isCancellable())
             throw new IllegalStateException("Transaction not cancellable!");
 
@@ -44,8 +45,8 @@ public abstract class Transaction {
         if (cancelled)
             throw new IllegalStateException("You can not cancel a transaction that has already been cancelled!");
 
-        if (doCancel())
-            cancelled = true;
+        cancelled = doCancel();
+        return cancelled;
     }
 
     protected abstract boolean doPerform();
