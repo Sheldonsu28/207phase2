@@ -50,6 +50,8 @@ public class FileHandler implements Observer, Serializable {
             information = (BankManager) input.readObject();
             fileRead.close();
             input.close();
+        }catch(FileNotFoundException f){
+            System.out.println("File not found, read failed");
         } catch (IOException i) {
             System.out.println("There is a problem when reading the file, file information failed to load.");
             i.printStackTrace();

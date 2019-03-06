@@ -20,10 +20,10 @@ public class UserTest{
         user = new User("Test account", "csc207");
         user.addAccount(account);
         user.addAccount(account1);
-        when(account.getNetBalance()).thenReturn((double)20);
-        when(account1.getNetBalance()).thenReturn((double)40);
-        when(account.getBalance()).thenReturn((double)20);
-        when(account1.getBalance()).thenReturn((double) 40);
+        when(account.getNetBalance()).thenReturn(20.0);
+        when(account1.getNetBalance()).thenReturn(40.0);
+        when(account.getBalance()).thenReturn(20.0);
+        when(account1.getBalance()).thenReturn(40.0);
         when(account.getId()).thenReturn("id_1");
         when(account1.getId()).thenReturn("id_2");
 
@@ -31,7 +31,7 @@ public class UserTest{
 
     @Test
     public void getNetTotalTest() {
-        assertEquals((int) user.getNetTotal(), 60);
+        assertEquals(user.getNetTotal(), 60.0, 0.0);
     }
 
     @Test

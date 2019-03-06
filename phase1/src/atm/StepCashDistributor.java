@@ -7,7 +7,6 @@ import java.util.TreeMap;
 class StepCashDistributor extends CashDistributor {
 
     @Override
-        //  TODO this definitely needs test
     TreeMap<Integer, Integer> distribute(TreeMap<Integer, Integer> orgStock, int amount) throws CashShortageException {
         TreeMap<Integer, Integer> result = getInitializedResultMap(orgStock);
         int balance = amount;
