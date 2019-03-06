@@ -1,8 +1,6 @@
 package ui;
 
-import account.ChequingAccount;
-import account.Withdrawable;
-import account.Depositable;
+import account.*;
 import atm.*;
 import transaction.*;
 
@@ -70,19 +68,7 @@ public class Interface {
                         String action = homePage();
                         switch (action) {
                             case "1":
-                                String moneyType = depositMoneyTypePage();
-                                //TODO
-                                if (moneyType.equals("1")) {
-                                    continue;
-                                } else if (moneyType.equals("2")) {
-                                    String moneyAmount = amountPage();
-                                    int money = convertStr(moneyAmount);
-                                    ArrayList depositableAccounts = user.getAccountListOfType(Depositable.class);
-                                    //for (Object obj: depositableAccounts) {
-                                        //if (obj instanceof ChequingAccount)
-                                            //DepositTransaction newDeposit = new DepositTransaction(user, obj, money);
-                                    // }
-                                }
+                                depositMoneyTypePage(user);
                             case "2":
                                 String withdrawAccount = withdrawPage(user);
                             case "3":
@@ -135,19 +121,33 @@ public class Interface {
     }
 
     //deposit
-    private String depositMoneyTypePage() {
+    private void depositMoneyTypePage(User u) {
         System.out.println("Check\t1\n" +
                             "Cash\t2\n" +
                             "Previous\t-1\n" +
                             "Home page\t0\n");
-        return response.nextLine();
+        String moneyType = response.nextLine();
+
+        if (moneyType.equals("1")) {
+            //TODO
+        } else if (moneyType.equals("2")) {
+            int money = amountPage();
+            ArrayList depositableAccounts = u.getAccountListOfType(Depositable.class);
+            for (Object obj: depositableAccounts) {
+                if (obj instanceof ChequingAccount) {
+                    DepositTransaction newDeposit = new DepositTransaction(user, obj, money);
+                    //What to write (From) when its deposit
+                    if (confirmPage(,obj,money, newDeposit)) thankyouPage();
+                }
+             }
+        }
     }
 
-    private String amountPage() {
+    private int amountPage() {
         System.out.println("Deposit amount\n +" +
                             "Previous\t-1\n" +
                             "Home page\t0\n");
-        return response.nextLine();
+        return convertStr(response.nextLine());
     }
 
     //TODO whats the required info
@@ -156,8 +156,16 @@ public class Interface {
     }
 
     //TODO different transfer type and deposit type
-    private String confirmPage(String s) {
-        return response.nextLine();
+    private boolean confirmPage(Account f, Account t, int amount, Transaction u) {
+        boolean result = false;
+        String output = String.format("From: %s To: %s Amount: $d", f.toString(), t.toString(), amount);
+        System.out.println(output);
+        System.out.println("Confirm\t1");
+        String decision = response.nextLine();
+        if (decision.equals("1")) {
+            //result = u.doPerferm();
+        }
+        return result;
     }
 
     private String thankyouPage() {
@@ -266,8 +274,8 @@ public class Interface {
 
 
 //    public static void main(String[] args) {
-//        new Interface().homePage();
-//        new Interface().depositMoneyTypePage();
+//        BankManager m = new BankManager();
+//        new Interface(m).confirmPage("a", "b", 100);
 //
 //    }
 }
