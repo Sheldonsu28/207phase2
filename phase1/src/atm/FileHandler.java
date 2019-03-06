@@ -46,9 +46,11 @@ public class FileHandler implements Observer, Serializable {
         BankManager information = null;
         try {
             FileInputStream fileRead = new FileInputStream(path + "BankData.txt");
-            ObjectInputStream input = new ObjectInputStream(fileRead);
+            InputStream file = new BufferedInputStream(fileRead);
+            ObjectInputStream input = new ObjectInputStream(file);
             information = (BankManager) input.readObject();
             fileRead.close();
+            file.close();
             input.close();
         }catch(FileNotFoundException f){
             System.out.println("File not found, read failed");
@@ -127,4 +129,14 @@ public class FileHandler implements Observer, Serializable {
 
         saveTo(args[0], args[1]);
     }
+
+    /**
+    public static void main(String[] args){
+        FileHandler F = new FileHandler();
+        BankManager B = new BankManager();
+        F.saveManagerData(B);
+        BankManager C = F.readManagerData();
+        System.out.println(C);
+    }
+     **/
 }
