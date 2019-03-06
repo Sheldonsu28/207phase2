@@ -1,8 +1,10 @@
 package ui;
 
+import account.ChequingAccount;
 import account.Withdrawable;
+import account.Depositable;
 import atm.*;
-import account.Account;
+import transaction.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,6 +75,12 @@ public class Interface {
                                     continue;
                                 } else if (moneyType.equals("2")) {
                                     String moneyAmount = amountPage();
+                                    int money = convertStr(moneyAmount);
+                                    ArrayList depositableAccounts = user.getAccountListOfType(Depositable.class);
+                                    //for (Object obj: depositableAccounts) {
+                                        //if (obj instanceof ChequingAccount)
+                                            //DepositTransaction newDeposit = new DepositTransaction(user, obj, money);
+                                    // }
                                 }
                             case "2":
                                 String withdrawAccount = withdrawPage(user);
@@ -238,6 +246,20 @@ public class Interface {
                 "Previous\t-1\n" +
                 "Homepage\t0\n");
         return response.nextLine();
+    }
+
+    private int convertStr(String s) {
+        int amount = 0;
+        boolean correct = false;
+        while (!correct) {
+            try {
+                amount = Integer.parseInt(s);
+                correct = true;
+            } catch (NumberFormatException nfe) {
+                System.out.println("Please enter number correctly");
+            }
+        }
+        return amount;
     }
 
 
