@@ -1,6 +1,7 @@
 package atm;
 
 import account.Account;
+import account.ChequingAccount;
 import account.Growable;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.util.Observer;
 
 final class AccountFactory implements Serializable {
 
-    <T extends Account> boolean generateDefaultAccount(User owner, Class<T> accountType, AtmTime time) {
+    <T extends Account> boolean generateDefaultAccount(User owner, Class<T> accountType, AtmTime time, boolean isPrimary) {
         T account = null;
 
         try {
@@ -25,6 +26,9 @@ final class AccountFactory implements Serializable {
 
         if (account != null) {
             owner.addAccount(account);
+
+            if (accountType == ChequingAccount.class && isPrimary)
+                owner.setPrimaryAccount((ChequingAccount) account);
 
             if (account instanceof Growable)
                 time.addObserver((Observer) account);

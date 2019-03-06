@@ -1,6 +1,7 @@
 package atm;
 
 import account.Account;
+import account.ChequingAccount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,14 @@ public class User {
         password = defaultPassword;
         this.username = username;
         accountVaults = new AccountStorageManager();
+    }
+
+    public ChequingAccount getPrimaryAccount() {
+        return accountVaults.getPrimaryAccount();
+    }
+
+    public void setPrimaryAccount(ChequingAccount primaryAccount) {
+        accountVaults.setPrimaryAccount(primaryAccount);
     }
 
     public String getUserName() {
@@ -31,7 +40,6 @@ public class User {
         password = newPassword;
     }
 
-    // TODO maybe test required
     double getNetTotal() {
         double netTotal = 0;
 
@@ -46,7 +54,6 @@ public class User {
         accountVaults.addAccount(account);
     }
 
-    //  TODO test required
     String getAccountsSummary() {
         StringBuilder summary = new StringBuilder("Account Summary: \n");
 
@@ -63,7 +70,7 @@ public class User {
         return accountVaults.getAccountListOfType(klass);
     }
 
-    public String toString(){
+    public String toString() {
         return username;
     }
 }

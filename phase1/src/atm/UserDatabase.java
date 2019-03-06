@@ -12,13 +12,15 @@ final class UserDatabase implements Serializable {
         users = new TreeMap<>();
     }
 
-    boolean registerNewUser(String username, String password) {
+    User registerNewUser(String username, String password)
+            throws UsernameAlreadyExistException {
         if (users.containsKey(username))
-            return false;
+            throw new UsernameAlreadyExistException(username);
 
         User user = new User(username, password);
         users.put(username, user);
-        return true;
+
+        return user;
     }
 
     void removeUser(String username) {

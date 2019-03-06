@@ -1,6 +1,7 @@
 package atm;
 
 import account.Account;
+import account.ChequingAccount;
 import transaction.Transaction;
 
 import java.io.Serializable;
@@ -60,6 +61,9 @@ public class BankManager implements Serializable {
             throw new IllegalStateException("This manager is not loggedin yet!");
     }
 
+    public List<AtmMachine> getMachineList() {
+        return Collections.unmodifiableList(machineList);
+    }
 
     public AtmMachine addMachine() {
         checkState();
@@ -75,14 +79,11 @@ public class BankManager implements Serializable {
         return machine;
     }
 
-    public List<AtmMachine> getMachineList() {
-        return Collections.unmodifiableList(machineList);
-    }
 
-    public <T extends Account> boolean createAccount(User user, Class<T> accountType) {
+    public <T extends Account> boolean createAccount(User user, Class<T> accountType, boolean isPrimary) {
         checkState();
 
-        return accountFactory.generateDefaultAccount(user, accountType, commonTime);
+        return accountFactory.generateDefaultAccount(user, accountType, commonTime, isPrimary);
     }
 
     /**
@@ -91,16 +92,20 @@ public class BankManager implements Serializable {
      * @param username The username of the user
      * @return The default password for this user
      */
-    public String createUser(String username) {
+    public String createUser(String username) throws UsernameAlreadyExistException {
         checkState();
 
         String password = passwordGenerator.generatePassword();
-        userDatabase.registerNewUser(username, password);
+        User newUser = userDatabase.registerNewUser(username, password);
+
+        accountFactory.generateDefaultAccount(newUser, ChequingAccount.class, commonTime, true);
 
         return password;
     }
 
-    public User validateLogin(String username, String password) {
+    public User validateUserLogin(String username, String password) {
+        checkState();
+
         User user = null;
 
         try {
@@ -113,6 +118,8 @@ public class BankManager implements Serializable {
     }
 
     public boolean cancelLastTransaction(Account targetAccount) {
+        checkState();
+
         Transaction transaction = targetAccount.getLastTransaction();
 
         if (transaction != null && transaction.isCancellable()) {
