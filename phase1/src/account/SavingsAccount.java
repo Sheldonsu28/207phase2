@@ -49,7 +49,7 @@ public class SavingsAccount extends AssetAccount implements Growable {
      * @param initialBalance the initial balance of the account
      * @see Account#Account(Date, User, double)
      */
-    SavingsAccount(Date time, User owner, double growthRate, String growthDay, double initialBalance) {
+    public SavingsAccount(Date time, User owner, double growthRate, String growthDay, double initialBalance) {
         super(time, owner, initialBalance);
         if (growthRate < 0)
             throw new IllegalArgumentException("Monthly rate can not be negative!");

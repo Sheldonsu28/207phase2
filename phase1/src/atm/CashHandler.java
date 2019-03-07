@@ -1,9 +1,7 @@
 package atm;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 class CashHandler {
     private TreeMap<Integer, Integer> cashStock;
@@ -26,6 +24,10 @@ class CashHandler {
 
     Currency getCurrency() {
         return currency;
+    }
+
+    List<Integer> getValidCashTypes() {
+        return new ArrayList<>(cashStock.keySet());
     }
 
     int getCashTypeCount() {

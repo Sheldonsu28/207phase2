@@ -65,7 +65,7 @@ public class Interface {
             if (intent.equals("yes")) {
                 String[] currUser = signInPage().split(",");
                 //what if incorrect info
-                User user = bankManager.validateLogin(currUser[0], currUser[1]);
+                User user = bankManager.validateUserLogin(currUser[0], currUser[1]);
 
                 if (user != null) {
                     Outer:

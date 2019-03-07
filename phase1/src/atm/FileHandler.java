@@ -2,14 +2,12 @@ package atm;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Scanner;
 
 /**
  * This class is responsible for handling that need to be save to files outside.
  */
-public class FileHandler implements Observer, Serializable {
+public class FileHandler implements Serializable {
     private String path;
 
     public FileHandler() {
@@ -46,11 +44,9 @@ public class FileHandler implements Observer, Serializable {
         BankManager information = null;
         try {
             FileInputStream fileRead = new FileInputStream(path + "BankData.txt");
-            InputStream file = new BufferedInputStream(fileRead);
-            ObjectInputStream input = new ObjectInputStream(file);
+            ObjectInputStream input = new ObjectInputStream(fileRead);
             information = (BankManager) input.readObject();
             fileRead.close();
-            file.close();
             input.close();
         }catch(FileNotFoundException f){
             System.out.println("File not found, read failed");
@@ -113,7 +109,7 @@ public class FileHandler implements Observer, Serializable {
             }
             scanner.close();
         }catch(FileNotFoundException e){
-            System.out.println("File not found, return null");
+            System.out.println("File not found.");
         }
         return content;
     }
@@ -123,20 +119,4 @@ public class FileHandler implements Observer, Serializable {
         return file.exists();
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        String[] args = (String[]) arg;
-
-        saveTo(args[0], args[1]);
-    }
-
-    /**
-    public static void main(String[] args){
-        FileHandler F = new FileHandler();
-        BankManager B = new BankManager();
-        F.saveManagerData(B);
-        BankManager C = F.readManagerData();
-        System.out.println(C);
-    }
-     **/
 }

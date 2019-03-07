@@ -1,6 +1,7 @@
 package atm;
 
 import account.Account;
+import account.ChequingAccount;
 import account.Growable;
 
 import java.io.Serializable;
@@ -9,9 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Observer;
 
-public final class AccountFactory implements Serializable {
+final class AccountFactory implements Serializable {
 
-    <T extends Account> boolean generateDefaultAccount(User owner, Class<T> accountType, AtmTime time) {
+    <T extends Account> boolean generateDefaultAccount(User owner, Class<T> accountType, AtmTime time, boolean isPrimary) {
         T account = null;
 
         try {
@@ -26,6 +27,9 @@ public final class AccountFactory implements Serializable {
         if (account != null) {
             owner.addAccount(account);
 
+            if (accountType == ChequingAccount.class && isPrimary)
+                owner.setPrimaryAccount((ChequingAccount) account);
+
             if (account instanceof Growable)
                 time.addObserver((Observer) account);
 
@@ -37,14 +41,4 @@ public final class AccountFactory implements Serializable {
         return false;
     }
 
-//    private boolean containsInterface(Class original, Class targetInterface) {
-//        Class[] interfaces = original.getInterfaces();
-//
-//        for (Class klass : interfaces) {
-//            if (klass == targetInterface)
-//                return true;
-//        }
-//
-//        return false;
-//    }
 }

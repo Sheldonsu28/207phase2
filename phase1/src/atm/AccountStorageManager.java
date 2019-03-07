@@ -1,16 +1,29 @@
 package atm;
 
 import account.Account;
+import account.ChequingAccount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AccountStorageManager {
+final class AccountStorageManager {
     private Map<Class, ArrayList<Object>> accountMapByType;
+    private ChequingAccount primaryAccount;
 
     AccountStorageManager() {
         accountMapByType = new HashMap<>();
+    }
+
+    public ChequingAccount getPrimaryAccount() {
+        return primaryAccount;
+    }
+
+    public void setPrimaryAccount(ChequingAccount account) {
+        if (!getAllAccounts().contains(account))
+            throw new IllegalArgumentException("Given account does not belong to this user.");
+
+        primaryAccount = account;
     }
 
     public <T extends Account> void addAccount(T account) {
