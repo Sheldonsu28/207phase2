@@ -1,14 +1,8 @@
 package ui;
 
-import account.Account;
-import account.ChequingAccount;
-import account.Depositable;
-import account.Withdrawable;
-import atm.BankManager;
-import atm.User;
-import atm.UserNotExistException;
-import atm.WrongPasswordException;
-import transaction.Transaction;
+import account.*;
+import atm.*;
+import transaction.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,7 +28,8 @@ public class Interface {
 
             //initialize page
             while (!initialized) {
-                String[] logInfo = initializePage().split(",");
+                System.out.println("Initialize Page");
+                String[] logInfo = signInPage().split(",");
                 try {
                     bankManager.login(logInfo[0], logInfo[1]);
                     System.out.println("Enter Time: yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
@@ -75,12 +70,16 @@ public class Interface {
                         switch (action) {
                             case "1":
                                 depositMoneyTypePage(user);
+                                break;
                             case "2":
-                                String withdrawAccount = withdrawPage(user);
+                                withdrawPage(user);
+                                break;
                             case "3":
                                 String transferAccount = transferPage();
+                                break;
                             case "4":
                                 String info = accountInfoPage();
+                                break;
                             case "-2":
                                 break Outer;
                         }
@@ -91,16 +90,6 @@ public class Interface {
     }
 
     //TODO different User has different amount accounts
-    //initialize page
-    private String initializePage() {
-        System.out.println("Initialize Page");
-        System.out.println("Enter username:");
-        String userName = response.nextLine();
-        System.out.println("Enter password:");
-        String password = response.nextLine();
-        return userName+","+password;
-    }
-
 
     private String welcomePage() {
         System.out.println("welcome");
@@ -138,19 +127,19 @@ public class Interface {
             //TODO
         } else if (moneyType.equals("2")) {
             int money = amountPage();
-            ArrayList depositableAccounts = u.getAccountListOfType(Depositable.class);
-            for (Object obj: depositableAccounts) {
-                if (obj instanceof ChequingAccount) {
-                    //DepositTransaction newDeposit = new DepositTransaction(user, obj, money);
+            ArrayList<Depositable> depositableAccounts = u.getAccountListOfType(Depositable.class);
+            for (Depositable depositableAccount: depositableAccounts) {
+                if (depositableAccount instanceof ChequingAccount) {
+                    //DepositTransaction newDeposit = new DepositTransaction(u, depositableAccount, money);
                     //What to write (From) when its deposit
-                    //if (confirmPage(,obj,money, newDeposit)) thankyouPage();
+                    //if (confirmPage(null ,obj,money, newDeposit)) thankyouPage();
                 }
              }
         }
     }
 
     private int amountPage() {
-        System.out.println("Deposit amount\n +" +
+        System.out.println("Amount\n +" +
                             "Previous\t-1\n" +
                             "Home page\t0\n");
         return convertStr(response.nextLine());
@@ -182,16 +171,24 @@ public class Interface {
     }
 
     //withdraw
-    private String withdrawPage(User u) {
+    private void withdrawPage(User u) {
         System.out.println("Select a account\n");
-        ArrayList withdrawableAccounts = u.getAccountListOfType(Withdrawable.class);
+        ArrayList<Withdrawable> withdrawableAccounts = u.getAccountListOfType(Withdrawable.class);
         int idx = 1;
-        for (Object obj : withdrawableAccounts) {
-            System.out.println(obj + Integer.toString(idx));
+        for (Withdrawable withdrawableAccount : withdrawableAccounts) {
+            System.out.println(withdrawableAccount.toString() + "\t" + idx);
             idx += 1;
         }
         System.out.println("Previous\t-1\n" + "Homepage\t0\n");
-        return response.nextLine();
+        String choice = response.nextLine();
+
+        switch (response.nextLine()) {
+            case "1":
+                //WithdrawTransaction newWithdraw = new WithdrawTransaction(u, , withdrawableAccounts[0],)
+
+        }
+
+
     }
 
     //transfer
@@ -277,7 +274,7 @@ public class Interface {
         return amount;
     }
 
-
+//Class Transaction Class Session Operator Panel CustomerConsole
 
 //    public static void main(String[] args) {
 //        BankManager m = new BankManager();
