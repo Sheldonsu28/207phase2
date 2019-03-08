@@ -36,11 +36,11 @@ public class User {
         return this.password.equals(password);
     }
 
-    void changePassword(String newPassword) {
+    public void changePassword(String newPassword) {
         password = newPassword;
     }
 
-    double getNetTotal() {
+    public double getNetTotal() {
         double netTotal = 0;
 
         for (Account account : accountVaults.getAllAccounts())
@@ -54,7 +54,7 @@ public class User {
         accountVaults.addAccount(account);
     }
 
-    String getAccountsSummary() {
+    public String getAccountsSummary() {
         StringBuilder summary = new StringBuilder("Account Summary: \n");
 
         for (Account account : accountVaults.getAllAccounts()) {

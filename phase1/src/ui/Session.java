@@ -1,8 +1,6 @@
 package ui;
 
-import account.Account;
-import account.Depositable;
-import account.Withdrawable;
+import account.*;
 import atm.*;
 import transaction.*;
 
@@ -37,18 +35,16 @@ public class Session {
     public void performSession()
     {
 
-        Transaction currentTransaction = null;
-
         while (state != State.FINAL_STATE) {
+            int choice;
             switch (state) {
                 case INITIALIZE_STATE:
                     if (initialize(bankManager)) state = State.WELCOME_STATE;
                     break;
 
                 case WELCOME_STATE:
-                    System.out.println("welcome");
-                    System.out.println("Sign in\tyes/no");
-                    if (response.nextLine().equals("yes")) state = State.SIGN_IN_STATE;
+                    currUser = welcome(bankManager);
+                    if (currUser != null) state = State.MAIN_STATE;
                     break;
 
                 case SIGN_IN_STATE:
@@ -59,18 +55,24 @@ public class Session {
                     break;
 
                 case MAIN_STATE:
-                    int choice = console.displayMenu(null, menu.mainMenu());
+                    choice = console.displayMenu(null, menu.main());
                     if (choice > 0 && choice < 4) {
-                        if (createTransaction(currUser, atm, choice) != null) state = State.PERFORM_TRANSACTION_STATE;
+                        Transaction currentTransaction = createTransaction(currUser, atm, choice);
+                        if (currentTransaction != null) state = State.PERFORM_TRANSACTION_STATE;
                     } else if (choice == 4) {
-                        //TODO handle info
+                        state = State.ACCOUNT_INFO_STATE;
                     }
                     break;
 
+                case ACCOUNT_INFO_STATE:
+                    getAccountInfo(currUser);
+
                 case PERFORM_TRANSACTION_STATE:
+                    //TODO how to get the accounts elegantly
                     break;
 
                 case SIGN_OUT_STATE:
+                    state = State.FINAL_STATE;
                     break;
             }
         }
@@ -93,12 +95,44 @@ public class Session {
                     System.out.println("Incorrect format. Try again");
                 }
             }
-        } catch (WrongPasswordException e) {
-            System.out.println("The password doesn't match. Try again.");
-        } catch (UserNotExistException i) {
-            System.out.println("The user doesn't exist. Try again");
+        } catch (WrongPasswordException|UserNotExistException e) {
+            System.out.println(e.getMessage());
         }
         return setDate;
+    }
+
+    private User welcome(BankManager m) {
+        User user = null;
+        int choice = console.displayMenu("Welcome", menu.welcome());
+        switch (choice) {
+            case 1:
+                String[] logInfo = signIn().split(",");
+                user = m.validateUserLogin(logInfo[0], logInfo[1]);
+                if (user != null) break;
+            case 2:
+                System.out.println("Enter new passwords");
+                String newPasswords = response.nextLine();
+                //TODO handel NullPointer Exception
+                try {
+                    user.changePassword(newPasswords);
+                } catch (NullPointerException npe) {
+                    System.out.println(npe.getMessage());
+                }
+            case 3:
+                System.out.println("Enter a new user name");
+                String newUserName = response.nextLine();
+                try {
+                    String password = m.createUser(newUserName);
+                    System.out.println("Your temporary password" + password);
+                    //this way if it will be continued if the user name is not entered correctly
+                    break;
+                } catch (UsernameAlreadyExistException e) {
+                    System.out.println(e.getMessage());
+            }
+            case 4:
+                //TODO reset is the same as initialize??
+        }
+        return user;
     }
 
     private String signIn() {
@@ -137,4 +171,31 @@ public class Session {
         return null;
     }
 
+    private void getAccountInfo(User user) {
+        int choice = console.displayMenu(null, menu.getAccountInfo());
+        switch (choice) {
+            case 1:
+                System.out.println(user.getAccountsSummary());
+                break;
+            case 2:
+                System.out.println(user.getNetTotal());
+                break;
+            case 3:
+                getMostRecentTransaction(user);
+                break;
+            case 4:
+                getCreationDate(user);
+                break;
+        }
+    }
+
+    private void getMostRecentTransaction(User user) {
+        int choice = console.displayMenu("Select A account", user.getAccountListOfType(Cancellable.class));
+        //TODO how to get the recent transaction
+    }
+
+    private void getCreationDate(User user) {
+        int choice = console.displayMenu("Select A account", user.getAccountListOfType(Cancellable.class));
+        //TODO how to get the creation date
+    }
 }
