@@ -1,8 +1,13 @@
 package ui;
 
-import account.*;
+import account.Account;
+import account.Cancellable;
+import account.Depositable;
+import account.Withdrawable;
 import atm.*;
-import transaction.*;
+import transaction.Transaction;
+import transaction.TransferTransaction;
+import transaction.WithdrawTransaction;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,23 +24,22 @@ public class Session {
     private Menu menu = new Menu();
     private User currUser;
 
-    public Session(BankManager m)
-    {
-        if (m == null) {
-            bankManager = new BankManager();
-            atm = bankManager.getMachineList().get(0);
+    public Session(BankManager bankManager) {
+        if (bankManager == null) {
+            this.bankManager = new BankManager();
+            atm = this.bankManager.getMachineList().get(0);
             state = State.INITIALIZE_STATE;
         } else {
-            //TODO null pointer
-            atm = bankManager.getMachineList().get(0);
+            this.bankManager = bankManager;
+            atm = this.bankManager.getMachineList().get(0);
             state = State.WELCOME_STATE;
         }
     }
 
-    /** Perform the Session Use Case
+    /**
+     * Perform the Session Use Case
      */
-    public void performSession()
-    {
+    public void performSession() {
         Transaction currentTransaction = null;
         while (state != State.FINAL_STATE) {
             int choice;
@@ -71,6 +75,8 @@ public class Session {
                     getAccountInfo(currUser);
 
                 case PERFORM_TRANSACTION_STATE:
+                    if (currentTransaction == null)
+                        throw new IllegalStateException("This should not be invoked before transaction initialization");
                     currentTransaction.perform();
                     break;
 
@@ -96,7 +102,7 @@ public class Session {
                     System.out.println("Incorrect format. Try again");
                 }
             }
-        } catch (WrongPasswordException|UserNotExistException e) {
+        } catch (WrongPasswordException | UserNotExistException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -110,17 +116,12 @@ public class Session {
                 String[] logInfo = signIn().split(",");
                 user = m.validateUserLogin(logInfo[0], logInfo[1]);
                 if (user != null) break;
-            //Change password
+                //Change password
             case 2:
                 System.out.println("Enter new passwords");
                 String newPasswords = response.nextLine();
-                //TODO handel NullPointer Exception
-                try {
-                    user.changePassword(newPasswords);
-                    break;
-                } catch (NullPointerException npe) {
-                    System.out.println(npe.getMessage());
-                }
+                user.changePassword(newPasswords);
+                break;
             //Create a new account
             case 3:
                 System.out.println("Enter a new user name");
@@ -132,8 +133,8 @@ public class Session {
                     break;
                 } catch (UsernameAlreadyExistException e) {
                     System.out.println(e.getMessage());
-            }
-            //Bank manager set the atm
+                }
+                //Bank manager set the atm
             case -3:
                 //TODO reset is the same as initialize??
         }
@@ -145,7 +146,8 @@ public class Session {
         String userName = response.nextLine();
         System.out.println("Enter password:");
         String password = response.nextLine();
-        return userName+","+password;
+        return userName + "," + password;
+
     }
 
     private Transaction createTransaction(User user, AtmMachine atm, int choice) {
@@ -165,40 +167,41 @@ public class Session {
                 userDepositableAccounts = user.getAccountListOfType(Depositable.class);
                 toAccountChoice = console.displayMenu("Select a account", userDepositableAccounts);
                 //return new DepositTransaction(user, atm, userDepositableAccounts.get(toAccountChoice - 1));
-            //withdraw
+                //withdraw
             case 2:
                 userWithdrawableAccounts = user.getAccountListOfType(Withdrawable.class);
                 fromAccountChoice = console.displayMenu("Select a account", userWithdrawableAccounts);
-                fromAccount = userWithdrawableAccounts.get(fromAccountChoice-1);
+                fromAccount = userWithdrawableAccounts.get(fromAccountChoice - 1);
 
                 amount = console.getAmount();
                 title = "From" + fromAccount.toString() + "Withdraw" + amount;
                 select = console.displayMenu(title, menu.confirmMenu());
-                if (select == 1) return new WithdrawTransaction(user, atm, userWithdrawableAccounts.get(fromAccountChoice-1), amount);
+                if (select == 1)
+                    return new WithdrawTransaction(user, atm, userWithdrawableAccounts.get(fromAccountChoice - 1), amount);
                 else state = State.MAIN_STATE;
                 break;
             //transfer
             case 3:
                 userWithdrawableAccounts = user.getAccountListOfType(Withdrawable.class);
                 fromAccountChoice = console.displayMenu("Select a account", userWithdrawableAccounts);
-                fromAccount = userWithdrawableAccounts.get(fromAccountChoice-1);
+                fromAccount = userWithdrawableAccounts.get(fromAccountChoice - 1);
 
                 userDepositableAccounts = user.getAccountListOfType(Depositable.class);
                 toAccountChoice = console.displayMenu("Select a account", userDepositableAccounts);
-                toAccount = userDepositableAccounts.get(toAccountChoice-1);
+                toAccount = userDepositableAccounts.get(toAccountChoice - 1);
 
                 amount = console.getAmount();
                 title = "From" + fromAccount.toString() + "transfer to" + toAccount.toString() + amount;
                 select = console.displayMenu(title, menu.confirmMenu());
                 if (select == 1) {
-                    return new TransferTransaction(user, userWithdrawableAccounts.get(fromAccountChoice-1),
-                        userDepositableAccounts.get(toAccountChoice-1), amount);
+                    return new TransferTransaction(user, userWithdrawableAccounts.get(fromAccountChoice - 1),
+                            userDepositableAccounts.get(toAccountChoice - 1), amount);
                 } else {
                     state = State.MAIN_STATE;
                     break;
                 }
 
-            //pay bill
+                //pay bill
             case 4:
                 userWithdrawableAccounts = user.getAccountListOfType(Withdrawable.class);
                 fromAccountChoice = console.displayMenu("Select a account", userWithdrawableAccounts);
@@ -235,7 +238,7 @@ public class Session {
     private void getMostRecentTransaction(User user) {
         ArrayList<Cancellable> accounts = user.getAccountListOfType(Cancellable.class);
         int choice = console.displayMenu("Select A account", accounts);
-        Account selectAccount = (Account)accounts.get(choice - 1);
+        Account selectAccount = (Account) accounts.get(choice - 1);
         System.out.println(selectAccount.getLastTransaction());
         System.out.println("Request to cancel the last transaction");
         //TODO request to cancel the last transaction
@@ -245,7 +248,7 @@ public class Session {
     private void getCreationDate(User user) {
         ArrayList<Cancellable> accounts = user.getAccountListOfType(Cancellable.class);
         int choice = console.displayMenu("Select A account", accounts);
-        Account selectAccount = (Account)accounts.get(choice - 1);
+        Account selectAccount = (Account) accounts.get(choice - 1);
         System.out.println(selectAccount.getTimeCreated());
 
     }
