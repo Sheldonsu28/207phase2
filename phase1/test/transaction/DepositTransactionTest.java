@@ -2,7 +2,7 @@ package transaction;
 
 import account.ChequingAccount;
 import atm.AtmMachine;
-=import org.junit.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 import atm.User;
 import static org.mockito.Mockito.*;
