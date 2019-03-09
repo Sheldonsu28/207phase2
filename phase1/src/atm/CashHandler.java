@@ -55,12 +55,12 @@ class CashHandler {
     }
 
     // TODO test required
-    TreeMap<Integer, Integer> takeAmountOfCash(int amount) throws InsufficientStockException, CashShortageException {
+    TreeMap<Integer, Integer> takeAmountOfCash(int amount) throws EmptyStockException, CashShortageException {
         if (amount % 5 != 0)
             throw new IllegalArgumentException("Can't produce amount that is not a multiplier of 5!");
 
         if (getTotalBalance() < amount)
-            throw new InsufficientStockException(this);
+            throw new EmptyStockException(this);
 
         TreeMap<Integer, Integer> take = cashDistributor.distribute(cashStock, amount);
 

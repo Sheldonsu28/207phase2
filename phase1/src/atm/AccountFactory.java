@@ -10,8 +10,27 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Observer;
 
+/**
+ * Produces account object with given specifications.
+ *
+ * @author zhaojuna
+ * @version 1.0
+ */
 final class AccountFactory implements Serializable {
 
+    /**
+     * Generate a specific type of {@linkplain Account} object by invoking {@linkplain Account}'s universal default
+     * constructor {@link Account#Account(Date, User)}.
+     *
+     * @param owner       the user who owns this account
+     * @param accountType the type of account being created
+     * @param time        the common time for stamping creation time
+     * @param isPrimary   this parameter is only considered when accountType is {@link ChequingAccount}.
+     *                    set to true if this chequing account requested to be the primary, set to false otherwise
+     * @param <T>         the type generics representing the account class type being created
+     * @return true if the account is successfully generated & initialized and added to its owner user's vault,
+     * false otherwise
+     */
     <T extends Account> boolean generateDefaultAccount(User owner, Class<T> accountType, AtmTime time, boolean isPrimary) {
         T account = null;
 
@@ -20,7 +39,7 @@ final class AccountFactory implements Serializable {
             account = defaultConstructor.newInstance(time.getCurrentTime(), owner);
         } catch (NoSuchMethodException | InstantiationException |
                 IllegalAccessException | InvocationTargetException e) {
-            System.out.println("Failed to create account");
+            System.out.println("Failed to create account due to following reason: ");
             e.printStackTrace();
         }
 

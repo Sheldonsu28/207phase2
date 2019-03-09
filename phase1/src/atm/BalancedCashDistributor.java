@@ -55,6 +55,8 @@ class BalancedCashDistributor extends CashDistributor {
             int currentType = types[index];
             int minAlign = amounts[types.length - 1];
 
+            /*  If last item is reached and no changes detected for the current loop, then call StepCashDistributor
+            to complete the left-over distribution. */
             if (index == types.length - 1) {
                 if (prevBalance == balance) {
                     TreeMap<Integer, Integer> midstep = new TreeMap<>();
@@ -75,6 +77,7 @@ class BalancedCashDistributor extends CashDistributor {
                 }
             }
 
+            //  Take as much as possible from the current type (as the array is sorted by amount from highest to lowest)
             int nextDiff = amounts[index] - minAlign;
 
             while (nextDiff > 0) {

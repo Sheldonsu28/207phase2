@@ -2,10 +2,10 @@ package atm;
 
 import java.util.Map;
 
-public class InsufficientStockException extends Exception {
+public class EmptyStockException extends Exception {
     private CashHandler shortageStock;
 
-    InsufficientStockException(CashHandler shortageStock) {
+    EmptyStockException(CashHandler shortageStock) {
         this.shortageStock = shortageStock;
     }
 

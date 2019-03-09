@@ -13,7 +13,7 @@ public class User {
     User(String username, String defaultPassword) {
         password = defaultPassword;
         this.username = username;
-        accountVaults = new AccountStorageManager();
+        accountVaults = new AccountStorageManager(this);
     }
 
     public ChequingAccount getPrimaryAccount() {
