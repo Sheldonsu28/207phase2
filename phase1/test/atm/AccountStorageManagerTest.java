@@ -8,13 +8,17 @@ import org.mockito.Mockito;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class AccountStorageManagerTest {
     private AccountStorageManager vaults;
+    private User owner;
 
     @Before
     public void before() {
-        vaults = new AccountStorageManager();
+        owner = Mockito.mock(User.class);
+
+        vaults = new AccountStorageManager(owner);
     }
 
     @Test
@@ -23,6 +27,11 @@ public class AccountStorageManagerTest {
         SavingsAccount sa = Mockito.mock(SavingsAccount.class);
         LineOfCreditAccount lca = Mockito.mock(LineOfCreditAccount.class);
         CreditCardAccount cca = Mockito.mock(CreditCardAccount.class);
+
+        when(ca.getOwner()).thenReturn(owner);
+        when(sa.getOwner()).thenReturn(owner);
+        when(lca.getOwner()).thenReturn(owner);
+        when(cca.getOwner()).thenReturn(owner);
 
         vaults.addAccount(ca);
         vaults.addAccount(sa);

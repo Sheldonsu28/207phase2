@@ -4,7 +4,7 @@ import account.WithdrawException;
 import account.Withdrawable;
 import atm.AtmMachine;
 import atm.CashShortageException;
-import atm.InsufficientStockException;
+import atm.EmptyStockException;
 import atm.User;
 
 import java.util.TreeMap;
@@ -38,7 +38,7 @@ public class WithdrawTransaction extends IntraUserTransaction {
 
         try {
             stock = machine.reduceStock(withdrawAmount);
-        } catch (InsufficientStockException | CashShortageException e) {
+        } catch (EmptyStockException | CashShortageException e) {
             System.out.println(e.getMessage());
             targetAccount.cancelWithdraw(withdrawAmount);
             return false;

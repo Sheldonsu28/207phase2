@@ -3,8 +3,8 @@ package atm;
 import account.Account;
 import account.ChequingAccount;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.List;
 
 public class User {
     private String username, password;
@@ -13,7 +13,7 @@ public class User {
     User(String username, String defaultPassword) {
         password = defaultPassword;
         this.username = username;
-        accountVaults = new AccountStorageManager();
+        accountVaults = new AccountStorageManager(this);
     }
 
     public ChequingAccount getPrimaryAccount() {
@@ -28,7 +28,7 @@ public class User {
         return username;
     }
 
-    List<Account> getAccounts() {
+    public ArrayList<Account> getAllAccounts() {
         return accountVaults.getAllAccounts();
     }
 
@@ -54,12 +54,20 @@ public class User {
         accountVaults.addAccount(account);
     }
 
+    public void requestAccountCreation(Class<? extends Account> klass) {
+        if (klass.isInterface() || Modifier.isAbstract(klass.getModifiers()))
+            throw new IllegalArgumentException("Can not request abstract or interface account class creation!");
+
+        (new FileHandler()).saveTo("accReq.txt", String.format("%s %s", username, klass.getName()));
+    }
+
     public String getAccountsSummary() {
         StringBuilder summary = new StringBuilder("Account Summary: \n");
 
         for (Account account : accountVaults.getAllAccounts()) {
-            summary.append(String.format("ID %s   TYPE %s   BAL $%.2f\n",
-                    account.getId(), account.getClass().getSimpleName(), account.getBalance()));
+            summary.append(String.format("ID %s\tTYPE %s\tDATE OF CREATION %s\tBAL $%.2f\tNET BAL %.2f\n",
+                    account.getId(), account.getClass().getSimpleName(), account.getTimeCreated(),
+                    account.getBalance(), account.getNetBalance()));
         }
 
         return summary.toString();

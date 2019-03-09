@@ -28,14 +28,18 @@ public class BankManager implements Serializable {
         password = "CS207fun";
         passwordGenerator = new RandomPasswordGenerator(12, 24,
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()");
+
+        addMachine();
     }
 
     public void initialize(Date initialDate) {
         commonTime = new AtmTime(initialDate);
 
-        //  TODO more initialization
-
         hasInitialized = true;
+    }
+
+    public AtmTime getCommonTime() {
+        return commonTime;
     }
 
     public boolean hasInitialized() {
@@ -51,13 +55,22 @@ public class BankManager implements Serializable {
         } else {
             throw new UserNotExistException(username);
         }
+
     }
 
-    private void checkState() {
+    public boolean hasLoggedin() {
+        return hasLoggedin;
+    }
+
+    public void logout() {
+        hasLoggedin = false;
+    }
+
+    private void checkState(boolean needLoginState) {
         if (!hasInitialized)
             throw new IllegalStateException("Manager not yet initialized!");
 
-        if (!hasLoggedin)
+        if (needLoginState && !hasLoggedin)
             throw new IllegalStateException("This manager is not loggedin yet!");
     }
 
@@ -65,9 +78,7 @@ public class BankManager implements Serializable {
         return Collections.unmodifiableList(machineList);
     }
 
-    public AtmMachine addMachine() {
-        checkState();
-
+    private AtmMachine addMachine() {
         TreeMap<Integer, Integer> initialStock = new TreeMap<>();
         initialStock.put(5, 500);
         initialStock.put(10, 500);
@@ -81,7 +92,7 @@ public class BankManager implements Serializable {
 
 
     public <T extends Account> boolean createAccount(User user, Class<T> accountType, boolean isPrimary) {
-        checkState();
+        checkState(true);
 
         return accountFactory.generateDefaultAccount(user, accountType, commonTime, isPrimary);
     }
@@ -93,7 +104,7 @@ public class BankManager implements Serializable {
      * @return The default password for this user
      */
     public String createUser(String username) throws UsernameAlreadyExistException {
-        checkState();
+        checkState(true);
 
         String password = passwordGenerator.generatePassword();
         User newUser = userDatabase.registerNewUser(username, password);
@@ -104,7 +115,7 @@ public class BankManager implements Serializable {
     }
 
     public User validateUserLogin(String username, String password) {
-        checkState();
+        checkState(false);
 
         User user = null;
 
@@ -118,7 +129,7 @@ public class BankManager implements Serializable {
     }
 
     public boolean cancelLastTransaction(Account targetAccount) {
-        checkState();
+        checkState(true);
 
         Transaction transaction = targetAccount.getLastTransaction();
 

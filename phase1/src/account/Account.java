@@ -55,7 +55,7 @@ public abstract class Account implements Serializable {
      * @param time  time of creation
      * @param owner owner user
      */
-    Account(Date time, User owner) {
+    public Account(Date time, User owner) {
         id = String.format("ACC%04d", prev_id);
         prev_id++;
         timeCreated = time;
