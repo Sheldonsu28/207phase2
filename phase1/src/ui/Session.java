@@ -77,6 +77,7 @@ public class Session {
                     if (currentTransaction == null)
                         throw new IllegalStateException("This should not be invoked before transaction initialization");
                     currentTransaction.perform();
+                    state = State.MAIN_STATE;
                     break;
 
                 case SIGN_OUT_STATE:
@@ -105,6 +106,13 @@ public class Session {
             } catch (ParseException e) {
                 System.out.println("Incorrect format. Try again");
             }
+        }
+
+        //  TEST CODE
+        try {
+            System.out.println(bankManager.createUser("snowsr"));
+        } catch (UsernameAlreadyExistException e) {
+            e.printStackTrace();
         }
     }
 
@@ -164,7 +172,7 @@ public class Session {
 
                 amount = console.getAmount();
                 inputChoice = console.displayMenu(Menu.CONFIRM_MENU,
-                        new Object[]{String.format("FROM %s\nWITHDRAW %d\n", fromAccount, amount)});
+                        new Object[]{String.format("FROM %s\nWITHDRAW $%d\n", fromAccount, amount)});
 
                 if (inputChoice == 1)
                     return new WithdrawTransaction(user, atm, fromAccount, amount);

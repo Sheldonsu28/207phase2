@@ -3,6 +3,7 @@ package atm;
 import account.Account;
 import account.ChequingAccount;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 public class User {
@@ -51,6 +52,13 @@ public class User {
 
     <T extends Account> void addAccount(T account) {
         accountVaults.addAccount(account);
+    }
+
+    public void requestAccountCreation(Class<? extends Account> klass) {
+        if (klass.isInterface() || Modifier.isAbstract(klass.getModifiers()))
+            throw new IllegalArgumentException("Can not request abstract or interface account class creation!");
+
+        (new FileHandler()).saveTo("accReq.txt", String.format("%s %s", username, klass.getName()));
     }
 
     public String getAccountsSummary() {

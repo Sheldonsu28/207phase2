@@ -55,6 +55,7 @@ public class BankManager implements Serializable {
         } else {
             throw new UserNotExistException(username);
         }
+
     }
 
     public boolean hasLoggedin() {
