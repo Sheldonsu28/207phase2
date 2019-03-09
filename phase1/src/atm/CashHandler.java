@@ -10,6 +10,14 @@ class CashHandler {
     private AtmTime time;
     private CashDistributor cashDistributor;
 
+    /**
+     * Create a default Cash Handler that
+     * @param time ATM's time.
+     * @param cashStock The cash Stock.
+     * @param currency The currency type.
+     * @param alertLevel The alert level.
+     * @param distributor The distributor related to this Cash handler.
+     */
     CashHandler(AtmTime time, TreeMap<Integer, Integer> cashStock, Currency currency,
                 int alertLevel, CashDistributor distributor) {
         this.currency = currency;
@@ -22,18 +30,34 @@ class CashHandler {
             this.cashStock.put(key, cashStock.get(key));
     }
 
+    /**
+     * Get the type of the currency
+     * @return The type of the currency(USD or CAD).
+     */
     Currency getCurrency() {
         return currency;
     }
 
+    /**
+     * Get the valid cash type such as 10 dollar bill, 20 dollar bill.
+     * @return Cash types in the stock.
+     */
     List<Integer> getValidCashTypes() {
         return new ArrayList<>(cashStock.keySet());
     }
 
+    /**
+     * Determine how many type of cashes with different values is in the stock.
+     * @return Number of different cash types in the cashStock.
+     */
     int getCashTypeCount() {
         return cashStock.size();
     }
 
+    /**
+     * Return the total amount of cash available in the cash stock.
+     * @return The total balance available in the cash stock.
+     */
     int getTotalBalance() {
         int balance = 0;
 
@@ -43,10 +67,18 @@ class CashHandler {
         return balance;
     }
 
+    /**
+     * Get and return the cash stock in this cash handler
+     * @return cash stock within the cash handler.
+     */
     Map<Integer, Integer> getCashStock() {
         return Collections.unmodifiableMap(cashStock);
     }
 
+    /**
+     * Take in a cash stock, store the new sock to the old stock if the new cash stock have the same type of currency.
+     * @param stock A cash stock that need to be stored.
+     */
     void storeCashStock(TreeMap<Integer, Integer> stock) {
         for (int type : stock.keySet()) {
             if (cashStock.containsKey(type))
@@ -54,6 +86,13 @@ class CashHandler {
         }
     }
 
+    /**
+     * Take the amount of cash from the
+     * @param amount The mount of cash that will be remove from the stock.
+     * @return  Return a TreeMap with cash type as the keyset and amount as the value.
+     * @throws EmptyStockException When the stock is empty, this exception is thrown.
+     * @throws CashShortageException When there is not enough cash, this exception is thrown.
+     */
     // TODO test required
     TreeMap<Integer, Integer> takeAmountOfCash(int amount) throws EmptyStockException, CashShortageException {
         if (amount % 5 != 0)
@@ -72,6 +111,10 @@ class CashHandler {
         return take;
     }
 
+    /**
+     * Go through the cash stock and check the amount of cash in the stock, if the cash is lower than
+     * the threshold set by alertLevel, write the alert into the file called alert.txt.
+     */
     // TODO test required
     public void stockCheck() {
         StringBuilder alertMsg = new StringBuilder(time + "\tStock shortage: ");
@@ -91,6 +134,15 @@ class CashHandler {
             (new FileHandler()).saveTo("alert.txt", alertMsg.toString());
     }
 
+    /**
+     * The string representation of Cash Handler in format:
+     * "Five dollar: amount"
+     * "Ten dollar: amount"
+     * "Twenty dollar: amount"
+     * "Total amount: amount"
+     * "Currency: currency type"
+     * @return The String representation of this class
+     */
     public String toString() {
         return String.format("Five dollar: %s\nTen dollar: %s\nTwenty dollar: %s\nTotal amount: %s\nCurrency: %s",
                 cashStock.get(5), cashStock.get(10), cashStock.get(20), getTotalBalance(), currency);
