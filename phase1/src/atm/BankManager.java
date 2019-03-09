@@ -7,6 +7,11 @@ import transaction.Transaction;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ *The manager class represent a manger, responsible for managing accounts and initialize time for the ATMs.
+ * @author zhaojuna
+ * @version 1.0
+ */
 public class BankManager implements Serializable {
     private AtmTime commonTime;
     private List<AtmMachine> machineList;
