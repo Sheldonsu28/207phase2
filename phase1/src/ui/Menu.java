@@ -8,7 +8,6 @@ class Menu {
         menu.add("Sign in");
         menu.add("Reset password");
         menu.add("Create a account");
-        menu.add("Reset atm");
         return menu;
     }
 
@@ -17,7 +16,8 @@ class Menu {
         menu.add("Deposit");
         menu.add("Withdraw");
         menu.add("Transfer");
-        menu.add("Info");
+        menu.add("Bills");
+        menu.add("Account(s) Info");
         return menu;
     }
 
@@ -27,6 +27,7 @@ class Menu {
         menu.add("Net total");
         menu.add("Most recent transaction");
         menu.add("Date of creation of account(s)");
+        menu.add("Create accounts");
         return menu;
     }
 
