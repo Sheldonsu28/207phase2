@@ -2,10 +2,18 @@ package atm;
 
 import java.util.TreeMap;
 
+/**
+ * Defines the Behaviors of CashDistributors.
+ */
 abstract class CashDistributor {
     abstract TreeMap<Integer, Integer> distribute(TreeMap<Integer, Integer> cashStock, int amount)
             throws CashShortageException;
 
+    /**
+     * Initialize a stock.
+     * @param stock the stoke you want to initialize
+     * @return A initialized Stock.
+     */
     TreeMap<Integer, Integer> getInitializedResultMap(TreeMap<Integer, Integer> stock) {
         TreeMap<Integer, Integer> result = new TreeMap<>();
 
