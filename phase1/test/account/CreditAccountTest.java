@@ -25,10 +25,17 @@ public class CreditAccountTest{
     }
 
     @Test
-    public void testTransferIn() {
+    public void testDeposit() {
         creditAccount = new CreditCardAccount(time, owner);
         register = Mockito.mock(Transaction.class);
         creditAccount.deposit(3.0, register);
         assertEquals(3.0, creditAccount.getNetBalance(), 0.0);
+    }
+
+    @Test
+    public void testCancelDeposit(){
+        testDeposit();
+        creditAccount.cancelDeposit(3.0);
+        assertEquals(0.0, creditAccount.getNetBalance(), 0.0);
     }
 }

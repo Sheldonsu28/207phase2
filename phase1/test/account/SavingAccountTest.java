@@ -32,13 +32,13 @@ public class SavingAccountTest {
 
     @Test
     public void testGrow(){
-        savingsAccount = new SavingsAccount(time, owner, 0.001, "30", 100);
+        savingsAccount = new SavingsAccount(time, owner, 0.001, "28", 100);
         savingsAccount.grow();
         assertEquals(100 * 1.001, savingsAccount.getBalance(), 0.0);
     }
 
     @Test
-    public void testWithdrawal() throws Throwable {
+    public void testWithdrawal() {
         register = Mockito.mock(WithdrawTransaction.class);
         savingsAccount = new SavingsAccount(time, owner);
         System.out.println(savingsAccount.getBalance());
@@ -58,5 +58,20 @@ public class SavingAccountTest {
         double withdrawAmount = 50;
         savingsAccount.cancelWithdraw(withdrawAmount);
         assertEquals(withdrawAmount, savingsAccount.getBalance(), 0.0);
+    }
+
+    @Test
+    public void testDeposit() {
+        savingsAccount = new SavingsAccount(time, owner);
+        register = Mockito.mock(Transaction.class);
+        savingsAccount.deposit(3.0, register);
+        assertEquals(3.0, savingsAccount.getNetBalance(), 0.0);
+    }
+
+    @Test
+    public void testCancelDeposit(){
+        testDeposit();
+        savingsAccount.cancelDeposit(3.0);
+        assertEquals(0.0, savingsAccount.getNetBalance(), 0.0);
     }
 }

@@ -52,4 +52,19 @@ public class LineOfCreditAccountTest {
         assertEquals(-withdrawAmount, lineOfCreditAccount.getBalance(), 0.0);
     }
 
+    @Test
+    public void testDeposit() {
+        lineOfCreditAccount = new LineOfCreditAccount(time, owner);
+        register = Mockito.mock(Transaction.class);
+        lineOfCreditAccount.deposit(3.0, register);
+        assertEquals(3.0, lineOfCreditAccount.getNetBalance(), 0.0);
+    }
+
+    @Test
+    public void testCancelDeposit(){
+        testDeposit();
+        lineOfCreditAccount.cancelDeposit(3.0);
+        assertEquals(0.0, lineOfCreditAccount.getNetBalance(), 0.0);
+    }
+
 }
