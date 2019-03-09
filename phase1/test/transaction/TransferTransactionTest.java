@@ -3,14 +3,10 @@ package transaction;
 import account.ChequingAccount;
 import account.SavingsAccount;
 import account.WithdrawException;
-import atm.AtmMachine;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import atm.User;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.assertEquals;
 
 
 public class TransferTransactionTest {
