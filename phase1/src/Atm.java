@@ -1,6 +1,6 @@
 import atm.BankManager;
 import atm.FileHandler;
-import ui.Interface;
+import ui.Session;
 
 public class Atm {
     public static void main(String[] args) {
@@ -11,7 +11,7 @@ public class Atm {
 
 
         //  TODO interface main invoke
-        Interface mainInterface = new Interface(manager);
-        mainInterface.activateInterface();
+        Session newSession = new Session(manager);
+        newSession.performSession();
     }
 }

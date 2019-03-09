@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
-
+//TODO delete the class
 public class Interface {
     private Scanner response = new Scanner(System.in);
     private BankManager bankManager;
