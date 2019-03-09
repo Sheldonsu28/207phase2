@@ -2,6 +2,9 @@ package atm;
 
 import java.util.Map;
 
+/**
+ * Defines the exception happen during taking out currency from cash stock.
+ */
 public class EmptyStockException extends Exception {
     private CashHandler shortageStock;
 
@@ -9,6 +12,10 @@ public class EmptyStockException extends Exception {
         this.shortageStock = shortageStock;
     }
 
+    /**
+     * The message when the exception is created.
+     * @return The message produce by this exception.
+     */
     public String getMessage() {
         Map<Integer, Integer> stock = shortageStock.getCashStock();
         boolean isEmptyStock = true;
