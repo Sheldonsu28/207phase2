@@ -4,7 +4,6 @@ import account.Account;
 import account.ChequingAccount;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class User {
     private String username, password;
@@ -28,7 +27,7 @@ public class User {
         return username;
     }
 
-    List<Account> getAccounts() {
+    public ArrayList<Account> getAllAccounts() {
         return accountVaults.getAllAccounts();
     }
 
@@ -58,8 +57,9 @@ public class User {
         StringBuilder summary = new StringBuilder("Account Summary: \n");
 
         for (Account account : accountVaults.getAllAccounts()) {
-            summary.append(String.format("ID %s   TYPE %s   BAL $%.2f\n",
-                    account.getId(), account.getClass().getSimpleName(), account.getBalance()));
+            summary.append(String.format("ID %s\tTYPE %s\tDATE OF CREATION %s\tBAL $%.2f\tNET BAL %.2f\n",
+                    account.getId(), account.getClass().getSimpleName(), account.getTimeCreated(),
+                    account.getBalance(), account.getNetBalance()));
         }
 
         return summary.toString();

@@ -19,6 +19,7 @@ import java.util.TimerTask;
  * @version 1.0
  */
 public final class AtmTime extends Observable implements Serializable {
+    public static final String FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
     private static boolean hasRunningInstance = false;
     private SimpleDateFormat dateFormat;
     private final SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
@@ -32,19 +33,7 @@ public final class AtmTime extends Observable implements Serializable {
      * @param initialTime the starting time
      */
     AtmTime(Date initialTime) {
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-        this.initialTime = initialTime;
-        initialize(initialTime);
-    }
-
-    /**
-     * Constructs an atm time starting at the given time with a specific date format used to create String time stamps
-     *
-     * @param initialTime the starting time
-     * @param dateFormat  the format of time stamp
-     */
-    AtmTime(Date initialTime, SimpleDateFormat dateFormat) {
-        this.dateFormat = dateFormat;
+        dateFormat = new SimpleDateFormat(FORMAT_STRING);
         this.initialTime = initialTime;
         initialize(initialTime);
     }
