@@ -38,6 +38,10 @@ public class BankManager implements Serializable {
         hasInitialized = true;
     }
 
+    /**
+     * Get the Atm's time
+     * @return The time of this ATM.
+     */
     public AtmTime getCommonTime() {
         return commonTime;
     }
@@ -46,6 +50,13 @@ public class BankManager implements Serializable {
         return hasInitialized;
     }
 
+    /**
+     * Takes the user's username and log the user in.
+     * @param username Username of the user.
+     * @param password Password of the user.
+     * @throws WrongPasswordException Throws this exception if the password is incorrect.
+     * @throws UserNotExistException Throws this exception if the username does not exist.
+     */
     public void login(String username, String password) throws WrongPasswordException, UserNotExistException {
         if (username.equals(this.username)) {
             if (password.equals(this.password))
@@ -58,6 +69,11 @@ public class BankManager implements Serializable {
 
     }
 
+    /**
+     * Check if the manager has logged in ot not.
+     * @return Log in states of the manager.
+     */
+
     public boolean hasLoggedin() {
         return hasLoggedin;
     }
@@ -66,18 +82,26 @@ public class BankManager implements Serializable {
         hasLoggedin = false;
     }
 
+    /**
+     * Private method that checks if the manager account is in a correct state.
+     * @param needLoginState True if manager need to log in.
+     */
     private void checkState(boolean needLoginState) {
         if (!hasInitialized)
             throw new IllegalStateException("Manager not yet initialized!");
 
         if (needLoginState && !hasLoggedin)
-            throw new IllegalStateException("This manager is not loggedin yet!");
+            throw new IllegalStateException("This manager is not logged in yet!");
     }
 
     public List<AtmMachine> getMachineList() {
         return Collections.unmodifiableList(machineList);
     }
 
+    /**
+     * Add a new ATM Machine with stock to the manager.
+     * @return The new ATM machine that has been created.
+     */
     private AtmMachine addMachine() {
         TreeMap<Integer, Integer> initialStock = new TreeMap<>();
         initialStock.put(5, 500);
@@ -90,7 +114,14 @@ public class BankManager implements Serializable {
         return machine;
     }
 
-
+    /**
+     * Create new account to the correspond user.
+     * @param user  The user that account need to be added to.
+     * @param accountType The type of the account.
+     * @param isPrimary if the account is the primary account of the user or not.
+     * @param <T> Any account type.
+     * @return Return the account created.
+     */
     public <T extends Account> boolean createAccount(User user, Class<T> accountType, boolean isPrimary) {
         checkState(true);
 
@@ -114,6 +145,12 @@ public class BankManager implements Serializable {
         return password;
     }
 
+    /**
+     * Try to log user into the system, throws error if the user failed to log in.
+     * @param username User's username.
+     * @param password User's password.
+     * @return The user account correspond to the username.
+     */
     public User validateUserLogin(String username, String password) {
         checkState(false);
 
@@ -128,6 +165,11 @@ public class BankManager implements Serializable {
         return user;
     }
 
+    /**
+     * Cancel the last transaction made by the specific user account.
+     * @param targetAccount The account requires cancellation.
+     * @return Return true if cancellation is successful, return false if the last transaction is not empty.
+     */
     public boolean cancelLastTransaction(Account targetAccount) {
         checkState(true);
 
