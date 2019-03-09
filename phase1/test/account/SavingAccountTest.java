@@ -38,7 +38,7 @@ public class SavingAccountTest {
     }
 
     @Test
-    public void testPositive() throws Throwable {
+    public void testWithdrawal() throws Throwable {
         register = Mockito.mock(WithdrawTransaction.class);
         savingsAccount = new SavingsAccount(time, owner);
         System.out.println(savingsAccount.getBalance());
@@ -50,5 +50,13 @@ public class SavingAccountTest {
             e.printStackTrace();
             throw new AssertionError("Incorrect exception thrown!");
         }
+    }
+
+    @Test
+    public void testCancelWithdrawal(){
+        savingsAccount = new SavingsAccount(time, owner);
+        double withdrawAmount = 50;
+        savingsAccount.cancelWithdraw(withdrawAmount);
+        assertEquals(withdrawAmount, savingsAccount.getBalance(), 0.0);
     }
 }

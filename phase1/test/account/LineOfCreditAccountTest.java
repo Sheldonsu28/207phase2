@@ -28,7 +28,7 @@ public class LineOfCreditAccountTest {
     }
 
     @Test
-    public void testWithdraw(){
+    public void testWithdrawal(){
         lineOfCreditAccount= new LineOfCreditAccount(time, owner, -0.5);
         register = Mockito.mock(WithdrawTransaction.class);
 
@@ -41,4 +41,15 @@ public class LineOfCreditAccountTest {
             throw new AssertionError("Incorrect exception thrown!");
         }
     }
+
+    @Test
+    public void testCancelWithdrawal() {
+        testWithdrawal();
+        double withdrawAmount = 50;
+
+        lineOfCreditAccount.cancelWithdraw(withdrawAmount);
+
+        assertEquals(-withdrawAmount, lineOfCreditAccount.getBalance(), 0.0);
+    }
+
 }
