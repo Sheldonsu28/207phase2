@@ -2,7 +2,8 @@ PROJECT TITLE
     This is an simulation of a real-life ATM machine.
 
 GETTING STARTED
-    We need a bank manager to log in (User name: admin  Password: CS207fun) and set the system time.
+    First, We need a bank manager to log in (User name: admin  Password: CS207fun) and set the system time.
+    Second, create a user from manager menu. We will print a password in the console. You can use it to log in as a user.
 
 
 
