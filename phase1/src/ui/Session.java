@@ -13,7 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.List;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Session {
@@ -172,7 +174,15 @@ public class Session {
                 break;
 
             case 6: //create account
-                console.displayMenu(Menu.ACCOUNT_MENU);
+                StringBuilder requestInfo = new StringBuilder();
+                List<String> accounts = Menu.ACCOUNT_MENU.getMenuOptions();
+                try {
+                    Class requestAccount = Class.forName(accounts.get(console.displayMenu(Menu.ACCOUNT_MENU) - 1));
+                    requestInfo.append(String.format("User: %b Account:%b \n", currUser, requestAccount));
+                    fileHandler.saveTo("newAccountRequests.txt", requestInfo.toString());
+                } catch (ClassNotFoundException c) {
+                    c.getMessage();
+                }
                 break;
 
             case 7:
@@ -264,8 +274,9 @@ public class Session {
             case 3:
                 getTransactions(user);
                 break;
-
             case 4:
+                String pattern;
+            case 5:
                 state = State.MAIN_STATE;
                 break;
         }
@@ -284,6 +295,7 @@ public class Session {
         int choice = console.displayMenu(Menu.MANAGER_MENU);
         String path = fileHandler.getPath();
         FileInputStream alerts;
+        FileInputStream requests;
         switch (choice) {
             case 1://read alerts
                 try {
@@ -307,11 +319,18 @@ public class Session {
                 }
                 break;
             case 3: //Read account creation request
+                try {
+                    requests = new FileInputStream(path + "newAccountRequests.txt");
+                    System.out.println(requests);
+                } catch (FileNotFoundException e) {
+                    e.getMessage();
+                }
                 break;
             case 4: //Cancel recent transaction
                 //manager.cancelLastTransaction();
                 break;
             case 5: // Restock
+
 
 
         }
