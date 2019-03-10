@@ -16,7 +16,8 @@ public class User {
 
     /**
      * Initial a user account with username and password.
-     * @param username The username of the user account.
+     *
+     * @param username        The username of the user account.
      * @param defaultPassword The default password of the user account.
      */
     User(String username, String defaultPassword) {
@@ -27,6 +28,7 @@ public class User {
 
     /**
      * Get the primary cheque account from the Account Storage manager.
+     *
      * @return The primary account of this user.
      */
     public ChequingAccount getPrimaryAccount() {
@@ -35,6 +37,7 @@ public class User {
 
     /**
      * Set the primary account for this user.
+     *
      * @param primaryAccount The chequeing account that will be set as the primary account.
      */
     public void setPrimaryAccount(ChequingAccount primaryAccount) {
@@ -43,6 +46,7 @@ public class User {
 
     /**
      * Get the user name for the current user account.
+     *
      * @return The user name for the current user account.
      */
     public String getUserName() {
@@ -51,6 +55,7 @@ public class User {
 
     /**
      * Return a array list that contains all the bank accounts belong to this user account.
+     *
      * @return An array list of all bank accounts belong to this user.
      */
     public ArrayList<Account> getAllAccounts() {
@@ -60,6 +65,7 @@ public class User {
     /**
      * Verify if the inout string equals to the password of this user account. Return true if the input is equal to the
      * password, else return false.
+     *
      * @param password Password for the user account.
      * @return True if the input is equal to the password, else return false.
      */
@@ -69,6 +75,7 @@ public class User {
 
     /**
      * Change the password of the user account.
+     *
      * @param newPassword New password.
      */
     public void changePassword(String newPassword) {
@@ -78,6 +85,7 @@ public class User {
     /**
      * Get total balance within in the user account by adding up all the balance stored in different bank accounts
      * belong to the user.
+     *
      * @return The net total balance in the user account.
      */
     public double getNetTotal() {
@@ -91,8 +99,9 @@ public class User {
 
     /**
      * Add a bank account to the user.
+     *
      * @param account Any bank account.
-     * @param <T> Any classes that extends Account.
+     * @param <T>     Any classes that extends Account.
      */
     <T extends Account> void addAccount(T account) {
         accountVaults.addAccount(account);
@@ -100,17 +109,20 @@ public class User {
 
     /**
      * Save a add account request to a file named accReq.txt.
+     *
      * @param klass Bank account that want to be add to the user account.
      */
     public void requestAccountCreation(Class<? extends Account> klass) {
         if (klass.isInterface() || Modifier.isAbstract(klass.getModifiers()))
             throw new IllegalArgumentException("Can not request abstract or interface account class creation!");
 
-        (new FileHandler()).saveTo("accReq.txt", String.format("%s %s", username, klass.getName()));
+        (new FileHandler()).saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
+                String.format("%s %s", username, klass.getName()));
     }
 
     /**
      * Get the account summary, the summary include username, type of accounts, balance in each account, and net balance.
+     *
      * @return Summary of the user account.
      */
     public String getAccountsSummary() {
@@ -127,8 +139,9 @@ public class User {
 
     /**
      * Get the list of account of the type designated by the input class in the user account.
+     *
      * @param klass Type of class to be filtered.
-     * @param <T> The generic type of the target class.
+     * @param <T>   The generic type of the target class.
      * @return An ArrayList contain all the class that satisfy the requirement in the user account
      */
     public <T> ArrayList<T> getAccountListOfType(Class<T> klass) {
@@ -137,6 +150,7 @@ public class User {
 
     /**
      * The String representation of the User account(username).
+     *
      * @return The username of the user account.
      */
     public String toString() {

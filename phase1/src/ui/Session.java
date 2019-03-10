@@ -1,6 +1,7 @@
 package ui;
 
 import account.Account;
+import account.BillingAccount;
 import account.Depositable;
 import account.Withdrawable;
 import atm.*;
@@ -12,9 +13,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
-
-import java.util.regex.Pattern;
 
 public class Session {
     private Scanner response;
@@ -128,7 +128,6 @@ public class Session {
         switch (choice) {
 
             case 1: //  Login
-                //TODO after user name does not exist 2 times, it will back to the main
                 String[] userLogin = signIn();
                 currUser = bankManager.validateUserLogin(userLogin[0], userLogin[1]);
                 if (currUser != null) {
@@ -192,13 +191,12 @@ public class Session {
 
         switch (choice) {
             case 1: //deposit
-                //TODO deposit checks and cash
                 System.out.println("Select target deposit account\n");
                 toAccount = depositables.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, depositables.toArray()) - 1);
                 try {
                     return new DepositTransaction(user, atm, toAccount);
-                } catch (IllegalDepositInfoException e) {
+                } catch (IllegalFileFormatException e) {
                     System.out.println(e.getMessage());
                 }
                 break;
@@ -208,7 +206,7 @@ public class Session {
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, withdrawables.toArray()) - 1);
 
                 amount = console.getAmount();
-                inputChoice = confirmation(String.format("WITHDRAW $%d FROM %s\n", fromAccount, amount));
+                inputChoice = confirmation(String.format("WITHDRAW $%d FROM %s\n", amount, fromAccount));
 
                 if (inputChoice == 1)
                     return new WithdrawTransaction(user, atm, fromAccount, amount);
@@ -236,7 +234,19 @@ public class Session {
             case 4:
                 fromAccount = withdrawables.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, withdrawables.toArray()) - 1);
-                //TODO how the user inputChoice payee account
+                List<BillingAccount> payeeList = bankManager.getPayeeList();
+                BillingAccount payeeAccount = payeeList.get(
+                        console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, payeeList.toArray()) - 1);
+
+                amount = console.getAmount();
+                inputChoice = confirmation(
+                        String.format("FROM %s\nPAY $%d BILL TO %s\n", fromAccount, amount, payeeAccount));
+
+                if (inputChoice == 1)
+                    return new PayBillTransaction(user, fromAccount, payeeAccount, amount);
+                else
+                    state = State.MAIN_STATE;
+                break;
 
             case 5:
                 state = State.MAIN_STATE;
