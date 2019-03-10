@@ -1,17 +1,42 @@
 package transaction;
 
+import atm.User;
+
 //  TODO implement toString and comparison
 public abstract class Transaction {
 
     private boolean performed, cancelled;
     private final String id;
     private static int prev_id = 0;
+    private User fromUser, toUser;
 
-    Transaction() {
+    private Transaction() {
         performed = false;
         cancelled = false;
         id = String.format("TRA%04d", prev_id);
         prev_id++;
+    }
+
+    Transaction(User fromUser) {
+        this();
+
+        this.fromUser = fromUser;
+        this.toUser = fromUser;
+    }
+
+    Transaction(User fromUser, User toUser) {
+        this();
+
+        this.fromUser = fromUser;
+        this.toUser = toUser;
+    }
+
+    public User getFromUser() {
+        return fromUser;
+    }
+
+    public User getToUser() {
+        return toUser;
     }
 
     public String getId() {
