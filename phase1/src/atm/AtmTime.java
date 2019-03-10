@@ -22,10 +22,11 @@ public final class AtmTime extends Observable implements Serializable {
     public static final String FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
     private static boolean hasRunningInstance = false;
     private SimpleDateFormat dateFormat;
-    private final SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+    private final SimpleDateFormat dayFormat;
     private Timer timer;
     private final Date initialTime;
     private Date currentTime, prevTime;
+    private long prevMills, currMills;
 
     /**
      * Constructs an atm time starting at the given time
@@ -35,6 +36,7 @@ public final class AtmTime extends Observable implements Serializable {
     AtmTime(Date initialTime) {
         dateFormat = new SimpleDateFormat(FORMAT_STRING);
         this.initialTime = initialTime;
+        dayFormat = new SimpleDateFormat("dd");
         initialize(initialTime);
     }
 
@@ -50,6 +52,8 @@ public final class AtmTime extends Observable implements Serializable {
 
         currentTime = initialTime;
         prevTime = currentTime;
+        currMills = System.currentTimeMillis();
+        prevMills = currMills;
 
         timer = new Timer();
         timer.schedule(getTimerTask(), 0L, 100L);
@@ -59,10 +63,9 @@ public final class AtmTime extends Observable implements Serializable {
         return new TimerTask() {
             @Override
             public void run() {
-                long currentMills = System.currentTimeMillis();
-                long prevMills = prevTime.getTime();
-                currentTime = new Date(currentTime.getTime() + (currentMills - prevMills));
-                prevTime = new Date(currentMills);
+                currMills = System.currentTimeMillis();
+                currentTime = new Date(currentTime.getTime() + (currMills - prevMills));
+                prevMills = currMills;
 
                 String prevDay = dayFormat.format(prevTime);
                 String currDay = dayFormat.format(currentTime);
@@ -70,6 +73,7 @@ public final class AtmTime extends Observable implements Serializable {
                     setChanged();
                     notifyObservers(currDay);
                 }
+
             }
         };
     }

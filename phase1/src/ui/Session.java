@@ -1,20 +1,23 @@
 package ui;
 
-import account.*;
+import account.Account;
+import account.Cancellable;
+import account.Depositable;
+import account.Withdrawable;
 import atm.*;
-import com.sun.tools.doclets.internal.toolkit.util.Extern;
 import transaction.DepositTransaction;
 import transaction.Transaction;
 import transaction.TransferTransaction;
 import transaction.WithdrawTransaction;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
 
 public class Session {
     private Scanner response;
@@ -351,9 +354,7 @@ public class Session {
                 break;
 
             case 5: // Restock
-                ArrayList<String> content = fileHandler.readFrom(ExternalFiles.CASH_ALERT_FILE);
-                int amount = 0;
-                amount = console.restockAmount(content.get(0));
+                bankManager.restockMachine(console.getInputStock());
                 break;
 
             case 6: //Create account
@@ -380,37 +381,40 @@ public class Session {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Class<Account> getValidAccountType(String classType) throws IllegalFileFormatException {
-        Class klass;
+//        Class klass;
+//
+//        try {
+//            klass = Class.forName(classType);
+//        } catch (ClassNotFoundException e) {
+//            throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+//        }
+//
+//        boolean isAccountSubclass = false;
+//        Class superclass = klass.getSuperclass();
+//
+//        while (superclass != null) {
+//            if (klass == Account.class){
+//                isAccountSubclass = true;
+//                break;
+//            }
+//
+//            superclass = superclass.getSuperclass();
+//        }
+//
+//        if (!isAccountSubclass || klass.isInterface() || Modifier.isAbstract(klass.getModifiers()))
+//            throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+
+        Class<Account> result;
 
         try {
-            klass = Class.forName(classType);
-        } catch (ClassNotFoundException e) {
+            result = (Class<Account>) Class.forName(classType);
+        } catch (ClassCastException | ClassNotFoundException e) {
             throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
         }
 
-        boolean isAccountSubclass = false;
-        Class superclass = klass.getSuperclass();
-
-        while (superclass != null) {
-            if (klass == Account.class){
-                isAccountSubclass = true;
-                break;
-            }
-
-            superclass = superclass.getSuperclass();
-        }
-
-        if (!isAccountSubclass || klass.isInterface() || Modifier.isAbstract(klass.getModifiers()))
-            throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
-
-        try {
-            Class<Account> result = (Class<Account>) klass;
-        } catch (ClassCastException e){
-            e.printStackTrace();
-        }
-
-        return klass;
+        return result;
     }
 
 }

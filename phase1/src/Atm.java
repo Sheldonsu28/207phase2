@@ -3,6 +3,7 @@ import atm.FileHandler;
 import ui.Session;
 
 public class Atm {
+
     public static void main(String[] args) {
         FileHandler fileHandler = new FileHandler();
         BankManager manager = fileHandler.readManagerData();
@@ -12,6 +13,8 @@ public class Atm {
 
         //  TODO interface main invoke
         Session newSession = new Session(manager);
-        newSession.performSession();
+
+        //newSession.performSession();
     }
+
 }

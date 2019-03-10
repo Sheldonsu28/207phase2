@@ -1,9 +1,6 @@
 package ui;
 
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class Console {
@@ -20,18 +17,18 @@ class Console {
                 options = Arrays.stream(args[0]).map(Object::toString).collect(Collectors.toList());
                 printOptions(options);
                 System.out.printf("%d) Back to main", options.size() + 1);
-                return getInput(options.size() + 1);
+                return getChoice(options.size() + 1);
 
             case CONFIRM_MENU:
                 System.out.println(args[0][0]);
                 options = menu.getMenuOptions();
                 printOptions(options);
-                return getInput(options.size());
+                return getChoice(options.size());
 
             default:
                 options = menu.getMenuOptions();
                 printOptions(options);
-                return getInput(options.size());
+                return getChoice(options.size());
         }
 
     }
@@ -43,22 +40,56 @@ class Console {
 
     int getAmount() {
         System.out.println("Please enter amount of money");
-        return getInput(Integer.MAX_VALUE);
+        return getChoice(Integer.MAX_VALUE);
     }
 
-    private int getInput(int limit) {
+    TreeMap<Integer, Integer> getInputStock() {
+        TreeMap<Integer, Integer> result = new TreeMap<>();
+
+        while (true) {
+            try {
+                System.out.println("Please enter your restock specification \"type-amount\" " +
+                        "(ex. 5-7 10-3 means 7 $5 and 3 $10)");
+
+                String[] data = response.nextLine().split(" ");
+
+                for (String stock : data) {
+                    String[] stockSpec = stock.split("-");
+
+                    if (stockSpec.length != 2)
+                        throw new IndexOutOfBoundsException();
+
+                    int type = Integer.parseInt(stockSpec[0]);
+                    int amount = Integer.parseInt(stockSpec[1]);
+
+                    if (result.containsKey(type))
+                        result.put(type, result.get(type) + amount);
+                    else
+                        result.put(type, amount);
+                }
+
+                break;
+            } catch (IndexOutOfBoundsException | NumberFormatException e) {
+                System.out.println("Invalid stock input!");
+            }
+        }
+
+        return result;
+    }
+
+    private int getChoice(int limit) {
         int result;
 
         while (true) {
             try {
                 result = response.nextInt();
 
-                if (result >= 1 && result <= limit)
+                if (result >= 0 && result <= limit)
                     break;
                 else
-                    System.out.printf("Choice out of range(must be 1 - %d)", limit);
+                    System.out.printf("Choice out of range(must be 0 - %d)", limit);
             } catch (InputMismatchException i) {
-                System.out.println("Number choice only!");
+                System.out.println("Must be numeric integer");
             }
         }
 
