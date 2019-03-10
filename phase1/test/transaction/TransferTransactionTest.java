@@ -11,12 +11,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
-public class IntraUserTransferTransactionTest {
+public class TransferTransactionTest {
 
     private User owner;
     private ChequingAccount chequingAccount;
     private SavingsAccount savingsAccount;
-    private IntraUserTransferTransaction register;
+    private TransferTransaction register;
 
     @Test
     public void testTransferTransaction() throws WithdrawException{
@@ -24,7 +24,7 @@ public class IntraUserTransferTransactionTest {
         chequingAccount = Mockito.mock(ChequingAccount.class);
         savingsAccount = Mockito.mock(SavingsAccount.class);
         int amount = 50;
-        register = new IntraUserTransferTransaction(owner, savingsAccount, chequingAccount, amount);
+        register = new TransferTransaction(owner, savingsAccount, chequingAccount, amount);
         register.doPerform();
         verify(chequingAccount, times(1)).deposit(50.0, register);
         verify(savingsAccount, times(1)).withdraw(50.0, register);
@@ -36,7 +36,7 @@ public class IntraUserTransferTransactionTest {
         chequingAccount = Mockito.mock(ChequingAccount.class);
         savingsAccount = Mockito.mock(SavingsAccount.class);
         int amount = 50;
-        register = new IntraUserTransferTransaction(owner, savingsAccount, chequingAccount, amount);
+        register = new TransferTransaction(owner, savingsAccount, chequingAccount, amount);
         register.doCancel();
         verify(chequingAccount, times(1)).cancelDeposit(50.0);
         verify(savingsAccount, times(1)).cancelWithdraw(50.0);

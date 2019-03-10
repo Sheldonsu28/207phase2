@@ -27,6 +27,12 @@ public class PayBillTransaction extends Transaction {
     }
 
     @Override
+    public String toString() {
+        return super.toString() +
+                String.format("User %s's Account %s\t PAYED $%.2f BILL to %s", getFromUser(), payer, payAmount, payee);
+    }
+
+    @Override
     protected boolean doPerform() {
         try {
             payer.withdraw(payAmount, this);

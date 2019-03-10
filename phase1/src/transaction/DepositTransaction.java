@@ -96,6 +96,12 @@ public class DepositTransaction extends Transaction {
     }
 
     @Override
+    public String toString() {
+        return super.toString() +
+                String.format("User %s's Account %s DEPOSIT $%d", getFromUser(), targetAccount, depositAmount);
+    }
+
+    @Override
     protected boolean doPerform() {
         if (depositType == DepositType.CASH)
             machine.increaseStock(depositStock);
