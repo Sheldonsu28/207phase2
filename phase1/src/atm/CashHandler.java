@@ -95,7 +95,6 @@ class CashHandler {
      * @throws EmptyStockException When the stock is empty, this exception is thrown.
      * @throws CashShortageException When there is not enough cash, this exception is thrown.
      */
-    // TODO test required
     TreeMap<Integer, Integer> takeAmountOfCash(int amount) throws EmptyStockException, CashShortageException {
         if (amount % 5 != 0)
             throw new IllegalArgumentException("Can't produce amount that is not a multiplier of 5!");
@@ -117,7 +116,6 @@ class CashHandler {
      * Go through the cash stock and check the amount of cash in the stock, if the cash is lower than
      * the threshold set by alertLevel, write the alert into the file called alert.txt.
      */
-    // TODO test required
     public void stockCheck() {
         StringBuilder alertMsg = new StringBuilder(time + "\tStock shortage: ");
         boolean hasAlert = false;
