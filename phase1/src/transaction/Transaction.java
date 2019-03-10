@@ -122,9 +122,6 @@ public abstract class Transaction {
 
     /**
      * The String representation of this transaction in the following format:
-     * "ID: id
-     * CAN_BE_CANCELLED: boolean
-     * IS_CANCELLED: boolean"
      *
      * @return The String representation of the transaction.
      */
