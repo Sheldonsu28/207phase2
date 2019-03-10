@@ -8,12 +8,23 @@ import atm.ExternalFiles;
 import atm.FileHandler;
 import atm.User;
 
+/**
+ * This class is responsible for transaction that is paying bills.
+ */
 public class PayBillTransaction extends Transaction {
     private final double payAmount;
     private final BillingAccount payee;
     private final Withdrawable payer;
     private final ExternalFiles file;
 
+    /**
+     * Initialize a new transaction object with user, payer, payee and amount.
+     *
+     * @param from      The user that is paying the bill.
+     * @param payer     The bank account to withdraw from.
+     * @param payee     The bank account that is receiving the bill.
+     * @param amount    Amount of money transferred.
+     */
     public PayBillTransaction(User from, Withdrawable payer, BillingAccount payee, double amount) {
         super(from);
         file = ExternalFiles.BILLING_FILE;
@@ -26,12 +37,18 @@ public class PayBillTransaction extends Transaction {
         this.payer = payer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return super.toString() +
                 String.format("User %s's Account %s\t PAYED $%.2f BILL to %s", getFromUser(), payer, payAmount, payee);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doPerform() {
         try {
@@ -51,11 +68,17 @@ public class PayBillTransaction extends Transaction {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doCancel() {
         throw new IllegalStateException("Billing action is not cancellable!");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCancellable() {
         return false;
