@@ -1,23 +1,20 @@
 package ui;
 
-import account.Account;
-import account.Cancellable;
-import account.Depositable;
-import account.Withdrawable;
+import account.*;
 import atm.*;
+import com.sun.tools.doclets.internal.toolkit.util.Extern;
 import transaction.DepositTransaction;
 import transaction.Transaction;
 import transaction.TransferTransaction;
 import transaction.WithdrawTransaction;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Session {
     private Scanner response;
@@ -81,7 +78,7 @@ public class Session {
                     break;
 
                 case MANAGER_STATE:
-                    manage(bankManager);
+                    manage();
                     break;
 
             }
@@ -136,14 +133,14 @@ public class Session {
                 currUser = bankManager.validateUserLogin(userLogin[0], userLogin[1]);
                 if (currUser != null) {
                     state = State.MAIN_STATE;
-                    break;
                 }
+                break;
             case 2: //  Bank manager login
                 managerLogin(signIn());
                 if (bankManager.hasLoggedin()) {
                     state = State.MANAGER_STATE;
-                    break;
                 }
+                break;
         }
 
     }
@@ -175,14 +172,14 @@ public class Session {
                 break;
 
             case 6: //open account
+                boolean setPrimary = false;
                 List<String> accounts = Menu.ACCOUNT_MENU.getMenuOptions();
-                try {
-                    Class requestAccount = Class.forName(accounts.get(console.displayMenu(Menu.ACCOUNT_MENU) - 1));
-                    fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
-                            String.format("%s %s", currUser.getUserName(), requestAccount.getSimpleName()));
-                } catch (ClassNotFoundException c) {
-                    c.getMessage();
+                String requestAccount = accounts.get(console.displayMenu(Menu.ACCOUNT_MENU) - 1);
+                if (requestAccount.equals("Chequing account")) {
+                    setPrimary = console.setPrimary();
                 }
+                fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
+                        String.format("%s %s %s", currUser.getUserName(), requestAccount, setPrimary));
                 break;
 
             case 7:
@@ -303,7 +300,7 @@ public class Session {
         System.out.println(selectAccount.getTransactions());
     }
 
-    private void manage(BankManager manager) {
+    private void manage() {
         int choice = console.displayMenu(Menu.MANAGER_MENU);
         String path = fileHandler.getPath();
         FileInputStream alerts;
@@ -324,7 +321,7 @@ public class Session {
                     String userName = response.nextLine();
                     if (userName != null) legalName = true;
                     try {
-                        manager.createUser(userName);
+                        bankManager.createUser(userName);
                     } catch (UsernameAlreadyExistException e) {
                         legalName = false;
                         e.getMessage();
@@ -341,23 +338,83 @@ public class Session {
                     e.getMessage();
                 }
                 break;
+
             case 4: //Cancel recent transaction
                 List<User> userList = bankManager.getAllUsers();
                 User userSelect = userList.get(console.displayMenu(Menu.USER_SELECTION_MENU, userList.toArray()) - 1);
                 ArrayList<Cancellable> userAccounts = userSelect.getAccountListOfType(Cancellable.class);
                 Cancellable accountSelect = userAccounts.get(console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, userAccounts.toArray()) - 1);
-                manager.cancelLastTransaction((Account) accountSelect);
+                bankManager.cancelLastTransaction((Account) accountSelect);
                 //TODO back to main
                 break;
+
             case 5: // Restock
-
+                ArrayList<String> content = new ArrayList<>();
+                int amount = 0;
+                try {
+                    Scanner scanner = new Scanner(new File(path + ExternalFiles.CASH_ALERT_FILE));
+                    while (scanner.hasNext()) {
+                        content.add(scanner.nextLine());
+                        amount = console.restockAmount(content.get(0));
+                    }
+                    scanner.close();
+                } catch (FileNotFoundException e) {
+                    System.out.println("File not found.");
+                }
+                break;
             case 6: //Create account
+                ArrayList<String> userInfo = fileHandler.readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
 
+                try {
+                    if (userInfo.size() != 3)
+                        throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+
+                    bankManager.createAccount(userInfo.get(0), getValidAccountType(userInfo.get(1)),
+                            Boolean.parseBoolean(userInfo.get(2)));
+
+                } catch (IllegalFileFormatException i) {
+                    System.out.println(i.getMessage());
+                }
+
+                break;
             case 7:
                 state = State.MAIN_STATE;
                 break;
 
         }
+    }
+
+    private Class<Account> getValidAccountType(String classType) throws IllegalFileFormatException {
+        Class klass;
+
+        try {
+            klass = Class.forName(classType);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+        }
+
+        boolean isAccountSubclass = false;
+        Class superclass = klass.getSuperclass();
+
+        while (superclass != null) {
+            if (klass == Account.class){
+                isAccountSubclass = true;
+                break;
+            }
+
+            superclass = superclass.getSuperclass();
+        }
+
+        if (!isAccountSubclass || klass.isInterface() || Modifier.isAbstract(klass.getModifiers()))
+            throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+
+        try {
+            Class<Account> result = (Class<Account>) klass;
+        } catch (ClassCastException e){
+            e.printStackTrace();
+        }
+
+        return klass;
     }
 
 }
