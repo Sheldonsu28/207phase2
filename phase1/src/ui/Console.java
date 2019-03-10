@@ -15,6 +15,7 @@ class Console {
         List<String> options;
 
         switch (menu) {
+            case USER_SELECTION_MENU:
             case ACCOUNT_SELECTION_MENU:
                 options = Arrays.stream(args[0]).map(Object::toString).collect(Collectors.toList());
                 printOptions(options);

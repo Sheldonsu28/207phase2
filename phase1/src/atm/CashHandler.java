@@ -131,7 +131,7 @@ class CashHandler {
         }
 
         if (hasAlert)
-            (new FileHandler()).saveTo("alert.txt", alertMsg.toString());
+            (new FileHandler()).saveTo(ExternalFiles.CASH_ALERT_FILE, alertMsg.toString());
     }
 
     /**

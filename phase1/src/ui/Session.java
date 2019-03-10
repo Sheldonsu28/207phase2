@@ -1,10 +1,14 @@
 package ui;
 
 import account.Account;
+import account.Cancellable;
 import account.Depositable;
 import account.Withdrawable;
 import atm.*;
-import transaction.*;
+import transaction.DepositTransaction;
+import transaction.Transaction;
+import transaction.TransferTransaction;
+import transaction.WithdrawTransaction;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,9 +16,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
-
-import java.util.regex.Pattern;
 
 public class Session {
     private Scanner response;
@@ -171,8 +174,15 @@ public class Session {
                 getAccountInfo(currUser);
                 break;
 
-            case 6: //create account
-                console.displayMenu(Menu.ACCOUNT_MENU);
+            case 6: //open account
+                List<String> accounts = Menu.ACCOUNT_MENU.getMenuOptions();
+                try {
+                    Class requestAccount = Class.forName(accounts.get(console.displayMenu(Menu.ACCOUNT_MENU) - 1));
+                    fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
+                            String.format("%s %s", currUser.getUserName(), requestAccount.getSimpleName()));
+                } catch (ClassNotFoundException c) {
+                    c.getMessage();
+                }
                 break;
 
             case 7:
@@ -198,8 +208,8 @@ public class Session {
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, depositables.toArray()) - 1);
                 try {
                     return new DepositTransaction(user, atm, toAccount);
-                } catch (IllegalDepositInfoException e) {
-                    System.out.println(e.getMessage());
+                } catch (IllegalFileFormatException e) {
+                    e.printStackTrace();
                 }
                 break;
 
@@ -208,7 +218,7 @@ public class Session {
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, withdrawables.toArray()) - 1);
 
                 amount = console.getAmount();
-                inputChoice = confirmation(String.format("WITHDRAW $%d FROM %s\n", fromAccount, amount));
+                inputChoice = confirmation(String.format("WITHDRAW $%d FROM %s\n", amount, fromAccount));
 
                 if (inputChoice == 1)
                     return new WithdrawTransaction(user, atm, fromAccount, amount);
@@ -266,6 +276,19 @@ public class Session {
                 break;
 
             case 4:
+                boolean valid = false;
+                while (!valid) {
+                    System.out.println("Please enter new password");
+                    String newPassword = response.nextLine();
+                    if (bankManager.isValidPassword(newPassword)) {
+                        user.changePassword(newPassword);
+                        valid = true;
+                    } else {
+                        System.out.println("Invalid password. Please try again");
+                    }
+                }
+                break;
+            case 5:
                 state = State.MAIN_STATE;
                 break;
         }
@@ -284,6 +307,7 @@ public class Session {
         int choice = console.displayMenu(Menu.MANAGER_MENU);
         String path = fileHandler.getPath();
         FileInputStream alerts;
+        FileInputStream requests;
         switch (choice) {
             case 1://read alerts
                 try {
@@ -293,6 +317,7 @@ public class Session {
                     e.getMessage();
                 }
                 break;
+            //TODO back to main
             case 2://Create user
                 boolean legalName = false;
                 while (!legalName) {
@@ -305,14 +330,32 @@ public class Session {
                         e.getMessage();
                     }
                 }
+                //TODO back to main
                 break;
             case 3: //Read account creation request
+                try {
+                    requests = new FileInputStream(path + ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+                    System.out.println(requests);
+                    //TODO back to main
+                } catch (FileNotFoundException e) {
+                    e.getMessage();
+                }
                 break;
             case 4: //Cancel recent transaction
-                //manager.cancelLastTransaction();
+                List<User> userList = bankManager.getAllUsers();
+                User userSelect = userList.get(console.displayMenu(Menu.USER_SELECTION_MENU, userList.toArray()) - 1);
+                ArrayList<Cancellable> userAccounts = userSelect.getAccountListOfType(Cancellable.class);
+                Cancellable accountSelect = userAccounts.get(console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, userAccounts.toArray()) - 1);
+                manager.cancelLastTransaction((Account) accountSelect);
+                //TODO back to main
                 break;
             case 5: // Restock
 
+            case 6: //Create account
+
+            case 7:
+                state = State.MAIN_STATE;
+                break;
 
         }
     }

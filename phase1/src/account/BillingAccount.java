@@ -20,12 +20,11 @@ public class BillingAccount extends Account {
      * In addition to {@linkplain Account}'s default constructor, set this billing account's payee name.
      *
      * @param time      time of creation
-     * @param owner     owner user
      * @param payeeName name of this billing account(payee)
      * @see Account#Account(Date, User)
      */
-    public BillingAccount(Date time, User owner, String payeeName) {
-        super(time, owner);
+    public BillingAccount(Date time, String payeeName) {
+        super(time, null);
         this.payeeName = payeeName;
     }
 

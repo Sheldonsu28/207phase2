@@ -14,7 +14,7 @@ public class FileHandler implements Serializable {
         path = new File("phase1/data/").getAbsolutePath() + '\\';
     }
 
-    public String getPath(){
+    public String getPath() {
         return this.path;
     }
 
@@ -48,7 +48,7 @@ public class FileHandler implements Serializable {
             information = (BankManager) input.readObject();
             fileRead.close();
             input.close();
-        }catch(FileNotFoundException f){
+        } catch (FileNotFoundException f) {
             System.out.println("File not found, read failed");
         } catch (IOException i) {
             System.out.println("There is a problem when reading the file, file information failed to load.");
@@ -62,45 +62,49 @@ public class FileHandler implements Serializable {
 
     /**
      * Save the files to the corresponding file in data folder.
-     * @param filename The name of the file with suffix such as data.txt.
+     *
+     * @param extFile  the target external file defined in {@link ExternalFiles}
      * @param contents The information you would like to put in the class.
      */
-   public void saveTo(String filename,String contents){
+    public void saveTo(ExternalFiles extFile, String contents) {
+        String filename = extFile.getFileName();
         ArrayList<String> content;
         File file = new File(path + filename);
 
-        if (file.exists()){
+        if (file.exists()) {
             try {
-                content = readFrom(filename);
-                content.add(contents );
+                content = readFrom(extFile);
+                content.add(contents);
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                 for (String item : content) {
                     writer.write(item);
                     writer.newLine();
                 }
                 writer.close();
-            }catch(IOException e) {
+            } catch (IOException e) {
                 System.out.println("Something went wrong, information not saved.");
             }
-        }else{
+        } else {
             try {
                 FileWriter writer = new FileWriter(file);
                 writer.write(contents);
                 writer.close();
-            }catch(IOException e){
+            } catch (IOException e) {
                 System.out.println("Something went wrong, information not saved.");
             }
 
         }
 
-   }
+    }
 
     /**
      * Reads the file that filename designates. If file not exist, return null.
-     * @param filename Name of the file you want to read from, the file name need to include the suffix such as "data.txt".
+     *
+     * @param file the target external file defined in {@link ExternalFiles}
      * @return A ArrayList, each element in the list represent one line in the file, if the file is not found, return null.
      */
-    public ArrayList<String> readFrom(String filename) {
+    public ArrayList<String> readFrom(ExternalFiles file) {
+        String filename = file.getFileName();
         ArrayList<String> content = new ArrayList<>();
         try {
             Scanner scanner = new Scanner(new File(path + filename));
@@ -108,13 +112,13 @@ public class FileHandler implements Serializable {
                 content.add(scanner.nextLine());
             }
             scanner.close();
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("File not found.");
         }
         return content;
     }
 
-    public boolean checkFileExist(String filename){
+    public boolean checkFileExist(String filename) {
         File file = new File(path + filename);
         return file.exists();
     }

@@ -9,7 +9,7 @@ import atm.User;
 
 import java.util.TreeMap;
 
-public class WithdrawTransaction extends IntraUserTransaction {
+public class WithdrawTransaction extends Transaction {
     private final int withdrawAmount;
     private final Withdrawable targetAccount;
     private final AtmMachine machine;
@@ -25,6 +25,12 @@ public class WithdrawTransaction extends IntraUserTransaction {
         targetAccount = account;
         this.machine = machine;
         stock = null;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                String.format("User %s's Account %s WITHDRAW $%d", getFromUser(), targetAccount, withdrawAmount);
     }
 
     @Override

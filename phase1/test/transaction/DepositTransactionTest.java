@@ -2,10 +2,13 @@ package transaction;
 
 import account.ChequingAccount;
 import atm.AtmMachine;
+import atm.IllegalFileFormatException;
+import atm.User;
 import org.junit.Test;
 import org.mockito.Mockito;
-import atm.User;
-import static org.mockito.Mockito.*;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 public class DepositTransactionTest {
@@ -16,7 +19,7 @@ public class DepositTransactionTest {
     private DepositTransaction register;
 
     @Test
-    public void testDepositTransaction() throws IllegalDepositInfoException{
+    public void testDepositTransaction() throws IllegalFileFormatException {
         owner = Mockito.mock(User.class);
         machine = Mockito.mock(AtmMachine.class);
         chequingAccount = Mockito.mock(ChequingAccount.class);
@@ -26,7 +29,7 @@ public class DepositTransactionTest {
     }
 
     @Test
-    public void testCancelDepositTransaction() throws IllegalDepositInfoException{
+    public void testCancelDepositTransaction() throws IllegalFileFormatException {
         owner = Mockito.mock(User.class);
         machine = Mockito.mock(AtmMachine.class);
         chequingAccount = Mockito.mock(ChequingAccount.class);

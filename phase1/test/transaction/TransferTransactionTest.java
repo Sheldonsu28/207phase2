@@ -3,10 +3,12 @@ package transaction;
 import account.ChequingAccount;
 import account.SavingsAccount;
 import account.WithdrawException;
+import atm.User;
 import org.junit.Test;
 import org.mockito.Mockito;
-import atm.User;
-import static org.mockito.Mockito.*;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 public class TransferTransactionTest {

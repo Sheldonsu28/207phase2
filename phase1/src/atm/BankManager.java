@@ -1,6 +1,7 @@
 package atm;
 
 import account.Account;
+import account.BillingAccount;
 import account.ChequingAccount;
 import transaction.Transaction;
 
@@ -8,7 +9,8 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- *The manager class represent a manger, responsible for managing accounts and initialize time for the ATMs.
+ * The manager class represent a manger, responsible for managing accounts and initialize time for the ATMs.
+ *
  * @author zhaojuna
  * @version 1.0
  */
@@ -17,9 +19,10 @@ public class BankManager implements Serializable {
     private List<AtmMachine> machineList;
     private AccountFactory accountFactory;
     private UserDatabase userDatabase;
+    private List<BillingAccount> payeeList;
     private boolean hasLoggedin;
     private String username, password;
-    private RandomPasswordGenerator passwordGenerator;
+    private PasswordManager passwordManager;
 
     private boolean hasInitialized;
 
@@ -31,8 +34,7 @@ public class BankManager implements Serializable {
         hasLoggedin = false;
         username = "admin";
         password = "CS207fun";
-        passwordGenerator = new RandomPasswordGenerator(12, 24,
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()");
+        passwordManager = new PasswordManager(12, 24, "[0-9]|[a-z]|[A-Z]");
 
         addMachine();
     }
@@ -40,11 +42,22 @@ public class BankManager implements Serializable {
     public void initialize(Date initialDate) {
         commonTime = new AtmTime(initialDate);
 
+        try {
+            payeeList = accountFactory.getPayeesFromFile(commonTime);
+        } catch (IllegalFileFormatException e) {
+            System.out.println(e.getMessage());
+        }
+
         hasInitialized = true;
+    }
+
+    public List<BillingAccount> getPayeeList() {
+        return payeeList;
     }
 
     /**
      * Get the Atm's time
+     *
      * @return The time of this ATM.
      */
     public AtmTime getCommonTime() {
@@ -55,12 +68,17 @@ public class BankManager implements Serializable {
         return hasInitialized;
     }
 
+    public boolean isValidPassword(String password) {
+        return passwordManager.isValidPassword(password);
+    }
+
     /**
      * Takes the user's username and log the user in.
+     *
      * @param username Username of the user.
      * @param password Password of the user.
      * @throws WrongPasswordException Throws this exception if the password is incorrect.
-     * @throws UserNotExistException Throws this exception if the username does not exist.
+     * @throws UserNotExistException  Throws this exception if the username does not exist.
      */
     public void login(String username, String password) throws WrongPasswordException, UserNotExistException {
         if (username.equals(this.username)) {
@@ -76,6 +94,7 @@ public class BankManager implements Serializable {
 
     /**
      * Check if the manager has logged in ot not.
+     *
      * @return Log in states of the manager.
      */
 
@@ -87,8 +106,13 @@ public class BankManager implements Serializable {
         hasLoggedin = false;
     }
 
+    public List<User> getAllUsers() {
+        return userDatabase.getUserList();
+    }
+
     /**
      * Private method that checks if the manager account is in a correct state.
+     *
      * @param needLoginState True if manager need to log in.
      */
     private void checkState(boolean needLoginState) {
@@ -105,6 +129,7 @@ public class BankManager implements Serializable {
 
     /**
      * Add a new ATM Machine with stock to the manager.
+     *
      * @return The new ATM machine that has been created.
      */
     private AtmMachine addMachine() {
@@ -121,10 +146,11 @@ public class BankManager implements Serializable {
 
     /**
      * Create new account to the correspond user.
-     * @param user  The user that account need to be added to.
+     *
+     * @param user        The user that account need to be added to.
      * @param accountType The type of the account.
-     * @param isPrimary if the account is the primary account of the user or not.
-     * @param <T> Any account type.
+     * @param isPrimary   if the account is the primary account of the user or not.
+     * @param <T>         Any account type.
      * @return Return the account created.
      */
     public <T extends Account> boolean createAccount(User user, Class<T> accountType, boolean isPrimary) {
@@ -142,7 +168,7 @@ public class BankManager implements Serializable {
     public String createUser(String username) throws UsernameAlreadyExistException {
         checkState(true);
 
-        String password = passwordGenerator.generatePassword();
+        String password = passwordManager.generateRandomPassword();
         User newUser = userDatabase.registerNewUser(username, password);
 
         accountFactory.generateDefaultAccount(newUser, ChequingAccount.class, commonTime, true);
@@ -152,6 +178,7 @@ public class BankManager implements Serializable {
 
     /**
      * Try to log user into the system, throws error if the user failed to log in.
+     *
      * @param username User's username.
      * @param password User's password.
      * @return The user account correspond to the username.
@@ -172,6 +199,7 @@ public class BankManager implements Serializable {
 
     /**
      * Cancel the last transaction made by the specific user account.
+     *
      * @param targetAccount The account requires cancellation.
      * @return Return true if cancellation is successful, return false if the last transaction is not empty.
      */
