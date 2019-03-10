@@ -11,7 +11,7 @@ abstract class CashDistributor {
 
     /**
      * Initialize a stock.
-     * @param stock the stoke you want to initialize
+     * @param stock the stock you want to initialize
      * @return A initialized Stock.
      */
     TreeMap<Integer, Integer> getInitializedResultMap(TreeMap<Integer, Integer> stock) {
