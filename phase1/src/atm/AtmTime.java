@@ -1,5 +1,7 @@
 package atm;
 
+import ui.Console;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,21 +24,24 @@ public final class AtmTime extends Observable implements Serializable {
     public static final String FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
     private static boolean hasRunningInstance = false;
     private SimpleDateFormat dateFormat;
-    private final SimpleDateFormat dayFormat;
+    private final SimpleDateFormat dayFormat, hmsFormat;
     private Timer timer;
     private final Date initialTime;
-    private Date currentTime, prevTime;
+    private Date currentTime;
     private long prevMills, currMills;
+    private Console activateConsole;
 
     /**
      * Constructs an atm time starting at the given time
      *
      * @param initialTime the starting time
      */
-    AtmTime(Date initialTime) {
+    AtmTime(Date initialTime, Console console) {
         dateFormat = new SimpleDateFormat(FORMAT_STRING);
         this.initialTime = initialTime;
         dayFormat = new SimpleDateFormat("dd");
+        hmsFormat = new SimpleDateFormat("HH:mm:ss");
+        activateConsole = console;
         initialize(initialTime);
     }
 
@@ -51,7 +56,6 @@ public final class AtmTime extends Observable implements Serializable {
         hasRunningInstance = true;
 
         currentTime = initialTime;
-        prevTime = currentTime;
         currMills = System.currentTimeMillis();
         prevMills = currMills;
 
@@ -64,16 +68,26 @@ public final class AtmTime extends Observable implements Serializable {
             @Override
             public void run() {
                 currMills = System.currentTimeMillis();
+                String prevDay = dayFormat.format(currentTime);
                 currentTime = new Date(currentTime.getTime() + (currMills - prevMills));
+                String currDay = dayFormat.format(currentTime);
                 prevMills = currMills;
 
-                String prevDay = dayFormat.format(prevTime);
-                String currDay = dayFormat.format(currentTime);
                 if (!prevDay.equals(currDay)) {
                     setChanged();
                     notifyObservers(currDay);
                 }
 
+                switch (hmsFormat.format(currentTime)) {
+                    case "23:59:00":
+                        activateConsole.shutdown();
+                        break;
+
+                    case "00:01:00":
+                        activateConsole.start();
+                        break;
+
+                }
             }
         };
     }
@@ -88,7 +102,7 @@ public final class AtmTime extends Observable implements Serializable {
     /**
      * @return the relative-real-time
      */
-    public Date getCurrentTime() {
+    Date getCurrentTime() {
         if (initialTime == null)
             throw new IllegalStateException("ATM time not initialized by Bank Manager yet");
 
@@ -98,14 +112,14 @@ public final class AtmTime extends Observable implements Serializable {
     /**
      * @return the String stamp of the relative-real-time using the formatter
      */
-    public String getCurrentTimeStamp() {
+    String getCurrentTimeStamp() {
         return dateFormat.format(getCurrentTime());
     }
 
     /**
      * @return the starting time of this instance
      */
-    public Date getInitialTime() {
+    Date getInitialTime() {
         return new Date(initialTime.getTime());
     }
 

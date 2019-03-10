@@ -20,7 +20,7 @@ public enum Menu {
     ACCOUNT_MENU(Arrays.asList(SavingsAccount.class.getSimpleName(), ChequingAccount.class.getSimpleName(),
             LineOfCreditAccount.class.getSimpleName(), CreditCardAccount.class.getSimpleName())),
     MANAGER_MENU(Arrays.asList("Read alerts", "Create user", "Read account creation request",
-            "Cancel recent transaction", "Create account", "Logout"));
+            "Cancel recent transaction", "Restock machine", "Create account", "Logout"));
 
     private final ArrayList<String> choices;
 

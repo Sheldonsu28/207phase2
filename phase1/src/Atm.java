@@ -10,11 +10,9 @@ public class Atm {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> fileHandler.saveManagerData(manager)));
 
-
-        //  TODO interface main invoke
         Session newSession = new Session(manager);
 
-        //newSession.performSession();
+        newSession.performSession();
     }
 
 }

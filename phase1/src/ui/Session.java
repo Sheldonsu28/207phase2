@@ -1,26 +1,14 @@
 package ui;
 
-import account.Account;
-import account.Cancellable;
-import account.Depositable;
-import account.Withdrawable;
+import account.*;
 import atm.*;
-import transaction.DepositTransaction;
-import transaction.Transaction;
-import transaction.TransferTransaction;
-import transaction.WithdrawTransaction;
+import transaction.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 public class Session {
-    private Scanner response;
     private AtmMachine atm;
     private BankManager bankManager;
     private State state;
@@ -41,7 +29,6 @@ public class Session {
             state = State.WELCOME_STATE;
         }
         console = new Console();
-        response = new Scanner(System.in);
         fileHandler = new FileHandler();
     }
 
@@ -65,17 +52,6 @@ public class Session {
                     handleMain();
                     break;
 
-//                case ACCOUNT_INFO_STATE:
-//                    getAccountInfo(currUser);
-//                    break;
-//
-//                case PERFORM_TRANSACTION_STATE:
-//                    if (currentTransaction == null)
-//                        throw new IllegalStateException("This should not be invoked before transaction initialization");
-//                    currentTransaction.perform();
-//                    state = State.MAIN_STATE;
-//                    break;
-
                 case SIGN_OUT_STATE:
                     state = State.WELCOME_STATE;
                     break;
@@ -92,30 +68,11 @@ public class Session {
         System.out.println("Bank manager initialization");
 
         while (!bankManager.hasLoggedin())
-            managerLogin(signIn());
+            managerLogin(console.getLoginInfo());
 
-        String formatString = AtmTime.FORMAT_STRING;
-
-        SimpleDateFormat format = new SimpleDateFormat(formatString);
-
-        System.out.printf("Enter Time in format: %s", formatString);
-
-        while (!bankManager.hasInitialized()) {
-            try {
-                Date date = format.parse(response.nextLine());
-                bankManager.initialize(date);
-                bankManager.logout();
-            } catch (ParseException e) {
-                System.out.println("Incorrect format. Try again");
-            }
-        }
-
-        //  TEST CODE
-        try {
-            System.out.println(bankManager.createUser("snowsr"));
-        } catch (UsernameAlreadyExistException e) {
-            e.printStackTrace();
-        }
+        Date date = console.getTime();
+        bankManager.initialize(date, console);
+        bankManager.logout();
     }
 
     private void managerLogin(String[] loginInfo) {
@@ -132,15 +89,14 @@ public class Session {
         switch (choice) {
 
             case 1: //  Login
-                //TODO after user name does not exist 2 times, it will back to the main
-                String[] userLogin = signIn();
+                String[] userLogin = console.getLoginInfo();
                 currUser = bankManager.validateUserLogin(userLogin[0], userLogin[1]);
                 if (currUser != null) {
                     state = State.MAIN_STATE;
                 }
                 break;
             case 2: //  Bank manager login
-                managerLogin(signIn());
+                managerLogin(console.getLoginInfo());
                 if (bankManager.hasLoggedin()) {
                     state = State.MANAGER_STATE;
                 }
@@ -149,14 +105,7 @@ public class Session {
 
     }
 
-    private String[] signIn() {
-        System.out.println("Enter username:");
-        String username = response.nextLine();
-        System.out.println("Enter password:");
-        String password = response.nextLine();
-        return new String[]{username, password};
 
-    }
 
     private void handleMain() {
         int choice = console.displayMenu(Menu.MAIN_MENU);
@@ -179,7 +128,7 @@ public class Session {
                 boolean setPrimary = false;
                 List<String> accounts = Menu.ACCOUNT_MENU.getMenuOptions();
                 String requestAccount = accounts.get(console.displayMenu(Menu.ACCOUNT_MENU) - 1);
-                if (requestAccount.equals("Chequing account")) {
+                if (requestAccount.equals("ChequingAccount")) {
                     setPrimary = console.setPrimary();
                 }
                 fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
@@ -203,7 +152,6 @@ public class Session {
 
         switch (choice) {
             case 1: //deposit
-                //TODO deposit checks and cash
                 System.out.println("Select target deposit account\n");
                 toAccount = depositables.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, depositables.toArray()) - 1);
@@ -215,6 +163,7 @@ public class Session {
                 break;
 
             case 2: // withdraw
+                System.out.println("Select target withdraw account\n");
                 fromAccount = withdrawables.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, withdrawables.toArray()) - 1);
 
@@ -228,10 +177,14 @@ public class Session {
                 break;
 
             case 3: //transfer
-                toAccount = depositables.get(
-                        console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, depositables.toArray()) - 1);
+                System.out.println("Transfer from: \n");
                 fromAccount = withdrawables.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, withdrawables.toArray()) - 1);
+
+                System.out.println("Transfer to: \n");
+                toAccount = depositables.get(
+                        console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, depositables.toArray()) - 1);
+
 
                 amount = console.getAmount();
                 inputChoice = confirmation(
@@ -247,7 +200,19 @@ public class Session {
             case 4:
                 fromAccount = withdrawables.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, withdrawables.toArray()) - 1);
-                //TODO how the user inputChoice payee account
+                List<BillingAccount> payeeList = bankManager.getPayeeList();
+                BillingAccount payeeAccount = payeeList.get(
+                        console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, payeeList.toArray()) - 1);
+
+                amount = console.getAmount();
+                inputChoice = confirmation(
+                        String.format("FROM %s\nPAY $%d BILL TO %s\n", fromAccount, amount, payeeAccount));
+
+                if (inputChoice == 1)
+                    return new PayBillTransaction(user, fromAccount, payeeAccount, amount);
+                else
+                    state = State.MAIN_STATE;
+                break;
 
             case 5:
                 state = State.MAIN_STATE;
@@ -277,13 +242,13 @@ public class Session {
                 break;
 
             case 4:
-                boolean valid = false;
-                while (!valid) {
+                while (true) {
                     System.out.println("Please enter new password");
-                    String newPassword = response.nextLine();
+                    String newPassword = console.getRawInput();
+
                     if (bankManager.isValidPassword(newPassword)) {
                         user.changePassword(newPassword);
-                        valid = true;
+                        break;
                     } else {
                         System.out.println("Invalid password. Please try again");
                     }
@@ -306,41 +271,31 @@ public class Session {
 
     private void manage() {
         int choice = console.displayMenu(Menu.MANAGER_MENU);
-        String path = fileHandler.getPath();
-        FileInputStream alerts;
-        FileInputStream requests;
+
         switch (choice) {
             case 1://read alerts
-                try {
-                    alerts = new FileInputStream(path + "alert.txt");
-                    System.out.println(alerts);
-                } catch (FileNotFoundException e) {
-                    e.getMessage();
-                }
+                for (String msg : fileHandler.readFrom(ExternalFiles.CASH_ALERT_FILE))
+                    System.out.println(msg);
                 break;
-            //TODO back to main
+
             case 2://Create user
-                boolean legalName = false;
-                while (!legalName) {
-                    String userName = response.nextLine();
-                    if (userName != null) legalName = true;
+                while (true) {
+                    System.out.println("Enter desired username: ");
+
                     try {
-                        bankManager.createUser(userName);
-                    } catch (UsernameAlreadyExistException e) {
-                        legalName = false;
-                        e.getMessage();
+                        System.out.println(String.format("Your password: %s",
+                                bankManager.createUser(console.getRawInput())));
+                    } catch (UsernameAlreadyExistException | UsernameOutOfRangeException e) {
+                        System.out.println(e.getMessage());
+                        continue;
                     }
+
+                    break;
                 }
-                //TODO back to main
                 break;
             case 3: //Read account creation request
-                try {
-                    requests = new FileInputStream(path + ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
-                    System.out.println(requests);
-                    //TODO back to main
-                } catch (FileNotFoundException e) {
-                    e.getMessage();
-                }
+                for (String msg : fileHandler.readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE))
+                    System.out.println(msg);
                 break;
 
             case 4: //Cancel recent transaction
@@ -350,7 +305,6 @@ public class Session {
                 Cancellable accountSelect = userAccounts.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, userAccounts.toArray()) - 1);
                 bankManager.cancelLastTransaction((Account) accountSelect);
-                //TODO back to main
                 break;
 
             case 5: // Restock
@@ -358,23 +312,29 @@ public class Session {
                 break;
 
             case 6: //Create account
-                ArrayList<String> userInfo = fileHandler.readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+                ArrayList<String> requests = fileHandler.readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
 
-                try {
-                    if (userInfo.size() != 3)
-                        throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+                for (String request : requests) {
+                    String[] info = request.split(" ");
 
-                    bankManager.createAccount(userInfo.get(0), getValidAccountType(userInfo.get(1)),
-                            Boolean.parseBoolean(userInfo.get(2)));
+                    try {
+                        if (info.length != 3)
+                            throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
 
-                } catch (IllegalFileFormatException i) {
-                    System.out.println(i.getMessage());
+                        bankManager.createAccount(info[0], getValidAccountType(info[1]),
+                                Boolean.parseBoolean(info[2]));
+
+                    } catch (IllegalFileFormatException i) {
+                        System.out.println(i.getMessage());
+                    }
                 }
+
+                fileHandler.clearFile(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
 
                 break;
 
             case 7:
-                state = State.MAIN_STATE;
+                state = State.WELCOME_STATE;
                 bankManager.logout();
                 break;
 
@@ -383,34 +343,13 @@ public class Session {
 
     @SuppressWarnings("unchecked")
     private Class<Account> getValidAccountType(String classType) throws IllegalFileFormatException {
-//        Class klass;
-//
-//        try {
-//            klass = Class.forName(classType);
-//        } catch (ClassNotFoundException e) {
-//            throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
-//        }
-//
-//        boolean isAccountSubclass = false;
-//        Class superclass = klass.getSuperclass();
-//
-//        while (superclass != null) {
-//            if (klass == Account.class){
-//                isAccountSubclass = true;
-//                break;
-//            }
-//
-//            superclass = superclass.getSuperclass();
-//        }
-//
-//        if (!isAccountSubclass || klass.isInterface() || Modifier.isAbstract(klass.getModifiers()))
-//            throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
 
         Class<Account> result;
 
         try {
-            result = (Class<Account>) Class.forName(classType);
+            result = (Class<Account>) Class.forName("account." + classType);
         } catch (ClassCastException | ClassNotFoundException e) {
+            e.printStackTrace();
             throw new IllegalFileFormatException(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
         }
 

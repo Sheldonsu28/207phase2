@@ -4,6 +4,7 @@ import account.Account;
 import account.BillingAccount;
 import account.ChequingAccount;
 import transaction.Transaction;
+import ui.Console;
 
 import java.io.Serializable;
 import java.util.*;
@@ -39,8 +40,8 @@ public class BankManager implements Serializable {
         addMachine();
     }
 
-    public void initialize(Date initialDate) {
-        commonTime = new AtmTime(initialDate);
+    public void initialize(Date initialDate, Console activateConsole) {
+        commonTime = new AtmTime(initialDate, activateConsole);
 
         try {
             payeeList = accountFactory.getPayeesFromFile(commonTime);
@@ -142,10 +143,10 @@ public class BankManager implements Serializable {
      */
     private AtmMachine addMachine() {
         TreeMap<Integer, Integer> initialStock = new TreeMap<>();
-        initialStock.put(5, 500);
-        initialStock.put(10, 500);
-        initialStock.put(20, 500);
-        initialStock.put(50, 500);
+        initialStock.put(5, 100);
+        initialStock.put(10, 100);
+        initialStock.put(20, 100);
+        initialStock.put(50, 100);
 
         AtmMachine machine = new AtmMachine(commonTime, initialStock, new StepCashDistributor());
         machineList.add(machine);
@@ -173,8 +174,11 @@ public class BankManager implements Serializable {
      * @param username The username of the user
      * @return The default password for this user
      */
-    public String createUser(String username) throws UsernameAlreadyExistException {
+    public String createUser(String username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
         checkState(true);
+
+        if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH)
+            throw new UsernameOutOfRangeException();
 
         String password = passwordManager.generateRandomPassword();
         User newUser = userDatabase.registerNewUser(username, password);

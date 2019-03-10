@@ -1,13 +1,58 @@
 package ui;
 
+import atm.AtmTime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class Console {
-    private Scanner response = new Scanner(System.in);
+public class Console {
+    private Scanner response;
+    private boolean isAlive;
 
-    //TODO null exception
+    Console() {
+        isAlive = true;
+        response = new Scanner(System.in);
+    }
+
+    private void stateCheck() {
+
+        while (!isAlive) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void shutdown() {
+        if (isAlive) {
+            System.out.println("\n========SYSTEM SHUTDOWN========\n");
+            isAlive = false;
+        }
+    }
+
+    public void start() {
+        if (!isAlive) {
+            String restartCode = "!?ReStArT+";
+            System.out.println(String.format("\n========SYSTEM START (restart code: %s)========\n", restartCode));
+
+            while (true) {
+                String msg = response.nextLine();
+
+                if (msg.equals(restartCode))
+                    break;
+            }
+
+            isAlive = true;
+        }
+    }
+
     int displayMenu(Menu menu, Object[]... args) {
+        stateCheck();
+
         System.out.println(menu);
         List<String> options;
 
@@ -34,16 +79,24 @@ class Console {
     }
 
     private void printOptions(List<String> options) {
+        stateCheck();
+
         for (int i = 0; i < options.size(); i++)
-            System.out.printf("%d) %s ", i + 1, options.get(i));
+            System.out.printf("%d) %s\n", i + 1, options.get(i));
+
+        System.out.println();
     }
 
     int getAmount() {
+        stateCheck();
+
         System.out.println("Please enter amount of money");
         return getChoice(Integer.MAX_VALUE);
     }
 
     TreeMap<Integer, Integer> getInputStock() {
+        stateCheck();
+
         TreeMap<Integer, Integer> result = new TreeMap<>();
 
         while (true) {
@@ -78,11 +131,14 @@ class Console {
     }
 
     private int getChoice(int limit) {
+        stateCheck();
+
         int result;
 
         while (true) {
             try {
                 result = response.nextInt();
+                response.nextLine();
 
                 if (result >= 0 && result <= limit)
                     break;
@@ -97,6 +153,8 @@ class Console {
     }
 
     boolean setPrimary() {
+        stateCheck();
+
         boolean valid = false;
         boolean result = false;
         while (!valid) {
@@ -116,20 +174,46 @@ class Console {
         return result;
     }
 
-    int restockAmount(String s) {
-        boolean valid = false;
-        int amount = 0;
-        while (!valid) {
-            System.out.print(s);
-            amount = response.nextInt();
-            if (amount < 1) {
-                valid = false;
-                System.out.println("Invalid amount. Please enter again.");
-            } else {
-                valid = true;
+    String getRawInput() {
+        stateCheck();
+
+        return response.nextLine();
+    }
+
+    String[] getLoginInfo() {
+        stateCheck();
+
+        System.out.println("Enter username:");
+        String username = response.nextLine();
+        System.out.println("Enter password:");
+        String password = response.nextLine();
+        return new String[]{username, password};
+    }
+
+
+    Date getTime() {
+        stateCheck();
+
+        String formatString = AtmTime.FORMAT_STRING;
+
+        SimpleDateFormat format = new SimpleDateFormat(formatString);
+
+        Date result;
+
+        while (true) {
+            System.out.printf("Enter Time in format: %s", formatString);
+
+            try {
+                result = format.parse(response.nextLine());
+            } catch (ParseException e) {
+                System.out.println("Invalid time format!");
+                continue;
             }
+
+            break;
         }
-        return amount;
+
+        return result;
     }
 
 

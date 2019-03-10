@@ -52,10 +52,8 @@ public class FileHandler implements Serializable {
             System.out.println("File not found, read failed");
         } catch (IOException i) {
             System.out.println("There is a problem when reading the file, file information failed to load.");
-            i.printStackTrace();
         } catch (ClassNotFoundException e) {
             System.out.println("The require classes is not found. Possible corruption in class file!");
-            e.printStackTrace();
         }
         return information;
     }
@@ -116,6 +114,17 @@ public class FileHandler implements Serializable {
             System.out.println("File not found.");
         }
         return content;
+    }
+
+    public void clearFile(ExternalFiles file) {
+        try {
+            PrintWriter writer = new PrintWriter(new File(path + file.getFileName()));
+            writer.print("");
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public boolean checkFileExist(String filename) {

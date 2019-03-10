@@ -26,7 +26,6 @@ public class DepositTransaction extends Transaction {
      * @param user The user which the money will be deposited to.
      * @param machine The ATM machine that perform the action.
      * @param account The account which the money will deposit to.
-     * @throws IllegalFileFormatException
      */
     public DepositTransaction(User user, AtmMachine machine, Depositable account)
             throws IllegalFileFormatException {
@@ -46,7 +45,7 @@ public class DepositTransaction extends Transaction {
      * It returns types of the deposit base on the interpretation of the file.
      *
      * @return The type of the deposit.
-     * @throws IllegalFileFormatException
+     * @throws IllegalFileFormatException throws illegal file format exception
      */
     private DepositType interpretDepositInfo() throws IllegalFileFormatException {
         ArrayList<String> depositFile = (new FileHandler()).readFrom(file);
@@ -148,8 +147,14 @@ public class DepositTransaction extends Transaction {
      */
     @Override
     protected boolean doPerform() {
-        if (depositType == DepositType.CASH)
-            machine.increaseStock(depositStock);
+        if (depositType == DepositType.CASH) {
+            try {
+                machine.increaseStock(depositStock);
+            } catch (InvalidCashTypeException e) {
+                System.out.println(e.getMessage());
+                return false;
+            }
+        }
 
         targetAccount.deposit(depositAmount, this);
         return true;

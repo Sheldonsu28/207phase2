@@ -28,6 +28,11 @@ public class BillingAccount extends Account {
         this.payeeName = payeeName;
     }
 
+    public String toString() {
+        return String.format("Payee Name: %s, ID: %s, Date Created: %s, Balance: %s",
+                payeeName, getId(), getTimeCreated(), balance);
+    }
+
     /**
      * {@inheritDoc}
      */

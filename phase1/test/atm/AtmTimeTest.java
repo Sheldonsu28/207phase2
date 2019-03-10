@@ -2,7 +2,7 @@ package atm;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import ui.Session;
+import ui.Console;
 
 import java.util.Date;
 
@@ -14,7 +14,7 @@ public class AtmTimeTest {
     @Test
     public void testTimeElapse() {
         Date startTime = new Date();
-        time = new AtmTime(startTime, Mockito.mock(Session.class));
+        time = new AtmTime(startTime, Mockito.mock(Console.class));
         long timeElapsed = 0;
 
         for (int repetition = 0; repetition < 5; repetition++) {

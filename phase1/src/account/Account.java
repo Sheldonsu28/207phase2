@@ -146,7 +146,8 @@ public abstract class Account implements Serializable {
      * @return a String containing information about this account (owner, id, date of creation, apparent balance).
      */
     public String toString() {
-        return String.format("Owner: %s, ID: %s, Date Created: %s, Balance: %s", owner, getId(), timeCreated, balance);
+        return String.format("Owner: %s, ID: %s, TYPE: %s, Date Created: %s, Balance: %s",
+                owner, getId(), owner.getClass().getSimpleName(), timeCreated, balance);
     }
 
     /**

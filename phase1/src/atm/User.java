@@ -13,6 +13,8 @@ import java.util.ArrayList;
 public class User {
     private String username, password;
     private AccountStorageManager accountVaults;
+    static final int MAX_NAME_LENGTH = 15;
+    static final int MIN_NAME_LENGTH = 5;
 
     /**
      * Initial a user account with username and password.
@@ -40,7 +42,7 @@ public class User {
      *
      * @param primaryAccount The chequeing account that will be set as the primary account.
      */
-    public void setPrimaryAccount(ChequingAccount primaryAccount) {
+    void setPrimaryAccount(ChequingAccount primaryAccount) {
         accountVaults.setPrimaryAccount(primaryAccount);
     }
 

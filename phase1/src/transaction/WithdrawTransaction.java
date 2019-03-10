@@ -2,10 +2,7 @@ package transaction;
 
 import account.WithdrawException;
 import account.Withdrawable;
-import atm.AtmMachine;
-import atm.CashShortageException;
-import atm.EmptyStockException;
-import atm.User;
+import atm.*;
 
 import java.util.TreeMap;
 
@@ -13,7 +10,7 @@ public class WithdrawTransaction extends Transaction {
     private final int withdrawAmount;
     private final Withdrawable targetAccount;
     private final AtmMachine machine;
-    private TreeMap<Integer, Integer> stock;
+    private TreeMap<Integer, Integer> withdrawStock;
 
     public WithdrawTransaction(User user, AtmMachine machine, Withdrawable account, int amount) {
         super(user);
@@ -24,7 +21,7 @@ public class WithdrawTransaction extends Transaction {
         withdrawAmount = amount;
         targetAccount = account;
         this.machine = machine;
-        stock = null;
+        withdrawStock = null;
     }
 
     @Override
@@ -43,7 +40,7 @@ public class WithdrawTransaction extends Transaction {
         }
 
         try {
-            stock = machine.reduceStock(withdrawAmount);
+            withdrawStock = machine.reduceStock(withdrawAmount);
         } catch (EmptyStockException | CashShortageException e) {
             System.out.println(e.getMessage());
             targetAccount.cancelWithdraw(withdrawAmount);
@@ -56,6 +53,11 @@ public class WithdrawTransaction extends Transaction {
     @Override
     protected boolean doCancel() {
         targetAccount.cancelWithdraw(withdrawAmount);
+        try {
+            machine.increaseStock(withdrawStock);
+        } catch (InvalidCashTypeException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
