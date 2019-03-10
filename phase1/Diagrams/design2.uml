@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>atm</OriginalElement>
+  <nodes>
+    <node x="0.0" y="1231.0">atm.UserDatabase</node>
+    <node x="0.0" y="979.0">atm.FileHandler</node>
+    <node x="1457.0" y="649.0">atm.ExternalFiles</node>
+    <node x="1067.0" y="649.0">atm.AccountStorageManager</node>
+    <node x="379.0" y="0.0">atm.AtmTime</node>
+    <node x="592.0" y="1231.0">atm.UserTest</node>
+    <node x="619.0" y="1603.0">atm.WrongPasswordException</node>
+    <node x="332.0" y="979.0">atm.PasswordManager</node>
+    <node x="0.0" y="839.0">atm.BalancedCashDistributorTest</node>
+    <node x="117.5" y="649.0">atm.CashDistributorTest</node>
+    <node x="587.0" y="649.0">atm.AtmMachine</node>
+    <node x="965.0" y="1461.0">atm.AccountFactory</node>
+    <node x="1187.0" y="1603.0">atm.UserNotExistException</node>
+    <node x="739.0" y="1461.0">atm.AtmTimeTest</node>
+    <node x="1444.0" y="1461.0">atm.IllegalFileFormatException</node>
+    <node x="872.0" y="1231.0">atm.FileHandlerTest</node>
+    <node x="0.0" y="1461.0">atm.CashShortageException</node>
+    <node x="1141.0" y="0.0">atm.CashHandler</node>
+    <node x="292.0" y="839.0">atm.StepCashDistributorTest</node>
+    <node x="831.0" y="979.0">atm.CashDistributor</node>
+    <node x="434.0" y="1461.0">atm.EmptyStockException</node>
+    <node x="726.0" y="0.0">atm.User</node>
+    <node x="628.0" y="1113.0">atm.StepCashDistributor</node>
+    <node x="303.0" y="1231.0">atm.Currency</node>
+    <node x="1088.0" y="1102.0">atm.BalancedCashDistributor</node>
+    <node x="0.0" y="1603.0">atm.UsernameAlreadyExistException</node>
+    <node x="1156.0" y="1231.0">atm.AccountStorageManagerTest</node>
+    <node x="0.0" y="0.0">atm.BankManager</node>
+    <node x="911.0" y="1603.0">atm.InvalidCashTypeException</node>
+    <node x="1461.0" y="1603.0">atm.AccountFactoryTest</node>
+    <node x="324.0" y="1603.0">atm.UsernameOutOfRangeException</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="atm.StepCashDistributor" target="atm.CashDistributor">
+      <point x="0.0" y="-25.5" />
+      <point x="848.0" y="1077.0" />
+      <point x="954.5" y="1077.0" />
+      <point x="-123.5" y="36.5" />
+    </edge>
+    <edge source="atm.BalancedCashDistributorTest" target="atm.CashDistributorTest">
+      <point x="0.0" y="-47.5" />
+      <point x="136.0" y="814.0" />
+      <point x="197.0" y="814.0" />
+      <point x="-79.5" y="70.0" />
+    </edge>
+    <edge source="atm.BalancedCashDistributor" target="atm.CashDistributor">
+      <point x="0.0" y="-36.5" />
+      <point x="1308.0" y="1077.0" />
+      <point x="1201.5" y="1077.0" />
+      <point x="123.5" y="36.5" />
+    </edge>
+    <edge source="atm.StepCashDistributorTest" target="atm.CashDistributorTest">
+      <point x="0.0" y="-47.5" />
+      <point x="417.0" y="814.0" />
+      <point x="356.0" y="814.0" />
+      <point x="79.5" y="70.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.690863579474343" x="385.0" y="389.5" />
+  <SelectedNodes>
+    <node>atm.UserDatabase</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

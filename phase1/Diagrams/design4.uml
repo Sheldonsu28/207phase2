@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>ui</OriginalElement>
+  <nodes>
+    <node x="418.0" y="472.0">ui.FileHandlerTest</node>
+    <node x="241.0" y="472.0">ui.State</node>
+    <node x="396.0" y="0.0">ui.Console</node>
+    <node x="0.0" y="472.0">ui.Menu</node>
+    <node x="0.0" y="0.0">ui.Session</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="106.0" y="125.5" />
+  <SelectedNodes>
+    <node>ui.FileHandlerTest</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

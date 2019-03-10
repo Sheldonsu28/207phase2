@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>transaction</OriginalElement>
+  <nodes>
+    <node x="313.0" y="920.0">transaction.TransferTransactionTest</node>
+    <node x="0.0" y="412.0">transaction.DepositTransaction</node>
+    <node x="116.5" y="802.0">transaction.DepositTransaction.DepositType</node>
+    <node x="0.0" y="920.0">transaction.WithdrawTransactionTest</node>
+    <node x="678.75" y="0.0">transaction.Transaction</node>
+    <node x="368.00000000000006" y="467.0">transaction.WithdrawTransaction</node>
+    <node x="619.0" y="920.0">transaction.DepositTransactionTest</node>
+    <node x="775.0" y="456.0">transaction.TransferTransaction</node>
+    <node x="1223.0" y="467.0">transaction.PayBillTransaction</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="transaction.WithdrawTransaction" target="transaction.Transaction">
+      <point x="0.0" y="-115.0" />
+      <point x="561.5" y="392.0" />
+      <point x="751.125" y="392.0" />
+      <point x="-24.125" y="181.0" />
+    </edge>
+    <edge source="transaction.PayBillTransaction" target="transaction.Transaction">
+      <point x="0.0" y="-115.0" />
+      <point x="1424.5" y="382.0" />
+      <point x="847.625" y="382.0" />
+      <point x="72.375" y="181.0" />
+    </edge>
+    <edge source="transaction.DepositTransaction.DepositType" target="transaction.DepositTransaction">
+      <point x="0.0" y="-36.5" />
+      <point x="0.0" y="170.0" />
+    </edge>
+    <edge source="transaction.DepositTransaction" target="transaction.Transaction">
+      <point x="0.0" y="-170.0" />
+      <point x="174.0" y="382.0" />
+      <point x="702.875" y="382.0" />
+      <point x="-72.375" y="181.0" />
+    </edge>
+    <edge source="transaction.TransferTransaction" target="transaction.Transaction">
+      <point x="0.0" y="-126.0" />
+      <point x="989.0" y="392.0" />
+      <point x="799.375" y="392.0" />
+      <point x="24.125" y="181.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.4816753926701571" x="813.0" y="563.0" />
+  <SelectedNodes>
+    <node>transaction.TransferTransactionTest</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
