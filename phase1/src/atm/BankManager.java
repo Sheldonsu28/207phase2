@@ -127,6 +127,14 @@ public class BankManager implements Serializable {
         return Collections.unmodifiableList(machineList);
     }
 
+    public void restockMachine(TreeMap<Integer, Integer> stock) {
+        try {
+            machineList.get(0).increaseStock(stock);
+        } catch (InvalidCashTypeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     /**
      * Add a new ATM Machine with stock to the manager.
      *
@@ -147,7 +155,7 @@ public class BankManager implements Serializable {
     /**
      * Create new account to the correspond user.
      *
-     * @param user        The user that account need to be added to.
+     * @param username    The user that account need to be added to.
      * @param accountType The type of the account.
      * @param isPrimary   if the account is the primary account of the user or not.
      * @param <T>         Any account type.

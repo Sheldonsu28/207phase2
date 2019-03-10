@@ -65,7 +65,7 @@ public class AtmMachine {
      *
      * @param increment the amount of different types of cash put into the machine. key is type and value is amount.
      */
-    public void increaseStock(TreeMap<Integer, Integer> increment) {
+    public void increaseStock(TreeMap<Integer, Integer> increment) throws InvalidCashTypeException {
         cashHandler.storeCashStock(increment);
     }
 

@@ -79,10 +79,12 @@ class CashHandler {
      * Take in a cash stock, store the new sock to the old stock if the new cash stock have the same type of currency.
      * @param stock A cash stock that need to be stored.
      */
-    void storeCashStock(TreeMap<Integer, Integer> stock) {
+    void storeCashStock(TreeMap<Integer, Integer> stock) throws InvalidCashTypeException {
         for (int type : stock.keySet()) {
             if (cashStock.containsKey(type))
                 cashStock.put(type, cashStock.get(type) + stock.get(type));
+            else
+                throw new InvalidCashTypeException(type);
         }
     }
 

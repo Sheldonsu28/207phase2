@@ -1,8 +1,14 @@
 package ui;
 
-import account.*;
-import atm.*;
-import transaction.*;
+import account.Account;
+import account.ChequingAccount;
+import account.Depositable;
+import account.Withdrawable;
+import atm.BankManager;
+import atm.User;
+import atm.UserNotExistException;
+import atm.WrongPasswordException;
+import transaction.Transaction;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +43,7 @@ public class Interface {
                     while (!setDate) {
                         try {
                             Date date = format.parse(response.nextLine());
-                            bankManager.initialize(date);
+                            //bankManager.initialize(date);
                             setDate = true;
                         } catch (ParseException e) {
                             System.out.println("Incorrect format. Try again");
