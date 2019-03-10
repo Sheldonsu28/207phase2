@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ * This class is responsible for deposit money to the accounts.
+ */
 public class DepositTransaction extends Transaction {
     private enum DepositType {CHEQUE, CASH}
 
@@ -17,6 +20,14 @@ public class DepositTransaction extends Transaction {
     private final Depositable targetAccount;
     private final AtmMachine machine;
 
+    /**
+     * Initialize a new deposit transaction with user, ATM machine and user's bank account.
+     *
+     * @param user The user which the money will be deposited to.
+     * @param machine The ATM machine that perform the action.
+     * @param account The account which the money will deposit to.
+     * @throws IllegalFileFormatException
+     */
     public DepositTransaction(User user, AtmMachine machine, Depositable account)
             throws IllegalFileFormatException {
         super(user);
@@ -29,6 +40,14 @@ public class DepositTransaction extends Transaction {
         depositType = interpretDepositInfo();
     }
 
+    /**
+     * This method is responsible for interpret the deposit information from the deposit.txt file,
+     * if the information cannot be interpreted, it will throw a IllegalFileFormatException.
+     * It returns types of the deposit base on the interpretation of the file.
+     *
+     * @return The type of the deposit.
+     * @throws IllegalFileFormatException
+     */
     private DepositType interpretDepositInfo() throws IllegalFileFormatException {
         ArrayList<String> depositFile = (new FileHandler()).readFrom(file);
 
@@ -61,6 +80,16 @@ public class DepositTransaction extends Transaction {
         }
     }
 
+    /**
+     * This method is responsible for interpreting a cash deposit info from deposit.txt.
+     * If the info cannot be interpreted, it will throw a IllegalFileFormatException.
+     * If it cannot convert the integer String( depositInfo[1] ) to integer, it will throw a NumberFormatException.
+     *
+     * @param depositInfo                 The transaction info read from deposit.txt.
+     * @throws IllegalFileFormatException When the format of the file cannot be interpreted,
+     *                                    this exception will be thrown.
+     * @throws NumberFormatException      When the integer String cannot be converted to integer, this exception is thrown.
+     */
     private void interpretCashDepositInfo(String[] depositInfo)
             throws IllegalFileFormatException, NumberFormatException {
         int sum = 0;
@@ -86,6 +115,16 @@ public class DepositTransaction extends Transaction {
         depositAmount = sum;
     }
 
+    /**
+     * This method is responsible for interpreting a cheque deposit info from deposit.txt.
+     * If the info cannot be interpreted, it will throw a IllegalFileFormatException.
+     * If it cannot convert the integer String( depositInfo[1] ) to integer, it will throw a NumberFormatException.
+     *
+     * @param depositInfo                 The transaction info read from deposit.txt.
+     * @throws IllegalFileFormatException When the format of the file cannot be interpreted,
+     *                                    this exception will be thrown.
+     * @throws NumberFormatException      When the integer String cannot be converted to integer, this exception is thrown.
+     */
     private void interpretChequeDepositInfo(String[] depositInfo)
             throws IllegalFileFormatException, NumberFormatException {
         //  cheque deposit info should be array of length 2
@@ -95,12 +134,18 @@ public class DepositTransaction extends Transaction {
         depositAmount = Integer.parseInt(depositInfo[1]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return super.toString() +
                 String.format("User %s's Account %s DEPOSIT $%d", getFromUser(), targetAccount, depositAmount);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doPerform() {
         if (depositType == DepositType.CASH)
@@ -110,12 +155,18 @@ public class DepositTransaction extends Transaction {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doCancel() {
         targetAccount.cancelDeposit(depositAmount);
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCancellable() {
         return true;
