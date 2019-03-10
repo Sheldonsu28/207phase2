@@ -1,13 +1,16 @@
 package atm;
 
 import account.Account;
+import account.BillingAccount;
 import account.ChequingAccount;
 import account.Growable;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Observer;
 
 /**
@@ -58,6 +61,23 @@ final class AccountFactory implements Serializable {
         }
 
         return false;
+    }
+
+    List<BillingAccount> getPayeesFromFile(AtmTime time) throws IllegalFileFormatException {
+        ExternalFiles file = ExternalFiles.PAYEE_DATA_FILE;
+        List<BillingAccount> billingAccounts = new ArrayList<>();
+
+        for (String payeeStr : (new FileHandler()).readFrom(file)) {
+            String[] payeeInfo = payeeStr.split(" ");
+
+            //  no space allowed
+            if (payeeInfo.length != 1)
+                throw new IllegalFileFormatException(file);
+
+            billingAccounts.add(new BillingAccount(time.getInitialTime(), payeeStr));
+        }
+
+        return billingAccounts;
     }
 
 }
