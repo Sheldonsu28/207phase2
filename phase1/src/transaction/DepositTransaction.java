@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-public class DepositTransaction extends IntraUserTransaction {
+public class DepositTransaction extends Transaction {
     private enum DepositType {CHEQUE, CASH}
 
     private final DepositType depositType;

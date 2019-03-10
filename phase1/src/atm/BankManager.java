@@ -103,6 +103,10 @@ public class BankManager implements Serializable {
         hasLoggedin = false;
     }
 
+    public List<User> getAllUsers() {
+        return userDatabase.getUserList();
+    }
+
     /**
      * Private method that checks if the manager account is in a correct state.
      *

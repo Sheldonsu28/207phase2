@@ -225,7 +225,7 @@ public class Session {
                         String.format("FROM %s\nTRANSFER $%d TO %s\n", fromAccount, amount, toAccount));
 
                 if (inputChoice == 1)
-                    return new TransferTransaction(user, fromAccount, toAccount, amount);
+                    return new IntraUserTransferTransaction(user, fromAccount, toAccount, amount);
                 else
                     state = State.MAIN_STATE;
                 break;

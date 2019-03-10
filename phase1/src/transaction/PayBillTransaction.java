@@ -8,7 +8,7 @@ import atm.ExternalFiles;
 import atm.FileHandler;
 import atm.User;
 
-public class PayBillTransaction extends IntraUserTransaction {
+public class PayBillTransaction extends Transaction {
     private final double payAmount;
     private final BillingAccount payee;
     private final Withdrawable payer;

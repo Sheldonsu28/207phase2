@@ -5,30 +5,34 @@ import account.WithdrawException;
 import account.Withdrawable;
 import atm.User;
 
-public class TransferTransaction extends IntraUserTransaction {
-    private final int transferAmount;
+public class InterUserTransferTransaction extends Transaction {
+    private final double transferAmount;
     private final Withdrawable fromAccount;
     private final Depositable toAccount;
 
-    public TransferTransaction(User user, Withdrawable fromAccount, Depositable toAccount, int amount) {
-        super(user);
+    public InterUserTransferTransaction(User from, Withdrawable fromAccount, User to, double amount) {
+        super(from, to);
 
-        if (amount < 0)
-            throw new IllegalArgumentException("Not allowed to transfer negative amount: " + amount);
+        transferAmount = amount;
+        this.fromAccount = fromAccount;
+        this.toAccount = to.getPrimaryAccount();
+    }
 
+    public InterUserTransferTransaction(User from, Withdrawable fromAccount, User to, Depositable toAccount,
+                                        double amount) {
+        super(from, to);
+
+        transferAmount = amount;
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
-        this.transferAmount = amount;
     }
 
     @Override
     protected boolean doPerform() {
         try {
             fromAccount.withdraw(transferAmount, this);
-        } catch (WithdrawException exception) {
-
-            // TODO exception handling & passing message
-
+        } catch (WithdrawException e) {
+            System.out.println(e.getMessage());
             return false;
         }
 
