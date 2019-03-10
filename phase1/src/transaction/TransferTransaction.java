@@ -33,6 +33,17 @@ public class TransferTransaction extends Transaction {
         this.transferAmount = amount;
     }
 
+    public TransferTransaction(User fromUser, Withdrawable fromAccount, User toUser, double amount) {
+        super(fromUser, toUser);
+
+        if (amount < 0)
+            throw new IllegalArgumentException("Not allowed to transfer negative amount: " + amount);
+
+        this.fromAccount = fromAccount;
+        this.toAccount = toUser.getPrimaryAccount();
+        this.transferAmount = amount;
+    }
+
     @Override
     public String toString() {
         return super.toString() +

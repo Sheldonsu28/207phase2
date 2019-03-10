@@ -22,7 +22,7 @@ public class BankManager implements Serializable {
     private List<BillingAccount> payeeList;
     private boolean hasLoggedin;
     private String username, password;
-    private RandomPasswordGenerator passwordGenerator;
+    private PasswordManager passwordManager;
 
     private boolean hasInitialized;
 
@@ -34,8 +34,7 @@ public class BankManager implements Serializable {
         hasLoggedin = false;
         username = "admin";
         password = "CS207fun";
-        passwordGenerator = new RandomPasswordGenerator(12, 24,
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()");
+        passwordManager = new PasswordManager(12, 24, "[0-9]|[a-z]|[A-Z]");
 
         addMachine();
     }
@@ -67,6 +66,10 @@ public class BankManager implements Serializable {
 
     public boolean hasInitialized() {
         return hasInitialized;
+    }
+
+    public boolean isValidPassword(String password) {
+        return passwordManager.isValidPassword(password);
     }
 
     /**
@@ -165,7 +168,7 @@ public class BankManager implements Serializable {
     public String createUser(String username) throws UsernameAlreadyExistException {
         checkState(true);
 
-        String password = passwordGenerator.generatePassword();
+        String password = passwordManager.generateRandomPassword();
         User newUser = userDatabase.registerNewUser(username, password);
 
         accountFactory.generateDefaultAccount(newUser, ChequingAccount.class, commonTime, true);
