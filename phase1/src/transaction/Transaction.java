@@ -2,7 +2,6 @@ package transaction;
 
 import atm.User;
 
-//  TODO implement toString and comparison
 public abstract class Transaction {
 
     private boolean performed, cancelled;
@@ -72,6 +71,10 @@ public abstract class Transaction {
 
         cancelled = doCancel();
         return cancelled;
+    }
+
+    public String toString() {
+        return String.format("ID %s\tCAN_BE_CANCELLED %s\tIS_CANCELLED %s\t", getId(), isCancellable(), isCancelled());
     }
 
     protected abstract boolean doPerform();

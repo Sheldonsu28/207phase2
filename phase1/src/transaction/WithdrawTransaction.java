@@ -28,6 +28,12 @@ public class WithdrawTransaction extends Transaction {
     }
 
     @Override
+    public String toString() {
+        return super.toString() +
+                String.format("User %s's Account %s WITHDRAW $%d", getFromUser(), targetAccount, withdrawAmount);
+    }
+
+    @Override
     protected boolean doPerform() {
         try {
             targetAccount.withdraw(withdrawAmount, this);
