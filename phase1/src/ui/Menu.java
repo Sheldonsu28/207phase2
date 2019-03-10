@@ -12,14 +12,15 @@ import java.util.List;
 
 public enum Menu {
     WELCOME_MENU(Arrays.asList("Login as user", "Login as manager")),
-    MAIN_MENU(Arrays.asList("Deposit", "Withdraw", "Transfer", "Pay Bill", "Account Info", "Create Account", "Logout")),
+    MAIN_MENU(Arrays.asList("Deposit", "Withdraw", "Transfer", "Pay Bill", "Account Info", "Open Account", "Logout")),
     ACCOUNT_INFO_MENU(Arrays.asList("Show Summary", "Show Net Total", "Show Recent Transactions", "Change password", "Back to main")),
     CONFIRM_MENU(Arrays.asList("Confirm", "Back to main")),
     ACCOUNT_SELECTION_MENU(Collections.emptyList()),
+    USER_SELECTION_MENU(Collections.emptyList()),
     ACCOUNT_MENU(Arrays.asList(SavingsAccount.class.getSimpleName(), ChequingAccount.class.getSimpleName(),
             LineOfCreditAccount.class.getSimpleName(), CreditCardAccount.class.getSimpleName())),
-    MANAGER_MENU(Arrays.asList("Read alerts", "Read user creation request", "Read account creation request",
-            "Cancel recent transaction"));
+    MANAGER_MENU(Arrays.asList("Read alerts", "Create user", "Read account creation request",
+            "Cancel recent transaction", "Create account", "Logout"));
 
     private final ArrayList<String> choices;
 
