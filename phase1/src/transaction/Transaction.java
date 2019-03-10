@@ -2,6 +2,9 @@ package transaction;
 
 import atm.User;
 
+/**
+ * This class defines the behavior of a transaction class.
+ */
 public abstract class Transaction {
 
     private boolean performed, cancelled;
@@ -16,6 +19,11 @@ public abstract class Transaction {
         prev_id++;
     }
 
+    /**
+     * Initialize a transaction with a user that will be withdraw from.
+     *
+     * @param fromUser The user that will be withdraw from.
+     */
     Transaction(User fromUser) {
         this();
 
@@ -23,6 +31,12 @@ public abstract class Transaction {
         this.toUser = fromUser;
     }
 
+    /**
+     * Initialize a transaction with a user that will be withdraw from and a user that will be the receiver.
+     *
+     * @param fromUser The user that will be with draw from.
+     * @param toUser The user that will be the receiver.
+     */
     Transaction(User fromUser, User toUser) {
         this();
 
@@ -30,26 +44,54 @@ public abstract class Transaction {
         this.toUser = toUser;
     }
 
+    /**
+     * Get the User that will be withdraw from in this transaction.
+     *
+     * @returnThe user that will be withdraw from.
+     */
     public User getFromUser() {
         return fromUser;
     }
-
+    /**
+     * Get the User that receive the transaction.
+     *
+     * @returnThe user that will receive the transaction.
+     */
     public User getToUser() {
         return toUser;
     }
 
+    /**
+     * Return the ID of the transaction.
+     * @return ID of the transaction.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Return the state of the transaction, return true if the action is performed, else false.
+     *
+     * @return State of transaction.
+     */
     public boolean isPerformed() {
         return performed;
     }
 
+    /**
+     * Return whether or not the transaction is cancelled or not.
+     *
+     * @return State of cancellation of the transaction.
+     */
     public boolean isCancelled() {
         return cancelled;
     }
 
+    /**
+     * Update the state of the transaction.
+     *
+     * @return The state of the transaction.
+     */
     public boolean perform() {
         if (performed || cancelled)
             throw new IllegalStateException("You can not perform a transaction that has already been performed!");
@@ -59,6 +101,11 @@ public abstract class Transaction {
         return performed;
     }
 
+    /**
+     * This method is responsible for cancelling a transaction.
+     *
+     * @return The update to whether the transaction is cancelled.
+     */
     public boolean cancel() {
         if (!isCancellable())
             throw new IllegalStateException("Transaction not cancellable!");
@@ -73,13 +120,36 @@ public abstract class Transaction {
         return cancelled;
     }
 
+    /**
+     * The String representation of this transaction in the following format:
+     * "ID: id
+     * CAN_BE_CANCELLED: boolean
+     * IS_CANCELLED: boolean"
+     *
+     * @return The String representation of the transaction.
+     */
     public String toString() {
         return String.format("ID %s\tCAN_BE_CANCELLED %s\tIS_CANCELLED %s\t", getId(), isCancellable(), isCancelled());
     }
 
+    /**
+     * Verify that the transaction is performed.
+     *
+     * @return Whether the transaction is perform or not.
+     */
     protected abstract boolean doPerform();
 
+    /**
+     * Verify that the transaction is cancel.
+     *
+     * @return The state whether the transaction is cancelled.
+     */
     protected abstract boolean doCancel();
 
+    /**
+     * Return whether or not the transaction is cancellable.
+     *
+     * @return Return whether or not the transaction is cancellable.
+     */
     public abstract boolean isCancellable();
 }
