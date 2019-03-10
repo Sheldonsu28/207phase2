@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
+import java.util.regex.Pattern;
+
 public class Session {
     private Scanner response;
     private AtmMachine atm;
@@ -281,22 +283,37 @@ public class Session {
     private void manage(BankManager manager) {
         int choice = console.displayMenu(Menu.MANAGER_MENU);
         String path = fileHandler.getPath();
+        FileInputStream alerts;
         switch (choice) {
             case 1://read alerts
                 try {
-                    FileInputStream alerts = new FileInputStream(path + "alert.txt");
+                    alerts = new FileInputStream(path + "alert.txt");
+                    System.out.println(alerts);
                 } catch (FileNotFoundException e) {
                     e.getMessage();
                 }
-
                 break;
-            case 2://Read user creation request
+            case 2://Create user
+                boolean legalName = false;
+                while (!legalName) {
+                    String userName = response.nextLine();
+                    if (userName != null) legalName = true;
+                    try {
+                        manager.createUser(userName);
+                    } catch (UsernameAlreadyExistException e) {
+                        legalName = false;
+                        e.getMessage();
+                    }
+                }
                 break;
-            case 3://Read account creation request
+            case 3: //Read account creation request
                 break;
-            case 4://Cancel recent transaction
+            case 4: //Cancel recent transaction
                 //manager.cancelLastTransaction();
                 break;
+            case 5: // Restock
+
+
         }
     }
 
