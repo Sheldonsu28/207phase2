@@ -1,6 +1,7 @@
 package ui;
 
 import account.Account;
+import account.Cancellable;
 import account.Depositable;
 import account.Withdrawable;
 import atm.*;
@@ -8,6 +9,8 @@ import transaction.Transaction;
 import transaction.TransferTransaction;
 import transaction.WithdrawTransaction;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ public class Session {
     private State state;
     private Console console;
     private User currUser;
+    private FileHandler fileHandler;
 
     public Session(BankManager bankManager) {
         if (bankManager == null) {
@@ -34,18 +38,16 @@ public class Session {
             atm = this.bankManager.getMachineList().get(0);
             state = State.WELCOME_STATE;
         }
-
         console = new Console();
         response = new Scanner(System.in);
+        fileHandler = new FileHandler();
     }
 
     /**
      * Perform the Session Use Case
      */
     public void performSession() {
-        Transaction currentTransaction = null;
         while (state != State.FINAL_STATE) {
-            int choice;
             switch (state) {
                 case INITIALIZE_STATE:
                     initialize();
@@ -55,34 +57,31 @@ public class Session {
 
                 case WELCOME_STATE:
                     welcome();
-                    if (currUser != null)
-                        state = State.MAIN_STATE;
                     break;
 
                 case MAIN_STATE:
-                    choice = console.displayMenu(Menu.MAIN_MENU);
-                    if (choice > 0 && choice < 5) {
-                        currentTransaction = createTransaction(currUser, atm, choice);
-                        if (currentTransaction != null) state = State.PERFORM_TRANSACTION_STATE;
-                    } else if (choice == 5) {
-                        state = State.ACCOUNT_INFO_STATE;
-                    } else if (choice == -2) state = State.WELCOME_STATE;
+                    handleMain();
                     break;
 
-                case ACCOUNT_INFO_STATE:
-                    getAccountInfo(currUser);
-                    break;
-
-                case PERFORM_TRANSACTION_STATE:
-                    if (currentTransaction == null)
-                        throw new IllegalStateException("This should not be invoked before transaction initialization");
-                    currentTransaction.perform();
-                    state = State.MAIN_STATE;
-                    break;
+//                case ACCOUNT_INFO_STATE:
+//                    getAccountInfo(currUser);
+//                    break;
+//
+//                case PERFORM_TRANSACTION_STATE:
+//                    if (currentTransaction == null)
+//                        throw new IllegalStateException("This should not be invoked before transaction initialization");
+//                    currentTransaction.perform();
+//                    state = State.MAIN_STATE;
+//                    break;
 
                 case SIGN_OUT_STATE:
                     state = State.WELCOME_STATE;
                     break;
+
+                case MANAGER_STATE:
+                    manage(bankManager);
+                    break;
+
             }
         }
     }
@@ -130,13 +129,19 @@ public class Session {
         switch (choice) {
 
             case 1: //  Login
+                //TODO after user name does not exist 2 times, it will back to the main
                 String[] userLogin = signIn();
                 currUser = bankManager.validateUserLogin(userLogin[0], userLogin[1]);
-                break;
-
+                if (currUser != null) {
+                    state = State.MAIN_STATE;
+                    break;
+                }
             case 2: //  Bank manager login
                 managerLogin(signIn());
-                break;
+                if (bankManager.hasLoggedin()) {
+                    state = State.MANAGER_STATE;
+                    break;
+            }
         }
 
     }
@@ -149,6 +154,32 @@ public class Session {
         return new String[]{username, password};
 
     }
+
+    private void handleMain() {
+        int choice = console.displayMenu(Menu.MAIN_MENU);
+        switch (choice) {
+            case 1: //create transaction
+            case 2:
+            case 3:
+            case 4:
+                Transaction currentTransaction = createTransaction(currUser, atm, choice);
+                if (currentTransaction != null) {
+                    currentTransaction.perform();
+                }
+                break;
+
+            case 5:
+                getAccountInfo(currUser);
+
+            case 6: //create account
+                console.displayMenu(Menu.ACCOUNT_MENU);
+
+            case 7:
+                state = State.WELCOME_STATE;
+                break;
+        }
+    }
+
 
     private Transaction createTransaction(User user, AtmMachine atm, int choice) {
         ArrayList<Depositable> depositables = user.getAccountListOfType(Depositable.class);
@@ -238,6 +269,28 @@ public class Session {
         Account selectAccount = accounts.get(choice - 1);
 
         System.out.println(selectAccount.getTransactions());
+    }
+
+    private void manage(BankManager manager) {
+        int choice = console.displayMenu(Menu.MANAGER_MENU);
+        String path = fileHandler.getPath();
+        switch (choice) {
+            case 1://read alerts
+                try {
+                    FileInputStream alerts = new FileInputStream(path + "alert.txt");
+                } catch (FileNotFoundException e) {
+                    e.getMessage();
+                }
+
+                break;
+            case 2://Read user creation request
+                break;
+            case 3://Read account creation request
+                break;
+            case 4://Cancel recent transaction
+                //manager.cancelLastTransaction();
+                break;
+        }
     }
 
 }

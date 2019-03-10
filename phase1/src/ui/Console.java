@@ -37,7 +37,7 @@ class Console {
 
     private void printOptions(List<String> options) {
         for (int i = 0; i < options.size(); i++)
-            System.out.printf("%d) %s", i + 1, options.get(i));
+            System.out.printf("%d) %s ", i + 1, options.get(i));
     }
 
     int getAmount() {
