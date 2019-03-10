@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ * This class is responsible for the transactions between accounts in the system and outside of the system.
+ */
 public class DepositTransaction extends IntraUserTransaction {
     private enum DepositType {CHEQUE, CASH}
 
@@ -18,6 +21,12 @@ public class DepositTransaction extends IntraUserTransaction {
     private final Depositable targetAccount;
     private final AtmMachine machine;
 
+    /**
+     * @param user Username.
+     * @param machine The atm machine that the user is using perform the operation.
+     * @param account Bank account in stored in user account.
+     * @throws IllegalDepositInfoException If the deposit file does not exist or cannot be saved, this exception is thrown.
+     */
     public DepositTransaction(User user, AtmMachine machine, Depositable account)
             throws IllegalDepositInfoException {
         super(user);
@@ -29,6 +38,13 @@ public class DepositTransaction extends IntraUserTransaction {
         depositType = interpretDepositInfo();
     }
 
+    /**
+     * This method is responsible for interpreting deposit.txt file, if the deposit is cheque,
+     * it will return a deposit type Cheque, if the deposit is Cash, it wil return a deposit type cash, if neither,
+     * it will throw a Illegal Deposit Info Exception.
+     * @return Type of deposit.
+     * @throws IllegalDepositInfoException Thrown if the information cannot be interpreted.
+     */
     private DepositType interpretDepositInfo() throws IllegalDepositInfoException {
         ArrayList<String> depositFile = (new FileHandler()).readFrom("deposit.txt");
 
@@ -65,6 +81,14 @@ public class DepositTransaction extends IntraUserTransaction {
         }
     }
 
+    /**
+     * This method is responsible for interpret Cash deposit information.
+     * @param depositInfo The deposit information in String array.
+     * @throws IllegalDepositInfoException When the deposit info contains information that cannot be interpreted,
+     *                                     this exception is thrown.
+     * @throws NumberFormatException When a string in the deposit info cannot be converted into numeric type,
+     * this exception is thrown.
+     */
     private void interpretCashDepositInfo(String[] depositInfo)
             throws IllegalDepositInfoException, NumberFormatException {
         int sum = 0;
@@ -90,6 +114,14 @@ public class DepositTransaction extends IntraUserTransaction {
         depositAmount = sum;
     }
 
+    /**
+     * This method will interpret the cheque deposit information to the proper deposit amount.
+     * @param depositInfo Deposit info read from file.
+     * @throws IllegalDepositInfoException This exception is thrown when the deposit info contains
+     * information that cannot be interpreted.
+     * @throws NumberFormatException When a string in the deposit info cannot be converted into numeric type,
+     * this exception is thrown.
+     */
     private void interpretChequeDepositInfo(String[] depositInfo)
             throws IllegalDepositInfoException, NumberFormatException {
         //  cheque deposit info should be array of length 2
@@ -98,7 +130,9 @@ public class DepositTransaction extends IntraUserTransaction {
 
         depositAmount = Integer.parseInt(depositInfo[1]);
     }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doPerform() {
         if (depositType == DepositType.CASH)
@@ -107,13 +141,17 @@ public class DepositTransaction extends IntraUserTransaction {
         targetAccount.deposit(depositAmount, this);
         return true;
     }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doCancel() {
         targetAccount.cancelDeposit(depositAmount);
         return true;
     }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCancellable() {
         return true;
