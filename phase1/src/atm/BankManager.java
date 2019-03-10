@@ -153,10 +153,10 @@ public class BankManager implements Serializable {
      * @param <T>         Any account type.
      * @return Return the account created.
      */
-    public <T extends Account> boolean createAccount(User user, Class<T> accountType, boolean isPrimary) {
+    public <T extends Account> boolean createAccount(String username, Class<T> accountType, boolean isPrimary) {
         checkState(true);
 
-        return accountFactory.generateDefaultAccount(user, accountType, commonTime, isPrimary);
+        return accountFactory.generateDefaultAccount(userDatabase.getUser(username), accountType, commonTime, isPrimary);
     }
 
     /**

@@ -65,4 +65,41 @@ class Console {
         return result;
     }
 
+    boolean setPrimary() {
+        boolean valid = false;
+        boolean result = false;
+        while (!valid) {
+            System.out.println("Do you want to set this chequing account primary?   yes/no");
+            String answer = response.nextLine();
+            if (answer.equals("yes")) {
+                valid = true;
+                result = true;
+            } else if (answer.equals("no")) {
+                valid = true;
+                result = false;
+            } else {
+                valid = false;
+                System.out.println("Invalid respond. Please try again.");
+            }
+        }
+        return result;
+    }
+
+    int restockAmount(String s) {
+        boolean valid = false;
+        int amount = 0;
+        while (!valid) {
+            System.out.print(s);
+            amount = response.nextInt();
+            if (amount < 1) {
+                valid = false;
+                System.out.println("Invalid amount. Please enter again.");
+            } else {
+                valid = true;
+            }
+        }
+        return amount;
+    }
+
+
 }
