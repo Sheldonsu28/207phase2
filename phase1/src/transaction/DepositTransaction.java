@@ -36,11 +36,15 @@ public class DepositTransaction extends IntraUserTransaction {
         if (depositFile == null || depositFile.size() < 1)
             throw new IllegalDepositInfoException();
 
+        System.out.println("FILE NOT THERE");
+
         String[] depositInfo = depositFile.get(0).split(" ");
 
         //  deposit info array must be odd-sized greater than 1
         if (depositInfo.length == 1 || depositInfo.length % 2 == 0)
             throw new IllegalDepositInfoException();
+
+        System.out.println("BEFORE TYPE DEF");
 
         try {
             //  check deposit type (cheque or cash)

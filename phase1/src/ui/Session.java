@@ -1,13 +1,10 @@
 package ui;
 
 import account.Account;
-import account.Cancellable;
 import account.Depositable;
 import account.Withdrawable;
 import atm.*;
-import transaction.Transaction;
-import transaction.TransferTransaction;
-import transaction.WithdrawTransaction;
+import transaction.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -141,7 +138,7 @@ public class Session {
                 if (bankManager.hasLoggedin()) {
                     state = State.MANAGER_STATE;
                     break;
-            }
+                }
         }
 
     }
@@ -170,9 +167,11 @@ public class Session {
 
             case 5:
                 getAccountInfo(currUser);
+                break;
 
             case 6: //create account
                 console.displayMenu(Menu.ACCOUNT_MENU);
+                break;
 
             case 7:
                 state = State.WELCOME_STATE;
@@ -192,18 +191,22 @@ public class Session {
         switch (choice) {
             case 1: //deposit
                 //TODO deposit checks and cash
-                System.out.println("Select target deposit account");
+                System.out.println("Select target deposit account\n");
                 toAccount = depositables.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, depositables.toArray()) - 1);
-                //return new DepositTransaction(user, atm, deposit.get(toAccountChoice - 1));
+                try {
+                    return new DepositTransaction(user, atm, toAccount);
+                } catch (IllegalDepositInfoException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
 
             case 2: // withdraw
                 fromAccount = withdrawables.get(
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, withdrawables.toArray()) - 1);
 
                 amount = console.getAmount();
-                inputChoice = console.displayMenu(Menu.CONFIRM_MENU,
-                        new Object[]{String.format("FROM %s\nWITHDRAW $%d\n", fromAccount, amount)});
+                inputChoice = confirmation(String.format("WITHDRAW $%d FROM %s\n", fromAccount, amount));
 
                 if (inputChoice == 1)
                     return new WithdrawTransaction(user, atm, fromAccount, amount);
@@ -218,8 +221,8 @@ public class Session {
                         console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, withdrawables.toArray()) - 1);
 
                 amount = console.getAmount();
-                inputChoice = console.displayMenu(Menu.CONFIRM_MENU,
-                        new Object[]{String.format("FROM %s\nWITHDRAW %d\n", fromAccount, amount)});
+                inputChoice = confirmation(
+                        String.format("FROM %s\nTRANSFER $%d TO %s\n", fromAccount, amount, toAccount));
 
                 if (inputChoice == 1)
                     return new TransferTransaction(user, fromAccount, toAccount, amount);
@@ -239,6 +242,10 @@ public class Session {
         }
 
         return null;
+    }
+
+    private int confirmation(String msg) {
+        return console.displayMenu(Menu.CONFIRM_MENU, new Object[]{msg});
     }
 
     private void getAccountInfo(User user) {

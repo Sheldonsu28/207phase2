@@ -33,7 +33,6 @@ public enum Currency {
      * @param amount The amount of currency that need to be converted.
      * @return The amount after converted to USD.
      */
-    //  TODO test required
     double convertToUSD(double amount) {
         return Double.parseDouble(decimalFormat.format(amount * rateToUsd));
     }
@@ -43,7 +42,6 @@ public enum Currency {
      * @param amount Amount of USD.
      * @return Amount of currency after conversion.
      */
-    //  TODO test required
     double convertFromUSD(double amount) {
         return Double.parseDouble(decimalFormat.format(amount / rateToUsd));
     }
