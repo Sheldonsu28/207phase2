@@ -3,7 +3,12 @@ package atm;
 import java.util.TreeMap;
 
 class BalancedCashDistributor extends CashDistributor {
-
+    /**
+     * Sort the cash stock provided.
+     *
+     * @param stock The cash stock you want to sort.
+     * @return The sort result.
+     */
     private int[][] getSortedAmountValue(TreeMap<Integer, Integer> stock) {
         int[] amounts = stock.values().stream().mapToInt(i -> i).toArray();
         int[] types = stock.keySet().stream().mapToInt(i -> i).toArray();
@@ -39,6 +44,9 @@ class BalancedCashDistributor extends CashDistributor {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     TreeMap<Integer, Integer> distribute(TreeMap<Integer, Integer> orgStock, int amount) throws CashShortageException {
         int balance = amount;

@@ -6,12 +6,22 @@ import atm.*;
 
 import java.util.TreeMap;
 
+/**
+ * This class is responsible for withdrawing from a bank account through ATM machine.
+ */
 public class WithdrawTransaction extends Transaction {
     private final int withdrawAmount;
     private final Withdrawable targetAccount;
     private final AtmMachine machine;
     private TreeMap<Integer, Integer> withdrawStock;
 
+    /**
+     * Initialize a new withdraw transaction.
+     * @param user      The user account.
+     * @param machine   The machine that the user is operate on.
+     * @param account   The account to withdraw from.
+     * @param amount    The amount that will be withdraw.
+     */
     public WithdrawTransaction(User user, AtmMachine machine, Withdrawable account, int amount) {
         super(user);
 
@@ -24,12 +34,18 @@ public class WithdrawTransaction extends Transaction {
         withdrawStock = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return super.toString() +
                 String.format("User %s's Account %s WITHDRAW $%d", getFromUser(), targetAccount, withdrawAmount);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doPerform() {
         try {
@@ -50,6 +66,9 @@ public class WithdrawTransaction extends Transaction {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doCancel() {
         targetAccount.cancelWithdraw(withdrawAmount);
@@ -61,6 +80,9 @@ public class WithdrawTransaction extends Transaction {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCancellable() {
         return true;
