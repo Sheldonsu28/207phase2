@@ -101,6 +101,7 @@ public class Session {
             try {
                 Date date = format.parse(response.nextLine());
                 bankManager.initialize(date);
+                bankManager.logout();
             } catch (ParseException e) {
                 System.out.println("Incorrect format. Try again");
             }
@@ -343,25 +344,18 @@ public class Session {
                 List<User> userList = bankManager.getAllUsers();
                 User userSelect = userList.get(console.displayMenu(Menu.USER_SELECTION_MENU, userList.toArray()) - 1);
                 ArrayList<Cancellable> userAccounts = userSelect.getAccountListOfType(Cancellable.class);
-                Cancellable accountSelect = userAccounts.get(console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, userAccounts.toArray()) - 1);
+                Cancellable accountSelect = userAccounts.get(
+                        console.displayMenu(Menu.ACCOUNT_SELECTION_MENU, userAccounts.toArray()) - 1);
                 bankManager.cancelLastTransaction((Account) accountSelect);
                 //TODO back to main
                 break;
 
             case 5: // Restock
-                ArrayList<String> content = new ArrayList<>();
+                ArrayList<String> content = fileHandler.readFrom(ExternalFiles.CASH_ALERT_FILE);
                 int amount = 0;
-                try {
-                    Scanner scanner = new Scanner(new File(path + ExternalFiles.CASH_ALERT_FILE));
-                    while (scanner.hasNext()) {
-                        content.add(scanner.nextLine());
-                        amount = console.restockAmount(content.get(0));
-                    }
-                    scanner.close();
-                } catch (FileNotFoundException e) {
-                    System.out.println("File not found.");
-                }
+                amount = console.restockAmount(content.get(0));
                 break;
+
             case 6: //Create account
                 ArrayList<String> userInfo = fileHandler.readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
 
@@ -377,8 +371,10 @@ public class Session {
                 }
 
                 break;
+
             case 7:
                 state = State.MAIN_STATE;
+                bankManager.logout();
                 break;
 
         }
