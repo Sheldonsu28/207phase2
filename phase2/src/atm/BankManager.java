@@ -168,6 +168,13 @@ public class BankManager implements Serializable {
         return accountFactory.generateDefaultAccount(userDatabase.getUser(username), accountType, commonTime, isPrimary);
     }
 
+    /**
+     * Create a new employee account.
+     * @param Username Username of the employee.
+     * @return The password of the account.
+     * @throws UsernameAlreadyExistException When username already exist, this exception will be thrown.
+     * @throws UsernameOutOfRangeException When username is too long, this exception is thrown.
+     */
     public String createEmployee(String Username)throws UsernameAlreadyExistException, UsernameOutOfRangeException {
         checkState(true);
 
