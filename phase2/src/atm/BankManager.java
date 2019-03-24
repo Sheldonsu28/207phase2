@@ -168,6 +168,19 @@ public class BankManager implements Serializable {
         return accountFactory.generateDefaultAccount(userDatabase.getUser(username), accountType, commonTime, isPrimary);
     }
 
+    public String createEmployee(String Username)throws UsernameAlreadyExistException, UsernameOutOfRangeException {
+        checkState(true);
+
+        if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH) {
+            throw new UsernameOutOfRangeException();
+        }
+        String password = passwordManager.generateRandomPassword();
+
+        Employee newEmployee = userDatabase.registerNewEmployee(Username, password, this.commonTime);
+        accountFactory.generateDefaultAccount(newEmployee, ChequingAccount.class,commonTime,true);
+
+        return password;
+    }
     /**
      * Create a new user with given username and register it in the database
      *
