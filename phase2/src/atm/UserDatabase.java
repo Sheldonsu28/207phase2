@@ -23,6 +23,16 @@ final class UserDatabase implements Serializable {
         return user;
     }
 
+    Employee registerNewEmployee(String username, String password, AtmTime time)throws UsernameAlreadyExistException{
+        if (users.containsKey(username)) {
+            throw new UsernameAlreadyExistException(username);
+        }
+        Employee employee = new Employee(username, password, this, time);
+        users.put(username,employee);
+
+        return employee;
+    }
+
     void removeUser(String username) {
         users.remove(username);
     }
