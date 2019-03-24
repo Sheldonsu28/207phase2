@@ -33,10 +33,9 @@ public abstract class Account implements Serializable {
     private final String id;
 
     /**
-     * The unique owner of this account.
+     * List of owner of this account.
      */
-    private final User owner;
-    private final User owner2;
+    private final User[] owner = new User[2];
 
     /**
      * The list of transaction related to this account.
@@ -57,13 +56,6 @@ public abstract class Account implements Serializable {
      * @param owner owner user
      */
     public Account(Date time, User owner) {
-//        id = String.format("ACC%04d", prev_id);
-//        prev_id++;
-//        timeCreated = time;
-//        balance = 0.0;
-//        transactions = new ArrayList<>();
-//        this.owner = owner;
-
         this(time, owner, null, 0);
     }
 
@@ -103,15 +95,15 @@ public abstract class Account implements Serializable {
         timeCreated = time;
         balance = 0.0;
         transactions = new ArrayList<>();
-        this.owner = owner;
-        this.owner2= owner2;
+        this.owner[0] = owner;
+        this.owner[1]= owner2;
         this.balance = initialBalance;
     }
 
     /**
      * @return owner of this account
      */
-    public User getOwner() {
+    public User[] getOwner() {
         return owner;
     }
 
