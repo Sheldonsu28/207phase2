@@ -165,18 +165,37 @@ public class BankManager implements Serializable {
     public <T extends Account> boolean createAccount(String username, Class<T> accountType, boolean isPrimary) {
         checkState(true);
 
-        return accountFactory.generateDefaultAccount(userDatabase.getUser(username), accountType, commonTime, isPrimary);
+        return accountFactory.generateDefaultAccount(
+                userDatabase.getUser(username), null, accountType, commonTime, isPrimary);
     }
 
     /**
-     * Create a new employee account.
+     * Create joint account to the correspond user.
      *
+     * @param user1name    The first user that account need to be added to.
+     * @param user2name    The second user that account need to be added to.
+     * @param accountType The type of the account.
+     * @param isPrimary   if the account is the primary account of the user or not.
+     * @param <T>         Any account type.
+     * @return Return the account created.
+     */
+    public <T extends Account> boolean createJointAccount(
+            String user1name, String user2name, Class<T> accountType, boolean isPrimary) {
+        checkState(true);
+
+        return accountFactory.generateDefaultAccount(
+                userDatabase.getUser(user1name), userDatabase.getUser(user2name), accountType, commonTime, isPrimary);
+    }
+
+
+    /**
+     * Create a new employee account.
      * @param Username Username of the employee.
      * @return The password of the account.
      * @throws UsernameAlreadyExistException When username already exist, this exception will be thrown.
-     * @throws UsernameOutOfRangeException   When username is too long, this exception is thrown.
+     * @throws UsernameOutOfRangeException When username is too long, this exception is thrown.
      */
-    public String createEmployee(String Username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
+    public String createEmployee(String Username)throws UsernameAlreadyExistException, UsernameOutOfRangeException {
         checkState(true);
 
         if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH) {
@@ -185,11 +204,10 @@ public class BankManager implements Serializable {
         String password = passwordManager.generateRandomPassword();
 
         Employee newEmployee = userDatabase.registerNewEmployee(Username, password, this.commonTime);
-        accountFactory.generateDefaultAccount(newEmployee, ChequingAccount.class, commonTime, true);
+        accountFactory.generateDefaultAccount(newEmployee, null, ChequingAccount.class,commonTime,true);
 
         return password;
     }
-
     /**
      * Create a new user with given username and register it in the database
      *
@@ -205,7 +223,7 @@ public class BankManager implements Serializable {
         String password = passwordManager.generateRandomPassword();
         User newUser = userDatabase.registerNewUser(username, password);
 
-        accountFactory.generateDefaultAccount(newUser, ChequingAccount.class, commonTime, true);
+        accountFactory.generateDefaultAccount(newUser, null, ChequingAccount.class, commonTime, true);
 
         return password;
     }
@@ -251,31 +269,14 @@ public class BankManager implements Serializable {
     }
 
     /**
-     * This method is responsible for cancelling multiple recent transactions.
-     * @param targetAccount         User account that the cancellation wil be perform on.
-     * @param numberOfTransactions  Numbers of transaction you want to cancel.
-     * @return                      Whether the cancellation is performed or not.
+     * Add secound user to the account.
+     * @param username User's username.
+     * @param account User's account.
      */
-    public boolean cancelTransactions(Account targetAccount, int numberOfTransactions) {
+    public void addSecondUser(String username, Account account) {
         checkState(true);
 
-        List<Transaction> fullTransaction = targetAccount.getFullTransaction();
-        if (fullTransaction.size() == 0) {
-            return true;
-        } else if (fullTransaction.size() < numberOfTransactions) {
-            numberOfTransactions = fullTransaction.size();
-        }
-        for (int index = fullTransaction.size() - 1; index >= fullTransaction.size() - 1 - numberOfTransactions; index--) {
-            Transaction transaction = fullTransaction.get(index);
-            if (!transaction.isCancellable()) {
-                if (!transaction.isCancelled()) {
-                    transaction.cancel();
-                }
-            }
-        }
-        return true;
-
-
+        account.setOwner2(userDatabase.getUser(username));
     }
 
 }
