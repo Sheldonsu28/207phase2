@@ -170,12 +170,13 @@ public class BankManager implements Serializable {
 
     /**
      * Create a new employee account.
+     *
      * @param Username Username of the employee.
      * @return The password of the account.
      * @throws UsernameAlreadyExistException When username already exist, this exception will be thrown.
-     * @throws UsernameOutOfRangeException When username is too long, this exception is thrown.
+     * @throws UsernameOutOfRangeException   When username is too long, this exception is thrown.
      */
-    public String createEmployee(String Username)throws UsernameAlreadyExistException, UsernameOutOfRangeException {
+    public String createEmployee(String Username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
         checkState(true);
 
         if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH) {
@@ -184,10 +185,11 @@ public class BankManager implements Serializable {
         String password = passwordManager.generateRandomPassword();
 
         Employee newEmployee = userDatabase.registerNewEmployee(Username, password, this.commonTime);
-        accountFactory.generateDefaultAccount(newEmployee, ChequingAccount.class,commonTime,true);
+        accountFactory.generateDefaultAccount(newEmployee, ChequingAccount.class, commonTime, true);
 
         return password;
     }
+
     /**
      * Create a new user with given username and register it in the database
      *
@@ -246,6 +248,34 @@ public class BankManager implements Serializable {
         }
 
         return false;
+    }
+
+    /**
+     * This method is responsible for cancelling multiple recent transactions.
+     * @param targetAccount         User account that the cancellation wil be perform on.
+     * @param numberOfTransactions  Numbers of transaction you want to cancel.
+     * @return                      Whether the cancellation is performed or not.
+     */
+    public boolean cancelTransactions(Account targetAccount, int numberOfTransactions) {
+        checkState(true);
+
+        List<Transaction> fullTransaction = targetAccount.getFullTransaction();
+        if (fullTransaction.size() == 0) {
+            return true;
+        } else if (fullTransaction.size() < numberOfTransactions) {
+            numberOfTransactions = fullTransaction.size();
+        }
+        for (int index = fullTransaction.size() - 1; index >= fullTransaction.size() - 1 - numberOfTransactions; index--) {
+            Transaction transaction = fullTransaction.get(index);
+            if (!transaction.isCancellable()) {
+                if (!transaction.isCancelled()) {
+                    transaction.cancel();
+                }
+            }
+        }
+        return true;
+
+
     }
 
 }
