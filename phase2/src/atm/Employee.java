@@ -40,7 +40,7 @@ public class Employee extends User implements Serializable {
             System.out.println("You can not add accounts to yourself.");
             return false;
         }
-        return accountFactory.generateDefaultAccount(Users.getUser(Username), accountType, commonTime, isPrimary);
+        return accountFactory.generateDefaultAccount(Users.getUser(Username),null, accountType, commonTime, isPrimary);
     }
 
     /**
@@ -58,7 +58,7 @@ public class Employee extends User implements Serializable {
         String password = passwordManager.generateRandomPassword();
         User newUser = Users.registerNewUser(username, password);
 
-        accountFactory.generateDefaultAccount(newUser, ChequingAccount.class, commonTime, true);
+        accountFactory.generateDefaultAccount(newUser,null, ChequingAccount.class, commonTime, true);
 
         return password;
     }
