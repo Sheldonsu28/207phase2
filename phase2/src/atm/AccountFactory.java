@@ -34,12 +34,41 @@ final class AccountFactory implements Serializable {
      * @return true if the account is successfully generated & initialized and added to its owner user's vault,
      * false otherwise
      */
-    <T extends Account> boolean generateDefaultAccount(User owner, Class<T> accountType, AtmTime time, boolean isPrimary) {
+//    <T extends Account> boolean generateDefaultAccount(User owner, Class<T> accountType, AtmTime time, boolean isPrimary) {
+//        T account = null;
+//
+//        try {
+//            Constructor<T> defaultConstructor = accountType.getDeclaredConstructor(Date.class, User.class);
+//            account = defaultConstructor.newInstance(time.getCurrentTime(), owner);
+//        } catch (NoSuchMethodException | InstantiationException |
+//                IllegalAccessException | InvocationTargetException e) {
+//            System.out.println("Failed to create account due to following reason: ");
+//            e.printStackTrace();
+//        }
+//
+//        if (account != null) {
+//            owner.addAccount(account);
+//
+//            if (accountType == ChequingAccount.class && isPrimary)
+//                owner.setPrimaryAccount((ChequingAccount) account);
+//
+//            if (account instanceof Growable)
+//                time.addObserver((Observer) account);
+//
+//            //  time-related class can have their observer hook here
+//
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
+    <T extends Account> boolean generateDefaultAccount(User owner, User owner2, Class<T> accountType, AtmTime time, boolean isPrimary) {
         T account = null;
 
         try {
-            Constructor<T> defaultConstructor = accountType.getDeclaredConstructor(Date.class, User.class);
-            account = defaultConstructor.newInstance(time.getCurrentTime(), owner);
+            Constructor<T> defaultConstructor = accountType.getDeclaredConstructor(Date.class, User.class, User.class);
+            account = defaultConstructor.newInstance(time.getCurrentTime(), owner, owner2);
         } catch (NoSuchMethodException | InstantiationException |
                 IllegalAccessException | InvocationTargetException e) {
             System.out.println("Failed to create account due to following reason: ");
