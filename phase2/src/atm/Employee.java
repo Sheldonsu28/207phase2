@@ -1,24 +1,21 @@
 package atm;
 import account.Account;
-import account.BillingAccount;
 import account.ChequingAccount;
 import transaction.Transaction;
-import ui.Console;
 
 import java.io.Serializable;
 
 public class Employee extends User implements Serializable {
     private AccountFactory accountFactory;
-    private AccountStorageManager accountStorage;
     private UserDatabase Users;
     private AtmTime commonTime;
     private PasswordManager passwordManager;
 
-    public Employee(String username, String password, UserDatabase dataBase, AtmTime standardTime) {
+    Employee(String username, String password, UserDatabase dataBase, AtmTime standardTime) {
         super(username, password);
-        this.accountStorage = new AccountStorageManager(this);
         this.Users = dataBase;
         this.commonTime = standardTime;
+        this.accountFactory = new AccountFactory();
         passwordManager = new PasswordManager(12, 24, "[0-9]|[a-z]|[A-Z]");
     }
 
@@ -41,5 +38,16 @@ public class Employee extends User implements Serializable {
         accountFactory.generateDefaultAccount(newUser, ChequingAccount.class, commonTime, true);
 
         return password;
+    }
+
+    public boolean cancelLastTransaction(Account targetAccount) {
+        Transaction transaction = targetAccount.getLastTransaction();
+
+        if (transaction != null && transaction.isCancellable()) {
+            transaction.cancel();
+            return true;
+        }
+
+        return false;
     }
 }
