@@ -166,6 +166,10 @@ public abstract class Account implements Serializable {
         return null;
     }
 
+    public void setOwner2(User owner2) {
+        this.owner[1] = owner2;
+    }
+
     /**
      * @return a String containing information about this account (owner, id, date of creation, apparent balance).
      */
