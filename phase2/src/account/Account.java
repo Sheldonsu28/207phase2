@@ -166,6 +166,11 @@ public abstract class Account implements Serializable {
         return null;
     }
 
+    public List<Transaction> getFullTransaction(){
+        return transactions;
+    }
+
+
     /**
      * @return a String containing information about this account (owner, id, date of creation, apparent balance).
      */
