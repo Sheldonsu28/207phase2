@@ -22,6 +22,11 @@ public class FinancialAccount extends AssetAccount implements Withdrawable{
         currTime = AtmTime.FORMAT_STRING;
     }
 
+
+    public void getGrowthRate(){
+        growthRate += (depositDuration/30)/10;
+    }
+
     public void deposit(double amount, Transaction register, double duration) {
         growthRate += (depositDuration/30)/10;
         balance += amount*growthRate;
@@ -30,15 +35,11 @@ public class FinancialAccount extends AssetAccount implements Withdrawable{
 //        format: DD
         registerTransaction(register);
     }
-//
-//    public void getGrowthRate(){
-//        growthRate += (depositDuration/30)/10;
-//    }
 
     private boolean isDate(String date) {
-        double timePass = 365*(Integer.parseInt(date.substring(0,3))-Integer.parseInt(date.substring(0,3)))
-                +30*(Integer.parseInt(date.substring(4,5))-Integer.parseInt(date.substring(4,5)))+
-                (Integer.parseInt(date.substring(6,7))-Integer.parseInt(date.substring(6,7)));
+        double timePass = 365*(Integer.parseInt(date.substring(0,3))-Integer.parseInt(depositTime.substring(0,3)))
+                +30*(Integer.parseInt(date.substring(4,5))-Integer.parseInt(depositTime.substring(4,5)))+
+                (Integer.parseInt(date.substring(6,7))-Integer.parseInt(depositTime.substring(6,7)));
         return timePass <= 365*2;
     }
 
