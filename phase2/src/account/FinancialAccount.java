@@ -18,13 +18,13 @@ public class FinancialAccount extends AssetAccount implements Withdrawable{
     super(time, owner);
     }
 
-    public void getTime(){
-        currTime = AtmTime.FORMAT_STRING;
+    public String getTime(){
+        return currTime;
     }
 
 
-    public void getGrowthRate(){
-        growthRate += (depositDuration/30)/10;
+    public double getGrowthRate(){
+        return growthRate;
     }
 
     public void deposit(double amount, Transaction register, double duration) {
