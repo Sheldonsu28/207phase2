@@ -13,18 +13,19 @@ public class StockQuoteGetter {
         String suffix = "?p=";
         URL url = new URL(yahooFinance + stockSymbol + suffix + stockSymbol);
         URLConnection urlConn = url.openConnection();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
         String inputLine;
         while((inputLine = reader.readLine()) != null) {
             if(inputLine.contains("regularMarketPrice")) {
                 int target = inputLine.indexOf("regularMarketPrice");
                 String subString = inputLine.substring(target);
                 int deci = subString.indexOf(".");
+                int end = subString.indexOf(",");
                 int start = deci;
                 while (subString.charAt(start) != ':') {
                     start--;
                 }
-                return Double.parseDouble(subString.substring(start+1, deci+3));
+                return Double.parseDouble(subString.substring(start+1, end));
             }
         }
         reader.close();
@@ -32,6 +33,6 @@ public class StockQuoteGetter {
     }
     public static void main(String[] args) throws IOException {
         StockQuoteGetter getter = new StockQuoteGetter();
-        System.out.println(getter.getQuote("BA"));
+        System.out.println(getter.getQuote("GOOGLE"));
     }
 }
