@@ -22,21 +22,32 @@ public class FinancialAccount extends AssetAccount implements Withdrawable{
         currTime = AtmTime.FORMAT_STRING;
     }
 
+
+    public void getGrowthRate(){
+        growthRate += (depositDuration/30)/10;
+    }
+
     public void deposit(double amount, Transaction register, double duration) {
-        balance += amount;
+        growthRate += (depositDuration/30)/10;
+        balance += amount*growthRate;
         depositTime = AtmTime.FORMAT_STRING;
         depositDuration = duration;
 //        format: DD
         registerTransaction(register);
     }
 
-    public void getGrowthRate(){
-        growthRate += (depositDuration/30)/10;
+    private boolean isDate(String date) {
+        double timePass = 365*(Integer.parseInt(date.substring(0,3))-Integer.parseInt(depositTime.substring(0,3)))
+                +30*(Integer.parseInt(date.substring(4,5))-Integer.parseInt(depositTime.substring(4,5)))+
+                (Integer.parseInt(date.substring(6,7))-Integer.parseInt(depositTime.substring(6,7)));
+        return timePass <= 365*2;
     }
 
     @Override
     public void withdraw(double amount, Transaction register) throws WithdrawException{
-        if(currTime - depositTime < depositDuration){
+//        if(currTime - depositTime < depositDuration){
+        currTime = AtmTime.FORMAT_STRING;
+        if (isDate(currTime)) {
             throw new InsufficientTimeException();
         }
 
