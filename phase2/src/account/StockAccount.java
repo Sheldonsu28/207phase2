@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.TreeMap;
 
-public class StockAccount extends AssetAccount{
+public class StockAccount extends Account{
 
     private double cash;
     private TreeMap<String, Double> stocks;
@@ -19,18 +19,18 @@ public class StockAccount extends AssetAccount{
         super(time, owner);
     }
 
-    public void buyStock(String stockSymbol) throws IOException {
+    @Override
+    public double getNetBalance() {
+        return balance;
+    }
+
+    public void buyStock(String stockSymbol, Transaction register) throws IOException {
         double stockQuote = quoteGetter.getQuote(stockSymbol);
-
     }
 
-    @Override
-    public void withdraw(double amount, Transaction register) throws WithdrawException {
-
-    }
-
-    @Override
-    public void cancelWithdraw(double amount) {
-
+    public void withdraw(int stockAmount, double stockQuote, String stockSymbol ,Transaction register) throws WithdrawException {
+        double moneyWithdraw = stockAmount*stockQuote;
+        balance -= moneyWithdraw;
+        registerTransaction(register);
     }
 }
