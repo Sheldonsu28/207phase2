@@ -9,11 +9,7 @@ package account;
  */
 public class InsufficientTimeException extends WithdrawException {
 
-    /**
-     * @param source          the source account
-     * @param amountRequested the requested amount that causes the exception
-     */
-    InsufficientTimeException(Withdrawable source, double amountRequested) {
+    InsufficientTimeException() {
         super();
     }
 
