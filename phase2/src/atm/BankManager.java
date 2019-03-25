@@ -202,7 +202,7 @@ public class BankManager implements Serializable {
         }
         String password = passwordManager.generateRandomPassword();
 
-        Employee newEmployee = userDatabase.registerNewEmployee(Username, password, this.commonTime);
+        Employee newEmployee = userDatabase.registerNewEmployee(Username, password, this.commonTime,this);
         accountFactory.generateDefaultAccount(newEmployee, null, ChequingAccount.class,commonTime,true);
 
         return password;
