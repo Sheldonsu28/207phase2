@@ -35,13 +35,8 @@ public class StockAccount extends Account{
     }
 
     public void deposit(int stockAmount, double stockPrice, String stockSymbol ,Transaction register){
-        currTime = AtmTime.FORMAT_STRING;
-
         double moneyDeposit = stockAmount*stockPrice;
 
-        if(Integer.parseInt(currTime.substring(14,15))<9 && Integer.parseInt(currTime.substring(14,15)) > 15){
-            throw new IncorrectTimeException;
-        }
         balance += moneyDeposit;
 
         registerTransaction(register);
@@ -53,7 +48,7 @@ public class StockAccount extends Account{
         double moneyWithdraw = stockAmount*stockPrice;
 
         if(Integer.parseInt(currTime.substring(14,15))<9 && Integer.parseInt(currTime.substring(14,15)) > 15){
-            throw new IncorrectTimeException;
+            throw new IncorrectTimeException();
         }
 
         if(moneyWithdraw > balance){
