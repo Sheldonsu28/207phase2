@@ -3,6 +3,7 @@ package atm;
 import account.Account;
 import account.BillingAccount;
 import account.ChequingAccount;
+import account.SavingsAccount;
 import transaction.Transaction;
 import ui.Console;
 
@@ -227,6 +228,26 @@ public class BankManager implements Serializable {
         return password;
     }
 
+    /**
+     * Create a new Child user with a chequing and a savings account.
+     * @param username Username of the user
+     * @param parent   The parent user.
+     * @return  The password of the user.
+     */
+    public String creatChildUser(String username, User parent) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
+        checkState(true);
+
+        if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH)
+            throw new UsernameOutOfRangeException();
+
+        String password = passwordManager.generateRandomPassword();
+        User newUser = userDatabase.registerNewChildUser(username, password,parent);
+
+        accountFactory.generateDefaultAccount(newUser,parent,ChequingAccount.class,commonTime,true);
+        accountFactory.generateDefaultAccount(newUser,parent,SavingsAccount.class,commonTime,false);
+
+        return password;
+    }
     /**
      * Try to log user into the system, throws error if the user failed to log in.
      *
