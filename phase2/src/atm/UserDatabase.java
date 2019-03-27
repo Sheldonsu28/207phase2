@@ -43,12 +43,12 @@ final class UserDatabase implements Serializable {
     }
 
     /**
-     *
-     * @param username
-     * @param password
-     * @param Parent
-     * @return
-     * @throws UsernameAlreadyExistException
+     * Create a new Child User.
+     * @param username  Username of the user
+     * @param password  Password of the user
+     * @param Parent    Parent User
+     * @return          The user created
+     * @throws UsernameAlreadyExistException Throws this exception when the username is already taken
      */
     ChildUser registerNewChildUser(String username, String password, User Parent) throws UsernameAlreadyExistException{
         if (users.containsKey(username))
