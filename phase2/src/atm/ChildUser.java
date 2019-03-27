@@ -8,7 +8,7 @@ public class ChildUser extends User {
 
     private User parentAccount;
 
-    public ChildUser(String username, String password, User parent){
+    ChildUser(String username, String password, User parent){
         super(username,password);
         this.parentAccount = parent;
     }
