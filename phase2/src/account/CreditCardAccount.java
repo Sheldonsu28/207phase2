@@ -15,13 +15,10 @@ public class CreditCardAccount extends DebtAccount {
     /**
      * @param time  time of creation
      * @param owner owner user
-     * @see Account#Account(Date, User)
      */
     public CreditCardAccount(Date time, User owner) {
         super(time, owner);
     }
-
-    public CreditCardAccount(Date time, User owner, User owner2) { super(time, owner, owner2); }
 
     /**
      * @param time      time of creation

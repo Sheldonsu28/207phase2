@@ -4,6 +4,7 @@ import atm.User;
 import transaction.Transaction;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Defines behaviours of a debt account. A debt account is always {@link Indebtable}.
@@ -23,15 +24,10 @@ public abstract class DebtAccount extends Account implements Depositable, Indebt
      *
      * @param time  time of creation
      * @param owner owner user
-     * @see Account#Account(Date, User)
+     * @see Account#Account(Date, List)
      */
-    DebtAccount(Date time, User owner) {
+    DebtAccount(Date time, List<User> owner) {
         super(time, owner);
-        debtLimit = DEFAULT_DEBT_LIMIT;
-    }
-
-    DebtAccount(Date time, User owner, User owner2) {
-        super(time, owner, owner2);
         debtLimit = DEFAULT_DEBT_LIMIT;
     }
 
@@ -42,15 +38,11 @@ public abstract class DebtAccount extends Account implements Depositable, Indebt
      * @param owner     owner user
      * @param debtLimit the debt limit of this account
      */
-    DebtAccount(Date time, User owner, double debtLimit) {
+    DebtAccount(Date time, List<User> owner, double debtLimit) {
         super(time, owner);
         this.debtLimit = debtLimit;
     }
 
-    DebtAccount(Date time, User owner, User owner2, double debtLimit) {
-        super(time, owner, owner2);
-        this.debtLimit = debtLimit;
-    }
     /**
      * {@inheritDoc}
      */

@@ -1,5 +1,6 @@
 package ui;
 
 public enum State {
-    INITIALIZE_STATE, WELCOME_STATE, MANAGER_STATE, MAIN_STATE, SIGN_OUT_STATE, FINAL_STATE
+    LOGIN,
+    MAIN
 }

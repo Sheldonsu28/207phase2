@@ -4,6 +4,7 @@ import atm.User;
 import transaction.Transaction;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Defines behaviours of chequing account. Chequing account is considered the default account type for any user,
@@ -28,34 +29,26 @@ public class ChequingAccount extends AssetAccount implements Indebtable {
      *
      * @param time  time of creation
      * @param owner owner user
-     * @see Account#Account(Date, User)
+     * @see Account#Account(Date, List)
      */
-    public ChequingAccount(Date time, User owner) {
+    public ChequingAccount(Date time, List<User> owner) {
         super(time, owner);
         debtLimit = DEFAULT_CHEQUING_DEBT_LIMIT;
     }
 
-    public ChequingAccount(Date time, User owner, User owner2) {
-        super(time, owner, owner2);
-        debtLimit = DEFAULT_CHEQUING_DEBT_LIMIT;
-    }
     /**
      * Create a default chequing account with {@link #DEFAULT_CHEQUING_DEBT_LIMIT} with the given initial balance.
      *
      * @param time           time of creation
      * @param owner          owner user
      * @param initialBalance initial apparent balance of the account
-     * @see Account#Account(Date, User, double)
+     * @see Account#Account(Date, List, double)
      */
-    public ChequingAccount(Date time, User owner, double initialBalance) {
+    public ChequingAccount(Date time, List<User> owner, double initialBalance) {
         super(time, owner, initialBalance);
         debtLimit = DEFAULT_CHEQUING_DEBT_LIMIT;
     }
 
-    public ChequingAccount(Date time, User owner, User owner2, double initialBalance) {
-        super(time, owner, owner2, initialBalance);
-        debtLimit = DEFAULT_CHEQUING_DEBT_LIMIT;
-    }
     /**
      * Creates a chequing with the given debt limit and initial balance.
      *
@@ -63,9 +56,9 @@ public class ChequingAccount extends AssetAccount implements Indebtable {
      * @param owner          owner user
      * @param initialBalance initial apparent balance of the account
      * @param debtLimit      the debt limit of this account
-     * @see Account#Account(Date, User, double)
+     * @see Account#Account(Date, List, double)
      */
-    public ChequingAccount(Date time, User owner, double initialBalance, double debtLimit) {
+    public ChequingAccount(Date time, List<User> owner, double initialBalance, double debtLimit) {
         super(time, owner, initialBalance);
         this.debtLimit = debtLimit;
     }

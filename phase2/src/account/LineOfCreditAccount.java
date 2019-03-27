@@ -4,6 +4,7 @@ import atm.User;
 import transaction.Transaction;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Defines behaviours of line of credit account.
@@ -16,28 +17,22 @@ public class LineOfCreditAccount extends DebtAccount implements Withdrawable {
     /**
      * @param time  time of creation
      * @param owner owner user
-     * @see Account#Account(Date, User)
+     * @see Account#Account(Date, List)
      */
-    public LineOfCreditAccount(Date time, User owner) {
+    public LineOfCreditAccount(Date time, List<User> owner) {
         super(time, owner);
     }
 
-    public LineOfCreditAccount(Date time, User owner, User owner2) {
-        super(time, owner, owner2);
-    }
     /**
      * @param time      time of creation
      * @param owner     owner user
      * @param debtLimit the debt limit of this account
-     * @see DebtAccount#DebtAccount(Date, User, double)
+     * @see DebtAccount#DebtAccount(Date, List, double)
      */
-    public LineOfCreditAccount(Date time, User owner, double debtLimit) {
+    public LineOfCreditAccount(Date time, List<User> owner, double debtLimit) {
         super(time, owner, debtLimit);
     }
 
-    public LineOfCreditAccount(Date time, User owner, User owner2, double debtLimit) {
-        super(time, owner, owner2, debtLimit);
-    }
     /**
      * {@inheritDoc}
      * The transaction will be registered into account's transaction list.

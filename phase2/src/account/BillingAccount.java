@@ -1,6 +1,5 @@
 package account;
 
-import atm.User;
 import transaction.Transaction;
 
 import java.util.Date;
@@ -21,7 +20,6 @@ public class BillingAccount extends Account {
      *
      * @param time      time of creation
      * @param payeeName name of this billing account(payee)
-     * @see Account#Account(Date, User)
      */
     public BillingAccount(Date time, String payeeName) {
         super(time, null);

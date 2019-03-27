@@ -5,7 +5,6 @@ import account.BillingAccount;
 import account.ChequingAccount;
 import account.SavingsAccount;
 import transaction.Transaction;
-import ui.Console;
 
 import java.io.Serializable;
 import java.util.*;
@@ -41,8 +40,8 @@ public class BankManager implements Serializable {
         addMachine();
     }
 
-    public void initialize(Date initialDate, Console activateConsole) {
-        commonTime = new AtmTime(initialDate, activateConsole);
+    public void initialize(Date initialDate) {
+        commonTime = new AtmTime(initialDate);
 
         try {
             payeeList = accountFactory.getPayeesFromFile(commonTime);

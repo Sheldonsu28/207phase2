@@ -35,7 +35,7 @@ public abstract class Account implements Serializable {
     /**
      * List of owner of this account.
      */
-    private final User[] owner = new User[2];
+    private final ArrayList<User> owners;
 
     /**
      * The list of transaction related to this account.
@@ -47,64 +47,39 @@ public abstract class Account implements Serializable {
      */
     double balance;
 
-
     /**
-     * Creates an account with given creation time stamp and owner user.
-     * This is the default constructor for all accounts.
+     * Creates an account
      *
-     * @param time  time of creation
-     * @param owner owner user
+     * @param time   time of creation
+     * @param owners owner users
      */
-    public Account(Date time, User owner) {
-        this(time, owner, null, 0);
-    }
-
-    /**
-     * Creates an account with an initial balance in addition to the default constructor - {@link #Account(Date, User)}.
-     *
-     * @param time           time of creation
-     * @param owner          owner user
-     * @param initialBalance initial apparent balance of the account
-     */
-    Account(Date time, User owner, double initialBalance) {
-        this(time, owner, null, initialBalance);
-    }
-
-    /**
-     * Creates a joint account in addition to the default constructor
-     *
-     * @param time           time of creation
-     * @param owner          owner user
-     * @param owner2         owner2 user
-     */
-    Account(Date time, User owner, User owner2) {
-        this(time, owner, owner2, 0);
-    }
-
-    /**
-     * Creates a joint account with an initial balance
-     *
-     * @param time           time of creation
-     * @param owner          owner user
-     * @param owner2         owner2 user
-     * @param initialBalance initial apparent balance of the account
-     */
-    Account(Date time, User owner, User owner2, double initialBalance) {
+    Account(Date time, List<User> owners) {
         id = String.format("ACC%04d", prev_id);
         prev_id++;
         timeCreated = time;
         balance = 0.0;
         transactions = new ArrayList<>();
-        this.owner[0] = owner;
-        this.owner[1]= owner2;
+        this.owners = new ArrayList<>();
+        this.owners.addAll(owners);
+    }
+
+    /**
+     * Creates an account with a given initial balance
+     *
+     * @param time           time of creation
+     * @param owners         owner users
+     * @param initialBalance the initial balance on the account
+     */
+    Account(Date time, List<User> owners, double initialBalance) {
+        this(time, owners);
         this.balance = initialBalance;
     }
 
     /**
      * @return owner of this account
      */
-    public User[] getOwner() {
-        return owner;
+    public List<User> getOwners() {
+        return owners;
     }
 
     /**
@@ -166,11 +141,7 @@ public abstract class Account implements Serializable {
         return null;
     }
 
-    public void setOwner2(User owner2) {
-        this.owner[1] = owner2;
-    }
-
-    public List<Transaction> getFullTransaction(){
+    public List<Transaction> getFullTransaction() {
         return transactions;
     }
 
@@ -178,8 +149,8 @@ public abstract class Account implements Serializable {
      * @return a String containing information about this account (owner, id, date of creation, apparent balance).
      */
     public String toString() {
-        return String.format("Owner: %s, ID: %s, TYPE: %s, Date Created: %s, Balance: %s",
-                owner, getId(), owner.getClass().getSimpleName(), timeCreated, balance);
+        return String.format("Owner(s): %s, ID: %s, TYPE: %s, Date Created: %s, Balance: %s",
+                owners.toString(), getId(), getClass().getSimpleName(), timeCreated, balance);
     }
 
     /**

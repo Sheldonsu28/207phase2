@@ -5,6 +5,7 @@ import atm.User;
 import transaction.Transaction;
 
 import java.util.Date;
+import java.util.List;
 
 public class FinancialAccount extends AssetAccount implements Withdrawable{
 
@@ -14,7 +15,7 @@ public class FinancialAccount extends AssetAccount implements Withdrawable{
 
     private double growthRate = 1.0;
 
-    public FinancialAccount(Date time, User owner){
+    public FinancialAccount(Date time, List<User> owner) {
     super(time, owner);
     }
 

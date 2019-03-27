@@ -1,6 +1,6 @@
 package atm;
 
-import ui.Console;
+import ui.MainFrame;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -29,19 +29,17 @@ public final class AtmTime extends Observable implements Serializable {
     private final Date initialTime;
     private Date currentTime;
     private long prevMills, currMills;
-    private Console activateConsole;
 
     /**
      * Constructs an atm time starting at the given time
      *
      * @param initialTime the starting time
      */
-    AtmTime(Date initialTime, Console console) {
+    AtmTime(Date initialTime, MainFrame console) {
         dateFormat = new SimpleDateFormat(FORMAT_STRING);
         this.initialTime = initialTime;
         dayFormat = new SimpleDateFormat("dd");
         hmsFormat = new SimpleDateFormat("HH:mm:ss");
-        activateConsole = console;
         initialize(initialTime);
     }
 
@@ -80,11 +78,11 @@ public final class AtmTime extends Observable implements Serializable {
 
                 switch (hmsFormat.format(currentTime)) {
                     case "23:59:00":
-                        activateConsole.shutdown();
+                        MainFrame.shutdown();
                         break;
 
                     case "00:01:00":
-                        activateConsole.start();
+                        MainFrame.start();
                         break;
 
                 }

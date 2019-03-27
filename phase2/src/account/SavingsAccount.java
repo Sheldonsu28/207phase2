@@ -4,6 +4,7 @@ import atm.User;
 import transaction.Transaction;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Observable;
 
 /**
@@ -31,19 +32,14 @@ public class SavingsAccount extends AssetAccount implements Growable {
      *
      * @param time  time of creation
      * @param owner owner user
-     * @see Account#Account(Date, User)
+     * @see Account#Account(Date, List)
      */
-    public SavingsAccount(Date time, User owner) {
+    public SavingsAccount(Date time, List<User> owner) {
         super(time, owner);
         growthRate = DEFAULT_GROWTH_RATE;
         growthDay = DEFAULT_GROWTH_DAY;
     }
 
-    public SavingsAccount(Date time, User owner, User owner2) {
-        super(time, owner, owner2);
-        growthRate = DEFAULT_GROWTH_RATE;
-        growthDay = DEFAULT_GROWTH_DAY;
-    }
     /**
      * Constructs a savings account with given growth rate and date and initial balance
      *
@@ -52,22 +48,10 @@ public class SavingsAccount extends AssetAccount implements Growable {
      * @param growthRate     growth rate (must be positive)
      * @param growthDay      growth day (must be 2-digit number in range 01 - 28)
      * @param initialBalance the initial balance of the account
-     * @see Account#Account(Date, User, double)
+     * @see Account#Account(Date, List, double)
      */
-    public SavingsAccount(Date time, User owner, double growthRate, String growthDay, double initialBalance) {
+    public SavingsAccount(Date time, List<User> owner, double growthRate, String growthDay, double initialBalance) {
         super(time, owner, initialBalance);
-        if (growthRate < 0)
-            throw new IllegalArgumentException("Monthly rate can not be negative!");
-
-        if (!isInDayFormat(growthDay))
-            throw new IllegalArgumentException("Growth day must be 2-digit number in range 01-28");
-
-        this.growthRate = growthRate;
-        this.growthDay = growthDay;
-    }
-
-    public SavingsAccount(Date time, User owner, User owner2, double growthRate, String growthDay, double initialBalance) {
-        super(time, owner, owner2, initialBalance);
         if (growthRate < 0)
             throw new IllegalArgumentException("Monthly rate can not be negative!");
 
