@@ -28,6 +28,7 @@ public class FinancialAccount extends AssetAccount implements Withdrawable{
     }
 
     public void deposit(double amount, Transaction register, double duration) {
+        depositDuration = duration;
         growthRate += (depositDuration/30)/10;
         balance += amount*growthRate;
         depositTime = AtmTime.FORMAT_STRING;
@@ -40,7 +41,7 @@ public class FinancialAccount extends AssetAccount implements Withdrawable{
         double timePass = 365*(Integer.parseInt(date.substring(0,3))-Integer.parseInt(depositTime.substring(0,3)))
                 +30*(Integer.parseInt(date.substring(4,5))-Integer.parseInt(depositTime.substring(4,5)))+
                 (Integer.parseInt(date.substring(6,7))-Integer.parseInt(depositTime.substring(6,7)));
-        return timePass <= 365*2;
+        return timePass <= depositDuration;
     }
 
     @Override
