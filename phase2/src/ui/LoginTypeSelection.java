@@ -30,12 +30,13 @@ public class LoginTypeSelection extends JDialog {
         userButton.addActionListener(actionListener);
         managerButton = new JButton("Manager");
         managerButton.addActionListener(actionListener);
+        userButton.setSize(managerButton.getSize());
 
         container = getContentPane();
 
         initializeLayout();
 
-        setBounds(10, 10, 300, 300);
+        setBounds(10, 10, 250, 200);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -47,17 +48,28 @@ public class LoginTypeSelection extends JDialog {
                 }
             }
         });
+        setMinimumSize(new Dimension(250, 200));
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setVisible(true);
     }
 
     private void initializeLayout() {
-        Box buttons = Box.createHorizontalBox();
-        buttons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        buttons.add(userButton);
-        buttons.add(managerButton);
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
+        flowLayout.setVgap(10);
+        flowLayout.setHgap(40);
+
+        JPanel selectionPanel = new JPanel();
+        selectionPanel.setLayout(flowLayout);
+        selectionPanel.add(userButton);
+        selectionPanel.add(managerButton);
+
+        JPanel instructionPanel = new JPanel();
+        instructionPanel.setLayout(flowLayout);
+        instructionPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        instructionPanel.add(new JLabel("Please choose the type of login:"));
 
         container.setLayout(new GridLayout(2, 1));
-        container.add(new JLabel("Please choose the type of login:"));
-        container.add(buttons);
+        container.add(instructionPanel);
+        container.add(selectionPanel);
     }
 }

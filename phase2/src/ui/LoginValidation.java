@@ -63,7 +63,7 @@ public class LoginValidation extends JDialog {
 
         initializeLayout();
 
-        setBounds(10, 10, 350, 250);
+        setBounds(100, 100, 350, 250);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -79,20 +79,25 @@ public class LoginValidation extends JDialog {
                 }
             }
         });
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new Dimension(350, 200));
         setVisible(true);
     }
 
     private void initializeLayout() {
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
+        flowLayout.setVgap(10);
+        flowLayout.setHgap(10);
+
         JPanel usernamePanel = new JPanel();
         usernamePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        usernamePanel.setLayout(flowLayout);
         usernamePanel.add(new JLabel("username: "));
         usernamePanel.add(usernameField);
 
         JPanel passwordPanel = new JPanel();
         passwordPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        passwordPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        passwordPanel.setLayout(flowLayout);
         passwordPanel.add(new JLabel("password: "));
         passwordPanel.add(passwordField);
 
@@ -103,7 +108,7 @@ public class LoginValidation extends JDialog {
         infoPanel.add(passwordPanel);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setLayout(flowLayout);
         buttonPanel.add(loginButton);
 
         JPanel mainPanel = new JPanel();
