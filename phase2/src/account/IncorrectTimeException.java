@@ -10,6 +10,6 @@ public class IncorrectTimeException extends WithdrawException{
      */
     @Override
     public String getMessage() {
-        return String.format("This is incorrect time for stock market to complete your withdraw ");
+        return String.format("This is incorrect time for stock market to complete your action");
     }
 }

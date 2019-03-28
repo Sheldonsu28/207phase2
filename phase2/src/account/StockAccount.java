@@ -8,15 +8,14 @@ import transaction.Transaction;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.HashMap;
 
-public class StockAccount extends Account{
-
+public class StockAccount extends AssetAccount {
     private double cash;
-    private TreeMap<String, Double> stocks;
+    private HashMap<String, Integer> stocks = new HashMap<>();
     private String currTime;
 
-    StockQuoteGetter quoteGetter = new StockQuoteGetter();
+    private StockQuoteGetter quoteGetter = new StockQuoteGetter();
 
     StockAccount(Date time, List<User> owner) {
         super(time, owner);
@@ -28,17 +27,25 @@ public class StockAccount extends Account{
 
     @Override
     public double getNetBalance() {
+        double stockNetValue = 0;
+        for (String stockSymbol: stocks.keySet()) {
+            try {
+                double currStockQuote = quoteGetter.getQuote(stockSymbol);
+                stockNetValue += stocks.get(stockSymbol) * currStockQuote;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        balance = cash + stockNetValue;
         return balance;
     }
 
-    public void buyStock(String stockSymbol, Transaction register) throws IOException {
-        double stockQuote = quoteGetter.getQuote(stockSymbol);
-    }
-
+    //TODO check time and weekday
     public void deposit(int stockAmount, double stockPrice, String stockSymbol ,Transaction register){
         double moneyDeposit = stockAmount*stockPrice;
+        cash += moneyDeposit;
 
-        balance += moneyDeposit;
+        stocks.put(stockSymbol, stocks.getOrDefault(stockSymbol, 0) + stockAmount);
 
         registerTransaction(register);
     }
@@ -49,16 +56,31 @@ public class StockAccount extends Account{
 
         double moneyWithdraw = stockAmount*stockPrice;
 
-        if(Integer.parseInt(currTime.substring(14,15))<9 && Integer.parseInt(currTime.substring(14,15)) > 15){
+        if(Integer.parseInt(currTime.substring(14,15))<9 || Integer.parseInt(currTime.substring(14,15)) > 15){
             throw new IncorrectTimeException();
         }
 
-        if(moneyWithdraw > balance){
-            throw new InsufficientTimeException();
+        if(moneyWithdraw > cash){
+            throw new InsufficientFundException(this, moneyWithdraw);
         }
 
-        balance -= moneyWithdraw;
+        cash -= moneyWithdraw;
+
+        stocks.put(stockSymbol, stocks.get(stockSymbol) - stockAmount);
+
+        if (stocks.get(stockSymbol) == 0)
+            stocks.remove(stockSymbol);
 
         registerTransaction(register);
+    }
+
+    @Override
+    public void withdraw(double amount, Transaction register) throws WithdrawException {
+
+    }
+
+    @Override
+    public void cancelWithdraw(double amount) {
+
     }
 }
