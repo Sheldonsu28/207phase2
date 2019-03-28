@@ -35,7 +35,7 @@ public final class AtmTime extends Observable implements Serializable {
      *
      * @param initialTime the starting time
      */
-    AtmTime(Date initialTime, MainFrame console) {
+    AtmTime(Date initialTime) {
         dateFormat = new SimpleDateFormat(FORMAT_STRING);
         this.initialTime = initialTime;
         dayFormat = new SimpleDateFormat("dd");
@@ -82,7 +82,7 @@ public final class AtmTime extends Observable implements Serializable {
                         break;
 
                     case "00:01:00":
-                        MainFrame.start();
+                        MainFrame.restart();
                         break;
 
                 }

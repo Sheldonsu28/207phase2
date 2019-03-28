@@ -2,6 +2,7 @@ package account;
 
 import transaction.Transaction;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -22,7 +23,7 @@ public class BillingAccount extends Account {
      * @param payeeName name of this billing account(payee)
      */
     public BillingAccount(Date time, String payeeName) {
-        super(time, null);
+        super(time, new ArrayList<>());
         this.payeeName = payeeName;
     }
 

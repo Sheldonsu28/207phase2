@@ -3,7 +3,9 @@ package atm;
 import account.Account;
 import account.ChequingAccount;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Stores & categorizes accounts for {@linkplain User}. Can perform filtered account search by type.
@@ -34,7 +36,7 @@ final class AccountStorageManager {
      * @param account the new primary account to be assigned
      */
     public void setPrimaryAccount(ChequingAccount account) {
-        if (!Arrays.asList(account.getOwner()).contains(owner) || !getAllAccounts().contains(account))
+        if (!account.getOwners().contains(owner) || !getAllAccounts().contains(account))
             throw new IllegalArgumentException("Given account does not belong to this user.");
 
         primaryAccount = account;
@@ -47,7 +49,7 @@ final class AccountStorageManager {
      * @param <T>     the type generic of the new account
      */
     public <T extends Account> void addAccount(T account) {
-        if (!Arrays.asList(account.getOwner()).contains(owner))
+        if (!account.getOwners().contains(owner))
             throw new IllegalArgumentException("Account does not belong to this user vault!");
 
         //  add this account to its own class' map value
