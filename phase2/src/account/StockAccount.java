@@ -43,7 +43,7 @@ public class StockAccount extends AssetAccount {
     //TODO check time and weekday
     public void deposit(int stockAmount, double stockPrice, String stockSymbol ,Transaction register){
         double moneyDeposit = stockAmount*stockPrice;
-        cash += moneyDeposit;
+        cash -= moneyDeposit;
 
         stocks.put(stockSymbol, stocks.getOrDefault(stockSymbol, 0) + stockAmount);
 
@@ -56,7 +56,7 @@ public class StockAccount extends AssetAccount {
 
         double moneyWithdraw = stockAmount*stockPrice;
 
-        if(Integer.parseInt(currTime.substring(14,15))<9 || Integer.parseInt(currTime.substring(14,15)) > 15){
+        if(Integer.parseInt(currTime.substring(14,16))< 9 || Integer.parseInt(currTime.substring(14,16)) > 16){
             throw new IncorrectTimeException();
         }
 
@@ -64,7 +64,7 @@ public class StockAccount extends AssetAccount {
             throw new InsufficientFundException(this, moneyWithdraw);
         }
 
-        cash -= moneyWithdraw;
+        cash += moneyWithdraw;
 
         stocks.put(stockSymbol, stocks.get(stockSymbol) - stockAmount);
 
