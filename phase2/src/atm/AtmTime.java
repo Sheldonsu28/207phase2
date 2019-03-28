@@ -4,10 +4,7 @@ import ui.Console;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * The time class representing "current" time based on a start time using timer thread.
@@ -138,4 +135,55 @@ public final class AtmTime extends Observable implements Serializable {
         hasRunningInstance = false;
     }
 
+    /**
+     * Return the weekday of a given date.
+     * @param mm month
+     * @param dd day
+     * @param yyyy year
+     * @return weekday
+     */
+    public String getWeekday(int mm, int dd, int yyyy) {
+        String[] Weekdays = new String[] {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        int numOfWeekday = weekday(mm, dd, yyyy);
+        return Weekdays[numOfWeekday -1];
+    }
+
+    private int weekday(int mm, int dd, int yyyy) {
+        int yy, total, remainder;
+        yy = yyyy - 1900;
+
+        if (isLeap(yyyy)) {
+            if (mm == 1)
+                total = yy / 4 + yy + dd + monthOffset(mm) - 1;
+            else if (mm == 2)
+                total = yy / 4 + yy + dd + monthOffset(mm) - 1;
+            else
+                total = yy / 4 + yy + dd + monthOffset(mm);
+        } else
+            total = yy/4 + yy + dd + monthOffset(mm);
+
+        remainder = total%7;
+
+        return remainder;
+    }
+
+    private int monthOffset(int mm) {
+        int result;
+        int[] offset = new int[] {1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6};
+        result = offset[mm - 1];
+        return result;
+    }
+
+    private boolean isLeap(int yyyy) {
+        if (yyyy % 400 == 0)
+            return true;
+        else if (yyyy % 100 == 0)
+            return false;
+        else
+            return (yyyy % 4 == 0);
+
+    }
 }
+
+
+
