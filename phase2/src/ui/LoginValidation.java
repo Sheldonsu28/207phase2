@@ -34,7 +34,7 @@ public class LoginValidation extends JDialog {
                         }
 
                         if (!onlyValidate) {
-                            new UserMainMenu();
+                            new UserMainMenu(manager);
                         }
 
                     }
@@ -50,7 +50,7 @@ public class LoginValidation extends JDialog {
                         }
 
                         if (!onlyValidate) {
-                            new ManagerMainMenu();
+                            new ManagerMainMenu(manager);
                         }
                     } catch (WrongPasswordException | UserNotExistException ex) {
                         MainFrame.showMessage(ex.getMessage());
