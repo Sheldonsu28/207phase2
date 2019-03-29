@@ -11,7 +11,7 @@ public class FileHandler implements Serializable {
     private String path;
 
     public FileHandler() {
-        path = new File("phase1/data/").getAbsolutePath() + '\\';
+        path = new File("phase2/data/").getAbsolutePath() + '\\';
     }
 
     public String getPath() {

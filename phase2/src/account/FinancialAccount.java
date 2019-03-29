@@ -50,7 +50,7 @@ public class FinancialAccount extends AssetAccount implements Withdrawable{
 //        if(currTime - depositTime < depositDuration){
         currTime = AtmTime.FORMAT_STRING;
         if (isDate(currTime)) {
-            throw new InsufficientTimeException();
+            throw new IncorrectTimeException();
         }
 
         balance -= amount;
