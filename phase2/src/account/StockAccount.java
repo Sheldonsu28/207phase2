@@ -1,6 +1,5 @@
 package account;
 
-import atm.AtmTime;
 import atm.StockQuoteGetter;
 import atm.User;
 import transaction.Transaction;
@@ -69,8 +68,12 @@ public class StockAccount extends AssetAccount implements Observer {
         registerTransaction(register);
     }
 
-    public void buyStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register) throws InsufficientSharesException {
+    public void buyStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register) throws InsufficientSharesException, IncorrectTimeException {
         double moneyDeposit = stockAmount*stockPrice;
+
+        if(dayOfWeek == 7 || dayOfWeek == 1){
+            throw new IncorrectTimeException();
+        }
 
         if (stockAmount > stocks.get(stockSymbol)){
             throw new InsufficientSharesException();
