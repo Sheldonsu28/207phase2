@@ -41,11 +41,19 @@ public class StockAccount extends AssetAccount {
     }
 
     //TODO check time and weekday
-    public void deposit(int stockAmount, double stockPrice, String stockSymbol ,Transaction register){
+    public void deposit(int stockAmount, double stockPrice, String stockSymbol ,Transaction register)
+            throws InsufficientSharesException {
         double moneyDeposit = stockAmount*stockPrice;
-        cash -= moneyDeposit;
 
-        stocks.put(stockSymbol, stocks.getOrDefault(stockSymbol, 0) + stockAmount);
+        if (stockAmount > stocks.get(stockSymbol))
+            throw new InsufficientSharesException();
+
+        stocks.put(stockSymbol, stocks.get(stockSymbol) - stockAmount);
+
+        if (stocks.get(stockSymbol) == 0)
+            stocks.remove(stockSymbol);
+
+        cash += moneyDeposit;
 
         registerTransaction(register);
     }
@@ -64,12 +72,9 @@ public class StockAccount extends AssetAccount {
             throw new InsufficientFundException(this, moneyWithdraw);
         }
 
-        cash += moneyWithdraw;
+        cash -= moneyWithdraw;
 
-        stocks.put(stockSymbol, stocks.get(stockSymbol) - stockAmount);
-
-        if (stocks.get(stockSymbol) == 0)
-            stocks.remove(stockSymbol);
+        stocks.put(stockSymbol, stocks.getOrDefault(stockSymbol, 0) + stockAmount);
 
         registerTransaction(register);
     }
