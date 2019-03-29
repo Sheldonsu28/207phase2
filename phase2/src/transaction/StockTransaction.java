@@ -1,8 +1,7 @@
 package transaction;
 
-import account.WithdrawException;
+import account.*;
 import atm.User;
-import account.StockAccount;
 
 public class StockTransaction extends Transaction{
 
@@ -10,13 +9,17 @@ public class StockTransaction extends Transaction{
     private int stockAmount;
     private int stockPrice;
     private StockAccount fromAccount;
+    private boolean buy;
+    //if True, buy; if
 
-    public StockTransaction(User user, StockAccount account, int Amount, int price, String stockName){
+
+    public StockTransaction(User user, StockAccount account, int Amount, int price, String stockName, boolean buy){
         super(user);
         this.stockAmount = Amount;
         this.stockPrice = price;
         this.fromAccount = account;
         this.stockName = stockName;
+        this.buy = buy;
     }
 
     /**
@@ -32,12 +35,22 @@ public class StockTransaction extends Transaction{
      */
     @Override
     public boolean doPerform(){
+        if(buy) {
+            try {
+                fromAccount.buyStock(stockAmount, stockPrice, stockName, this);
+            } catch (WithdrawException e) {
+                return false;
+            }
+            return true;
+        }
+
         try {
-            fromAccount.withdraw(stockAmount, stockPrice, stockName, this);
-        }catch (WithdrawException e){
+            fromAccount.sellStock(stockAmount, stockPrice, stockName, this);
+        } catch (InsufficientSharesException | IncorrectTimeException e) {
             return false;
         }
         return true;
+
     }
 
     /**
