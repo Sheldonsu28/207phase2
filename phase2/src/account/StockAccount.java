@@ -11,16 +11,12 @@ import java.util.*;
 public class StockAccount extends AssetAccount implements Observer {
     private double cash;
     private HashMap<String, Integer> stocks = new HashMap<>();
-    private String currTime;
+    private int dayOfWeek;
 
     private StockQuoteGetter quoteGetter = new StockQuoteGetter();
 
     StockAccount(Date time, List<User> owner) {
         super(time, owner);
-    }
-
-    public String getTime(){
-        return currTime;
     }
 
     @Override
@@ -39,30 +35,26 @@ public class StockAccount extends AssetAccount implements Observer {
     }
 
     //TODO check time and weekday
-    public void deposit(int stockAmount, double stockPrice, String stockSymbol ,Transaction register)
-            throws InsufficientSharesException {
-        double moneyDeposit = stockAmount*stockPrice;
-
-        if (stockAmount > stocks.get(stockSymbol))
-            throw new InsufficientSharesException();
-
-        stocks.put(stockSymbol, stocks.get(stockSymbol) - stockAmount);
-
-        if (stocks.get(stockSymbol) == 0)
-            stocks.remove(stockSymbol);
-
-        cash += moneyDeposit;
+    @Override
+    public void deposit(double amount ,Transaction register){
+        balance += amount;
 
         registerTransaction(register);
     }
 
-    public void withdraw(int stockAmount, double stockPrice, String stockSymbol, Transaction register)
+    @Override
+    public void withdraw(double amount, Transaction register) throws WithdrawException{
+        balance -= amount;
+
+        registerTransaction(register);
+    }
+
+    public void sellStock(int stockAmount, double stockPrice, String stockSymbol, Transaction register)
             throws WithdrawException {
-        currTime = AtmTime.FORMAT_STRING;
 
         double moneyWithdraw = stockAmount*stockPrice;
 
-        if(Integer.parseInt(currTime.substring(14,16))< 9 || Integer.parseInt(currTime.substring(14,16)) > 16){
+        if(dayOfWeek == 7 || dayOfWeek == 1){
             throw new IncorrectTimeException();
         }
 
@@ -77,10 +69,24 @@ public class StockAccount extends AssetAccount implements Observer {
         registerTransaction(register);
     }
 
-    @Override
-    public void withdraw(double amount, Transaction register) throws WithdrawException {
+    public void buyStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register) throws InsufficientSharesException {
+        double moneyDeposit = stockAmount*stockPrice;
 
+        if (stockAmount > stocks.get(stockSymbol)){
+            throw new InsufficientSharesException();
+        }
+
+        stocks.put(stockSymbol, stocks.get(stockSymbol) - stockAmount);
+
+        if (stocks.get(stockSymbol) == 0) {
+            stocks.remove(stockSymbol);
+        }
+
+        cash += moneyDeposit;
+
+        registerTransaction(register);
     }
+
 
     @Override
     public void cancelWithdraw(double amount) {
@@ -90,7 +96,8 @@ public class StockAccount extends AssetAccount implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         Date currTime = (Date) arg;
-
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currTime);
+        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
     }
 }
