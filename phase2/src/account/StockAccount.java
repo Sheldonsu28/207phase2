@@ -43,12 +43,16 @@ public class StockAccount extends AssetAccount implements Observer {
 
     @Override
     public void withdraw(double amount, Transaction register) throws WithdrawException{
+        if(balance < amount){
+            throw new InsufficientFundException(this, amount);
+        }
+
         balance -= amount;
 
         registerTransaction(register);
     }
 
-    public void sellStock(int stockAmount, double stockPrice, String stockSymbol, Transaction register)
+    public void buyStock(int stockAmount, double stockPrice, String stockSymbol, Transaction register)
             throws WithdrawException {
 
         double moneyWithdraw = stockAmount*stockPrice;
@@ -65,10 +69,12 @@ public class StockAccount extends AssetAccount implements Observer {
 
         stocks.put(stockSymbol, stocks.getOrDefault(stockSymbol, 0) + stockAmount);
 
+        withdraw(moneyWithdraw, register);
+
         registerTransaction(register);
     }
 
-    public void buyStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register) throws InsufficientSharesException, IncorrectTimeException {
+    public void sellStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register) throws InsufficientSharesException, IncorrectTimeException {
         double moneyDeposit = stockAmount*stockPrice;
 
         if(dayOfWeek == 7 || dayOfWeek == 1){
@@ -86,6 +92,8 @@ public class StockAccount extends AssetAccount implements Observer {
         }
 
         cash += moneyDeposit;
+
+        deposit(moneyDeposit, register);
 
         registerTransaction(register);
     }
