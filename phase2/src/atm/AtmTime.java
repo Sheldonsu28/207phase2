@@ -24,6 +24,7 @@ public final class AtmTime extends Observable implements Serializable {
     private final SimpleDateFormat dayFormat, hmsFormat;
     private Timer timer;
     private final Date initialTime;
+    //change to public
     private Date currentTime;
     private long prevMills, currMills;
 
@@ -104,6 +105,8 @@ public final class AtmTime extends Observable implements Serializable {
         return new Date(currentTime.getTime());
     }
 
+
+
     /**
      * @return the String stamp of the relative-real-time using the formatter
      */
@@ -140,30 +143,16 @@ public final class AtmTime extends Observable implements Serializable {
      * @param yyyy year
      * @return weekday
      */
-    public String getWeekday(int mm, int dd, int yyyy) {
-        String[] Weekdays = new String[] {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-        int numOfWeekday = weekday(mm, dd, yyyy);
-        return Weekdays[numOfWeekday -1];
+
+
+    public int DayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentTime);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        return dayOfWeek;
+        //1 is Monday, 2 is Tuesday...
     }
 
-    private int weekday(int mm, int dd, int yyyy) {
-        int yy, total, remainder;
-        yy = yyyy - 1900;
-
-        if (isLeap(yyyy)) {
-            if (mm == 1)
-                total = yy / 4 + yy + dd + monthOffset(mm) - 1;
-            else if (mm == 2)
-                total = yy / 4 + yy + dd + monthOffset(mm) - 1;
-            else
-                total = yy / 4 + yy + dd + monthOffset(mm);
-        } else
-            total = yy/4 + yy + dd + monthOffset(mm);
-
-        remainder = total%7;
-
-        return remainder;
-    }
 
     private int monthOffset(int mm) {
         int result;
