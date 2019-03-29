@@ -3,6 +3,7 @@ package account;
 import atm.User;
 import transaction.Transaction;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
@@ -144,9 +145,9 @@ public class SavingsAccount extends AssetAccount implements Growable {
      */
     @Override
     public void update(Observable o, Object arg) {
-        String currDay = (String) arg;
+        Date currDay = (Date) arg;
 
-        if (currDay.equals(growthDay))
+        if (new SimpleDateFormat("dd").format(currDay).equals(growthDay))
             grow();
     }
 }

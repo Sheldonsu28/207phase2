@@ -4,7 +4,10 @@ import ui.MainFrame;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The time class representing "current" time based on a start time using timer thread.
@@ -71,7 +74,7 @@ public final class AtmTime extends Observable implements Serializable {
 
                 if (!prevDay.equals(currDay)) {
                     setChanged();
-                    notifyObservers(currDay);
+                    notifyObservers(getCurrentTime());
                 }
 
                 switch (hmsFormat.format(currentTime)) {
@@ -136,40 +139,6 @@ public final class AtmTime extends Observable implements Serializable {
         hasRunningInstance = false;
     }
 
-    /**
-     * Return the weekday of a given date.
-     * @param mm month
-     * @param dd day
-     * @param yyyy year
-     * @return weekday
-     */
-
-
-    public int DayOfWeek() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentTime);
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        return dayOfWeek;
-        //1 is Monday, 2 is Tuesday...
-    }
-
-
-    private int monthOffset(int mm) {
-        int result;
-        int[] offset = new int[] {1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6};
-        result = offset[mm - 1];
-        return result;
-    }
-
-    private boolean isLeap(int yyyy) {
-        if (yyyy % 400 == 0)
-            return true;
-        else if (yyyy % 100 == 0)
-            return false;
-        else
-            return (yyyy % 4 == 0);
-
-    }
 }
 
 

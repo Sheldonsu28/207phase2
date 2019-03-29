@@ -1,9 +1,6 @@
 package atm;
 
-import account.Account;
-import account.BillingAccount;
-import account.ChequingAccount;
-import account.Growable;
+import account.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -82,6 +79,9 @@ final class AccountFactory implements Serializable {
                 owner.setPrimaryAccount((ChequingAccount) account);
 
             if (account instanceof Growable)
+                time.addObserver((Observer) account);
+
+            if (account instanceof StockAccount)
                 time.addObserver((Observer) account);
 
             //  time-related class can have their observer hook here

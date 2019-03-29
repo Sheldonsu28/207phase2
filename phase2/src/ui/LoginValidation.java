@@ -34,7 +34,7 @@ public class LoginValidation extends JDialog {
                         }
 
                         if (!onlyValidate) {
-                            new UserMainMenu(manager);
+                            new UserMainMenu(manager, user);
                         }
 
                     }

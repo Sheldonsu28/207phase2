@@ -1,15 +1,19 @@
 package ui;
 
 import atm.BankManager;
+import atm.User;
 
 import javax.swing.*;
 
 public class UserMainMenu extends ChoiceMenu {
 
     private JButton toDepositMenu, toWithdrawMenu, toTransferMenu, toPayBillMenu, toInfoMenu, toOpenAccountMenu;
+    private final User user;
 
-    UserMainMenu(BankManager manager) {
+    UserMainMenu(BankManager manager, User user) {
         super(manager, "User Main Menu");
+
+        this.user = user;
 
         initializeLayout(new JButton[]{toDepositMenu, toWithdrawMenu, toTransferMenu, toPayBillMenu,
                 toInfoMenu, toOpenAccountMenu});
@@ -26,6 +30,7 @@ public class UserMainMenu extends ChoiceMenu {
         toPayBillMenu = new JButton("Pay Bill");
         toInfoMenu = new JButton("Account Info");
         toOpenAccountMenu = new JButton("Request New Account");
+
 
         toDepositMenu.addActionListener(e -> {
 

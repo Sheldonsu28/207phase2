@@ -6,11 +6,9 @@ import atm.User;
 import transaction.Transaction;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.HashMap;
+import java.util.*;
 
-public class StockAccount extends AssetAccount {
+public class StockAccount extends AssetAccount implements Observer {
     private double cash;
     private HashMap<String, Integer> stocks = new HashMap<>();
     private String currTime;
@@ -86,6 +84,13 @@ public class StockAccount extends AssetAccount {
 
     @Override
     public void cancelWithdraw(double amount) {
+
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Date currTime = (Date) arg;
+
 
     }
 }
