@@ -71,8 +71,8 @@ class CashHandler {
      * Get and return the cash stock in this cash handler
      * @return cash stock within the cash handler.
      */
-    Map<Integer, Integer> getCashStock() {
-        return Collections.unmodifiableMap(cashStock);
+    SortedMap<Integer, Integer> getCashStock() {
+        return Collections.unmodifiableSortedMap(cashStock);
     }
 
     /**

@@ -34,15 +34,17 @@ public class ManagerMainMenu extends MainMenu {
             ManagerMainMenu.this.setVisible(false);
 
             if (source == toAlerts) {
-                JOptionPane.showMessageDialog(this,
-                        new FileHandler().readFrom(ExternalFiles.CASH_ALERT_FILE),
+                JOptionPane.showMessageDialog(this, getFormattedMessage(ExternalFiles.CASH_ALERT_FILE),
                         "Alerts", JOptionPane.INFORMATION_MESSAGE);
+
             } else if (source == toCreateUser) {
                 new UserCreationMenu(manager);
+
             } else if (source == toAccountRequest) {
                 JOptionPane.showMessageDialog(this,
-                        new FileHandler().readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE),
+                        getFormattedMessage(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE),
                         "Account Creation Requests", JOptionPane.INFORMATION_MESSAGE);
+
             } else if (source == toCreateAccount) {
                 int choice = getAccountCreationMethod(new String[]{"From Request File", "Manual"});
 
@@ -64,7 +66,7 @@ public class ManagerMainMenu extends MainMenu {
                 new CancelTransactionMenu(manager);
 
             } else if (source == toRestock) {
-
+                new RestockMenu(manager);
             }
 
             ManagerMainMenu.this.setVisible(true);
@@ -76,6 +78,16 @@ public class ManagerMainMenu extends MainMenu {
         toCreateAccount.addActionListener(listener);
         toCancelTransactions.addActionListener(listener);
         toRestock.addActionListener(listener);
+    }
+
+    private String getFormattedMessage(ExternalFiles file) {
+        StringBuilder msg = new StringBuilder();
+
+        for (String info : new FileHandler().readFrom(file)) {
+            msg.append(info).append("\n");
+        }
+
+        return msg.toString();
     }
 
     private int getAccountCreationMethod(String[] options) {

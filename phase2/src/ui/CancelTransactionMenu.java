@@ -47,7 +47,7 @@ public class CancelTransactionMenu extends SubMenu {
         transactionLog = new JTextArea();
         transactionLog.setEditable(false);
         transactionLog.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        transactionLog.setFont(new Font("Serif", Font.PLAIN, 16));
+        transactionLog.setFont(new Font("Serif", Font.PLAIN, 18));
 
         numOfCancellation = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
