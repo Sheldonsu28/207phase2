@@ -3,7 +3,6 @@ package atm;
 import account.Account;
 import account.BillingAccount;
 import account.ChequingAccount;
-import account.SavingsAccount;
 import transaction.Transaction;
 
 import java.io.Serializable;
@@ -21,6 +20,7 @@ public class BankManager implements Serializable {
     private AccountFactory accountFactory;
     private UserDatabase userDatabase;
     private List<BillingAccount> payeeList;
+    private TreeMap<String, Employee> employeeList;
     private boolean hasLoggedin;
     private String username, password;
     private PasswordManager passwordManager;
@@ -31,6 +31,7 @@ public class BankManager implements Serializable {
         machineList = new ArrayList<>();
         userDatabase = new UserDatabase();
         accountFactory = new AccountFactory();
+        employeeList = new TreeMap<>();
         hasInitialized = false;
         hasLoggedin = false;
         username = "admin";
@@ -193,68 +194,43 @@ public class BankManager implements Serializable {
 
 
     /**
-     * Create a new employee account.
-     *
-     * @param Username Username of the employee.
-     * @return The password of the account.
-     * @throws UsernameAlreadyExistException When username already exist, this exception will be thrown.
-     * @throws UsernameOutOfRangeException   When username is too long, this exception is thrown.
-     */
-    public String createEmployee(String Username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
-        checkState(true);
-
-        if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH) {
-            throw new UsernameOutOfRangeException();
-        }
-        String password = passwordManager.generateRandomPassword();
-
-        Employee newEmployee = userDatabase.registerNewEmployee(Username, password, this.commonTime, this);
-        accountFactory.generateDefaultAccount(newEmployee, null, ChequingAccount.class, commonTime, true);
-
-        return password;
-    }
-
-    /**
      * Create a new user with given username and register it in the database
      *
      * @param username The username of the user
      * @return The default password for this user
      */
     public String createUser(String username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
-        checkState(true);
-
-        if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH)
-            throw new UsernameOutOfRangeException();
-
-        String password = passwordManager.generateRandomPassword();
+        String password = userCreationValidation(username);
         User newUser = userDatabase.registerNewUser(username, password);
 
-        accountFactory.generateDefaultAccount(newUser, null, ChequingAccount.class, commonTime, true);
+        accountFactory.generateDefaultAccount(Collections.singletonList(newUser),
+                ChequingAccount.class, commonTime, true);
 
         return password;
     }
 
-    /**
-     * Create a new Child user with a chequing and a savings account.
-     *
-     * @param username Username of the user
-     * @param parent   The parent user.
-     * @return The password of the user.
-     */
-    public String creatChildUser(String username, User parent) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
+    public String createEmployee(String username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
+        String password = userCreationValidation(username);
+        Employee employee = new Employee(username, password, this);
+
+        userDatabase.registerEmployeeFromExternal(employee);
+        employeeList.put(username, employee);
+
+        accountFactory.generateDefaultAccount(Collections.singletonList(employee),
+                ChequingAccount.class, commonTime, true);
+
+        return password;
+    }
+
+    private String userCreationValidation(String username) throws UsernameOutOfRangeException {
         checkState(true);
 
         if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH)
             throw new UsernameOutOfRangeException();
 
-        String password = passwordManager.generateRandomPassword();
-        User newUser = userDatabase.registerNewChildUser(username, password, parent);
-
-        accountFactory.generateDefaultAccount(newUser, parent, ChequingAccount.class, commonTime, true);
-        accountFactory.generateDefaultAccount(newUser, parent, SavingsAccount.class, commonTime, false);
-
-        return password;
+        return passwordManager.generateRandomPassword();
     }
+
 
     /**
      * Try to log user into the system, throws error if the user failed to log in.
