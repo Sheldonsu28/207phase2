@@ -1,6 +1,6 @@
 package account;
 
-import atm.StockQuoteGetter;
+import atm.StockInfoGetter;
 import atm.User;
 import transaction.Transaction;
 
@@ -12,7 +12,7 @@ public class StockAccount extends AssetAccount implements Observer {
     private HashMap<String, Integer> stocks = new HashMap<>();
     private int dayOfWeek;
 
-    private StockQuoteGetter quoteGetter = new StockQuoteGetter();
+    private StockInfoGetter quoteGetter = new StockInfoGetter();
 
     StockAccount(Date time, List<User> owner) {
         super(time, owner);
@@ -35,22 +35,18 @@ public class StockAccount extends AssetAccount implements Observer {
 
     @Override
     public void deposit(double amount ,Transaction register){
-        balance += amount;
+        cash += amount;
 
         registerTransaction(register);
     }
 
     @Override
     public void withdraw(double amount, Transaction register) throws WithdrawException{
-        if(dayOfWeek == 7 || dayOfWeek == 1){
-            throw new IncorrectTimeException();
-        }
-
-        if(balance < amount){
+        if(cash < amount){
             throw new InsufficientFundException(this, amount);
         }
 
-        balance -= amount;
+        cash -= amount;
 
         registerTransaction(register);
     }
@@ -63,12 +59,6 @@ public class StockAccount extends AssetAccount implements Observer {
         if(dayOfWeek == 7 || dayOfWeek == 1){
             throw new IncorrectTimeException();
         }
-
-        if(moneyWithdraw > cash){
-            throw new InsufficientFundException(this, moneyWithdraw);
-        }
-
-        cash -= moneyWithdraw;
 
         stocks.put(stockSymbol, stocks.getOrDefault(stockSymbol, 0) + stockAmount);
 
@@ -93,8 +83,6 @@ public class StockAccount extends AssetAccount implements Observer {
         if (stocks.get(stockSymbol) == 0) {
             stocks.remove(stockSymbol);
         }
-
-        cash += moneyDeposit;
 
         deposit(moneyDeposit, register);
 
