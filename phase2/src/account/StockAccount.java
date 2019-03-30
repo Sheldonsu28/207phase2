@@ -1,6 +1,6 @@
 package account;
 
-import atm.StockQuoteGetter;
+import atm.StockInfoGetter;
 import atm.User;
 import transaction.Transaction;
 
@@ -12,7 +12,7 @@ public class StockAccount extends AssetAccount implements Observer {
     private HashMap<String, Integer> stocks = new HashMap<>();
     private int dayOfWeek;
 
-    private StockQuoteGetter quoteGetter = new StockQuoteGetter();
+    private StockInfoGetter quoteGetter = new StockInfoGetter();
 
     StockAccount(Date time, List<User> owner) {
         super(time, owner);
