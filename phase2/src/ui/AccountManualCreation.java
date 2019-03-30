@@ -7,7 +7,6 @@ import atm.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class AccountManualCreation extends SubMenu {
     private JComboBox<User> userSelection;
@@ -19,10 +18,7 @@ public class AccountManualCreation extends SubMenu {
     AccountManualCreation(BankManager manager) {
         super("Account Manual Creation");
 
-        List<User> allUsers = manager.getAllUsers();
-        User[] userOptions = allUsers.toArray(new User[0]);
-        userSelection = new JComboBox<>(userOptions);
-        //userSelection.setSelectedIndex(0);
+        userSelection = getUserSelectionBox(manager.getAllUsers());
 
         accountTypeSelection = new JComboBox<>(Account.OWNABLE_ACCOUNT_TYPES);
         accountTypeSelection.addActionListener(e -> {
@@ -49,6 +45,11 @@ public class AccountManualCreation extends SubMenu {
 
                 manager.createAccount(owner.getUserName(), accountType, isPrimary);
 
+                JOptionPane.showMessageDialog(this, "Account successfully created!",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                AccountManualCreation.this.dispose();
+
             } else {
                 JOptionPane.showMessageDialog(this, "You have unselected item!", "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -57,12 +58,13 @@ public class AccountManualCreation extends SubMenu {
 
         initializeLayout();
 
+        setBounds(100, 100, 600, 300);
         setVisible(true);
     }
 
     private void initializeLayout() {
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
-        flowLayout.setVgap(10);
+        flowLayout.setVgap(5);
         flowLayout.setHgap(10);
 
         JPanel userSelectionPanel = new JPanel(flowLayout);
@@ -78,7 +80,7 @@ public class AccountManualCreation extends SubMenu {
         infoPanel.add(userSelectionPanel);
         infoPanel.add(accountTypeSelectionPanel);
 
-        JPanel submitPanel = new JPanel(flowLayout);
+        JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         submitPanel.add(submitButton);
 
         Box box = Box.createVerticalBox();

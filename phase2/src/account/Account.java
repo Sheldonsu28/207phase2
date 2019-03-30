@@ -4,6 +4,7 @@ import atm.User;
 import transaction.Transaction;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -144,16 +145,13 @@ public abstract class Account implements Serializable {
         return null;
     }
 
-    public List<Transaction> getFullTransaction() {
-        return transactions;
-    }
-
     /**
      * @return a String containing information about this account (owner, id, date of creation, apparent balance).
      */
     public String toString() {
-        return String.format("Owner(s): %s, ID: %s, TYPE: %s, Date Created: %s, Balance: %s",
-                owners.toString(), getId(), getClass().getSimpleName(), timeCreated, balance);
+        return String.format("%s  %s  %s  %s  $%s",
+                owners.toString(), getId(), getClass().getSimpleName(),
+                new SimpleDateFormat("yyyy-MM-dd").format(timeCreated), balance);
     }
 
     /**
