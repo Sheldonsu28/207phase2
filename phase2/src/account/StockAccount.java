@@ -33,7 +33,6 @@ public class StockAccount extends AssetAccount implements Observer {
         return balance;
     }
 
-    //TODO check time and weekday
     @Override
     public void deposit(double amount ,Transaction register){
         balance += amount;
@@ -43,6 +42,10 @@ public class StockAccount extends AssetAccount implements Observer {
 
     @Override
     public void withdraw(double amount, Transaction register) throws WithdrawException{
+        if(dayOfWeek == 7 || dayOfWeek == 1){
+            throw new IncorrectTimeException();
+        }
+
         if(balance < amount){
             throw new InsufficientFundException(this, amount);
         }
