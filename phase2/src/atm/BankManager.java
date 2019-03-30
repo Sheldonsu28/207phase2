@@ -280,29 +280,35 @@ public class BankManager implements Serializable {
      * This method is responsible for cancelling multiple recent transactions.
      *
      * @param targetAccount        User account that the cancellation wil be perform on.
-     * @param numberOfTransactions Numbers of transaction you want to cancel.
+     * @param amount Numbers of transaction you want to cancel.
      * @return Whether the cancellation is performed or not.
      */
-    public boolean cancelTransactions(Account targetAccount, int numberOfTransactions) {
+    public boolean cancelTransactions(Account targetAccount, int amount) {
         checkState(true);
 
-        List<Transaction> fullTransaction = targetAccount.getFullTransaction();
-        if (fullTransaction.size() == 0) {
+        List<Transaction> transactions = targetAccount.getTransactions();
+        int total = transactions.size();
+
+        if (total == 0) {
             return true;
-        } else if (fullTransaction.size() < numberOfTransactions) {
-            numberOfTransactions = fullTransaction.size();
+        } else if (transactions.size() < amount) {
+            amount = transactions.size();
         }
-        for (int index = fullTransaction.size() - 1; index >= fullTransaction.size() - 1 - numberOfTransactions; index--) {
-            Transaction transaction = fullTransaction.get(index);
-            if (!transaction.isCancellable()) {
+
+        for (int index = total - 1; index > total - 1 - amount; index--) {
+            Transaction transaction = transactions.get(index);
+
+            if (transaction.isCancellable()) {
                 if (!transaction.isCancelled()) {
                     transaction.cancel();
+                    continue;
                 }
             }
+
+            return false;
         }
+
         return true;
-
-
     }
 
 }

@@ -61,6 +61,8 @@ public class ManagerMainMenu extends MainMenu {
 
             } else if (source == toCancelTransactions) {
 
+                new CancelTransactionMenu(manager);
+
             } else if (source == toRestock) {
 
             }

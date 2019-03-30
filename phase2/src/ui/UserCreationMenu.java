@@ -6,6 +6,7 @@ import atm.UsernameOutOfRangeException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 
 public class UserCreationMenu extends SubMenu {
 
@@ -27,8 +28,10 @@ public class UserCreationMenu extends SubMenu {
                 return;
             }
 
-            JOptionPane.showMessageDialog(MainFrame.mainFrame, "Your password: " + password,
+            JOptionPane.showMessageDialog(MainFrame.mainFrame, "Password(copied to clipboard): " + password,
                     "Creation Successful", JOptionPane.INFORMATION_MESSAGE);
+
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(password), null);
 
             UserCreationMenu.this.dispose();
         });

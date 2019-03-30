@@ -1,9 +1,13 @@
 package ui;
 
+import account.Account;
+import atm.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 public class SubMenu extends JDialog {
     Container container;
@@ -26,6 +30,16 @@ public class SubMenu extends JDialog {
             }
         });
         setBounds(100, 100, 400, 400);
+    }
+
+    JComboBox<User> getUserSelectionBox(List<User> allUsers) {
+        User[] userOptions = allUsers.toArray(new User[0]);
+        return new JComboBox<>(userOptions);
+    }
+
+    JComboBox<Account> getAccountSelectionBox(List<Account> allAccounts) {
+        Account[] userOptions = allAccounts.toArray(new Account[0]);
+        return new JComboBox<>(userOptions);
     }
 
 }
