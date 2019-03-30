@@ -38,13 +38,27 @@ public class ManagerMainMenu extends MainMenu {
                         new FileHandler().readFrom(ExternalFiles.CASH_ALERT_FILE),
                         "Alerts", JOptionPane.INFORMATION_MESSAGE);
             } else if (source == toCreateUser) {
-                new UserCreationMenu(manager, this);
+                new UserCreationMenu(manager);
             } else if (source == toAccountRequest) {
                 JOptionPane.showMessageDialog(this,
                         new FileHandler().readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE),
                         "Account Creation Requests", JOptionPane.INFORMATION_MESSAGE);
             } else if (source == toCreateAccount) {
-                new AccountCreationMenu(manager, this);
+                int choice = getAccountCreationMethod(new String[]{"From Request File", "Manual"});
+
+                switch (choice) {
+                    case 0:
+                        new AccountRequestedCreation(manager);
+                        break;
+
+                    case 1:
+                        new AccountManualCreation(manager);
+                        break;
+
+                    default:
+                        throw new IllegalStateException("Unregistered account creation choice type!");
+                }
+
             } else if (source == toCancelTransactions) {
 
             } else if (source == toRestock) {
@@ -60,6 +74,13 @@ public class ManagerMainMenu extends MainMenu {
         toCreateAccount.addActionListener(listener);
         toCancelTransactions.addActionListener(listener);
         toRestock.addActionListener(listener);
+    }
+
+    private int getAccountCreationMethod(String[] options) {
+
+        return JOptionPane.showOptionDialog(this, "Choose how to create account",
+                "Account Creation Method", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
     }
 
 }
