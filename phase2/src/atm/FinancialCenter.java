@@ -15,7 +15,7 @@ public class FinancialCenter implements Observer {
     private double amount;
     private Transaction register;
     private double duration;
-    private double growthRate = 0.01;
+    private double growthRate = 0.02;
     private Date depositTime;
 
     public FinancialCenter(ChequingAccount withdrawAccount, double amount, Transaction register, double duration){
@@ -23,6 +23,7 @@ public class FinancialCenter implements Observer {
         this.amount = amount;
         this.register = register;
         this.duration = duration;
+        //it is calculated as year and should be larger than 0
         this.depositTime = new Date();
     }
 
@@ -38,7 +39,7 @@ public class FinancialCenter implements Observer {
         withdrawAccount.withdraw(amount, register);
     }
 
-    public boolean canWithdraw(Date currTime) {
+    private boolean canWithdraw(Date currTime) {
         Calendar currTimeCal = Calendar.getInstance();
         Calendar depositTimeCal = Calendar.getInstance();
         currTimeCal.setTime(depositTime);
@@ -51,11 +52,11 @@ public class FinancialCenter implements Observer {
         int depositDay = depositTimeCal.get(Calendar.DAY_OF_MONTH);
         double timePass = 365*(currYear - depositYear) +30*(currMonth - depositMonth)+
                 (currDay - depositDay);
-        return timePass >= duration;
+        return timePass >= duration*365;
     }
 
     public void deposit(){
-        amount += amount*(growthRate + duration * 0.001);
+        amount += amount*(growthRate + duration * 0.005);
         withdrawAccount.deposit(amount, register);
     }
 }
