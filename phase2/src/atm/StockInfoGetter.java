@@ -6,7 +6,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class StockQuoteGetter {
+/**
+ * This class get the information of given stock.
+ */
+public class StockInfoGetter {
 
     public double getQuote(String stockSymbol) throws IOException {
         String yahooFinance = "https://ca.finance.yahoo.com/quote/";
@@ -29,10 +32,26 @@ public class StockQuoteGetter {
             }
         }
         reader.close();
-        return -1;
+        throw new IOException();
     }
+
+    public String getSymbol(String companyName) throws SymbolNotFoundException{
+        switch (companyName){
+            case "microsoft": return "MSFT";
+            case "apple": return "AAPL";
+            case "google": return "GOOG";
+            case "alibaba": return "BABA";
+        }
+        throw new SymbolNotFoundException(companyName);
+    }
+
+
     public static void main(String[] args) throws IOException {
-        StockQuoteGetter getter = new StockQuoteGetter();
-        System.out.println(getter.getQuote("GOOGLE"));
+        StockInfoGetter getter = new StockInfoGetter();
+        try {
+            System.out.println(getter.getQuote(getter.getSymbol("alib")));
+        } catch (SymbolNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
