@@ -3,7 +3,6 @@ package atm;
 import account.Account;
 import account.BillingAccount;
 import account.ChequingAccount;
-import account.SavingsAccount;
 import transaction.Transaction;
 
 import java.io.Serializable;
@@ -21,6 +20,7 @@ public class BankManager implements Serializable {
     private AccountFactory accountFactory;
     private UserDatabase userDatabase;
     private List<BillingAccount> payeeList;
+    private TreeMap<String, Employee> employeeList;
     private boolean hasLoggedin;
     private String username, password;
     private PasswordManager passwordManager;
@@ -31,6 +31,7 @@ public class BankManager implements Serializable {
         machineList = new ArrayList<>();
         userDatabase = new UserDatabase();
         accountFactory = new AccountFactory();
+        employeeList = new TreeMap<>();
         hasInitialized = false;
         hasLoggedin = false;
         username = "admin";
@@ -165,48 +166,33 @@ public class BankManager implements Serializable {
     public <T extends Account> boolean createAccount(String username, Class<T> accountType, boolean isPrimary) {
         checkState(true);
 
-        return accountFactory.generateDefaultAccount(userDatabase.getUser(username), null, accountType, commonTime, isPrimary);
+        return accountFactory.generateDefaultAccount(
+                new ArrayList<>(Collections.singletonList(userDatabase.getUser(username))),
+                accountType, commonTime, isPrimary);
     }
 
     /**
      * Create joint account to the correspond user.
      *
-     * @param user1name    The first user that account need to be added to.
-     * @param user2name    The second user that account need to be added to.
+     * @param usernames   The usernames of the owners of the joint accounts
      * @param accountType The type of the account.
      * @param isPrimary   if the account is the primary account of the user or not.
      * @param <T>         Any account type.
      * @return Return the account created.
      */
     public <T extends Account> boolean createJointAccount(
-            String user1name, String user2name, Class<T> accountType, boolean isPrimary) {
+            List<String> usernames, Class<T> accountType, boolean isPrimary) {
         checkState(true);
 
-        return accountFactory.generateDefaultAccount(
-                userDatabase.getUser(user1name), userDatabase.getUser(user2name), accountType, commonTime, isPrimary);
-    }
-
-
-    /**
-     * Create a new employee account.
-     * @param Username Username of the employee.
-     * @return The password of the account.
-     * @throws UsernameAlreadyExistException When username already exist, this exception will be thrown.
-     * @throws UsernameOutOfRangeException When username is too long, this exception is thrown.
-     */
-    public String createEmployee(String Username)throws UsernameAlreadyExistException, UsernameOutOfRangeException {
-        checkState(true);
-
-        if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH) {
-            throw new UsernameOutOfRangeException();
+        List<User> owners = new ArrayList<>();
+        for (String username : usernames) {
+            owners.add(userDatabase.getUser(username));
         }
-        String password = passwordManager.generateRandomPassword();
 
-        Employee newEmployee = userDatabase.registerNewEmployee(Username, password, this.commonTime,this);
-        accountFactory.generateDefaultAccount(newEmployee, null, ChequingAccount.class,commonTime,true);
-
-        return password;
+        return accountFactory.generateDefaultAccount(owners, accountType, commonTime, isPrimary);
     }
+
+
     /**
      * Create a new user with given username and register it in the database
      *
@@ -214,39 +200,38 @@ public class BankManager implements Serializable {
      * @return The default password for this user
      */
     public String createUser(String username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
-        checkState(true);
-
-        if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH)
-            throw new UsernameOutOfRangeException();
-
-        String password = passwordManager.generateRandomPassword();
+        String password = userCreationValidation(username);
         User newUser = userDatabase.registerNewUser(username, password);
 
-        accountFactory.generateDefaultAccount(newUser, null, ChequingAccount.class, commonTime, true);
+        accountFactory.generateDefaultAccount(Collections.singletonList(newUser),
+                ChequingAccount.class, commonTime, true);
 
         return password;
     }
 
-    /**
-     * Create a new Child user with a chequing and a savings account.
-     * @param username Username of the user
-     * @param parent   The parent user.
-     * @return  The password of the user.
-     */
-    public String creatChildUser(String username, User parent) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
+    public String createEmployee(String username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
+        String password = userCreationValidation(username);
+        Employee employee = new Employee(username, password, this);
+
+        userDatabase.registerEmployeeFromExternal(employee);
+        employeeList.put(username, employee);
+
+        accountFactory.generateDefaultAccount(Collections.singletonList(employee),
+                ChequingAccount.class, commonTime, true);
+
+        return password;
+    }
+
+    private String userCreationValidation(String username) throws UsernameOutOfRangeException {
         checkState(true);
 
         if (username.length() < User.MIN_NAME_LENGTH || username.length() > User.MAX_NAME_LENGTH)
             throw new UsernameOutOfRangeException();
 
-        String password = passwordManager.generateRandomPassword();
-        User newUser = userDatabase.registerNewChildUser(username, password,parent);
-
-        accountFactory.generateDefaultAccount(newUser,parent,ChequingAccount.class,commonTime,true);
-        accountFactory.generateDefaultAccount(newUser,parent,SavingsAccount.class,commonTime,false);
-
-        return password;
+        return passwordManager.generateRandomPassword();
     }
+
+
     /**
      * Try to log user into the system, throws error if the user failed to log in.
      *
@@ -289,9 +274,10 @@ public class BankManager implements Serializable {
 
     /**
      * This method is responsible for cancelling multiple recent transactions.
-     * @param targetAccount         User account that the cancellation wil be perform on.
-     * @param numberOfTransactions  Numbers of transaction you want to cancel.
-     * @return                      Whether the cancellation is performed or not.
+     *
+     * @param targetAccount        User account that the cancellation wil be perform on.
+     * @param numberOfTransactions Numbers of transaction you want to cancel.
+     * @return Whether the cancellation is performed or not.
      */
     public boolean cancelTransactions(Account targetAccount, int numberOfTransactions) {
         checkState(true);

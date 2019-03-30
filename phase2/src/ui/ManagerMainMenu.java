@@ -1,10 +1,13 @@
 package ui;
 
 import atm.BankManager;
+import atm.ExternalFiles;
+import atm.FileHandler;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
-public class ManagerMainMenu extends ChoiceMenu {
+public class ManagerMainMenu extends MainMenu {
     private JButton toAlerts, toCreateUser, toAccountRequest, toCreateAccount, toCancelTransactions, toRestock;
 
     ManagerMainMenu(BankManager manager) {
@@ -26,28 +29,37 @@ public class ManagerMainMenu extends ChoiceMenu {
         toCancelTransactions = new JButton("Cancel Transactions");
         toRestock = new JButton("Restock Machine");
 
-        toAlerts.addActionListener(e -> {
+        ActionListener listener = e -> {
+            JButton source = (JButton) e.getSource();
+            ManagerMainMenu.this.setVisible(false);
 
-        });
+            if (source == toAlerts) {
+                JOptionPane.showMessageDialog(this,
+                        new FileHandler().readFrom(ExternalFiles.CASH_ALERT_FILE),
+                        "Alerts", JOptionPane.INFORMATION_MESSAGE);
+            } else if (source == toCreateUser) {
+                new UserCreationMenu(manager, this);
+            } else if (source == toAccountRequest) {
+                JOptionPane.showMessageDialog(this,
+                        new FileHandler().readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE),
+                        "Account Creation Requests", JOptionPane.INFORMATION_MESSAGE);
+            } else if (source == toCreateAccount) {
+                new AccountCreationMenu(manager, this);
+            } else if (source == toCancelTransactions) {
 
-        toCreateUser.addActionListener(e -> {
+            } else if (source == toRestock) {
 
-        });
+            }
 
-        toAccountRequest.addActionListener(e -> {
+            ManagerMainMenu.this.setVisible(true);
+        };
 
-        });
-
-        toCreateAccount.addActionListener(e -> {
-
-        });
-
-        toCancelTransactions.addActionListener(e -> {
-
-        });
-
-        toRestock.addActionListener(e -> {
-
-        });
+        toAlerts.addActionListener(listener);
+        toCreateUser.addActionListener(listener);
+        toAccountRequest.addActionListener(listener);
+        toCreateAccount.addActionListener(listener);
+        toCancelTransactions.addActionListener(listener);
+        toRestock.addActionListener(listener);
     }
+
 }

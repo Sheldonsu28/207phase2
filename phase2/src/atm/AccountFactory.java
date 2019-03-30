@@ -60,12 +60,12 @@ final class AccountFactory implements Serializable {
 //        return false;
 //    }
 
-    <T extends Account> boolean generateDefaultAccount(User owner, User owner2, Class<T> accountType, AtmTime time, boolean isPrimary) {
+    <T extends Account> boolean generateDefaultAccount(List<User> owners, Class<T> accountType, AtmTime time, boolean isPrimary) {
         T account = null;
 
         try {
-            Constructor<T> defaultConstructor = accountType.getDeclaredConstructor(Date.class, User.class, User.class);
-            account = defaultConstructor.newInstance(time.getCurrentTime(), owner, owner2);
+            Constructor<T> defaultConstructor = accountType.getDeclaredConstructor(Date.class, List.class);
+            account = defaultConstructor.newInstance(time.getCurrentTime(), owners);
         } catch (NoSuchMethodException | InstantiationException |
                 IllegalAccessException | InvocationTargetException e) {
             System.out.println("Failed to create account due to following reason: ");
@@ -73,10 +73,12 @@ final class AccountFactory implements Serializable {
         }
 
         if (account != null) {
-            owner.addAccount(account);
+            for (User owner : owners) {
+                owner.addAccount(account);
 
-            if (accountType == ChequingAccount.class && isPrimary)
-                owner.setPrimaryAccount((ChequingAccount) account);
+                if (accountType == ChequingAccount.class && isPrimary)
+                    owner.setPrimaryAccount((ChequingAccount) account);
+            }
 
             if (account instanceof Growable)
                 time.addObserver((Observer) account);

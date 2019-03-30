@@ -23,17 +23,6 @@ final class UserDatabase implements Serializable {
         return user;
     }
 
-    Employee registerNewEmployee(String username, String password, AtmTime time, BankManager manager)
-            throws UsernameAlreadyExistException{
-        if (users.containsKey(username)) {
-            throw new UsernameAlreadyExistException(username);
-        }
-        Employee employee = new Employee(username, password, this, time,manager );
-        users.put(username,employee);
-
-        return employee;
-    }
-
     void removeUser(String username) {
         users.remove(username);
     }
@@ -42,22 +31,17 @@ final class UserDatabase implements Serializable {
         return users.get(username);
     }
 
-    /**
-     * Create a new Child User.
-     * @param username  Username of the user
-     * @param password  Password of the user
-     * @param Parent    Parent User
-     * @return          The user created
-     * @throws UsernameAlreadyExistException Throws this exception when the username is already taken
-     */
-    ChildUser registerNewChildUser(String username, String password, User Parent) throws UsernameAlreadyExistException{
+    boolean hasUser(String username) {
+        return users.containsKey(username);
+    }
+
+    void registerEmployeeFromExternal(Employee employee) throws UsernameAlreadyExistException {
+        String username = employee.getUserName();
+
         if (users.containsKey(username))
             throw new UsernameAlreadyExistException(username);
 
-        ChildUser user = new ChildUser(username, password,Parent);
-        users.put(username, user);
-
-        return user;
+        users.put(username, employee);
     }
 
     /**

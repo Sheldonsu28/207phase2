@@ -5,7 +5,7 @@ import atm.User;
 
 import javax.swing.*;
 
-public class UserMainMenu extends ChoiceMenu {
+public class UserMainMenu extends MainMenu {
 
     private JButton toDepositMenu, toWithdrawMenu, toTransferMenu, toPayBillMenu, toInfoMenu, toOpenAccountMenu;
     private final User user;

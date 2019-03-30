@@ -7,17 +7,19 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public abstract class ChoiceMenu extends JDialog {
+public abstract class MainMenu extends JDialog {
     private Container container;
     private JButton toLogout;
+    BankManager manager;
 
-    ChoiceMenu(BankManager manager, String title) {
+    MainMenu(BankManager manager, String title) {
         super(MainFrame.mainFrame, title, true);
 
+        this.manager = manager;
         container = getContentPane();
         toLogout = new JButton("Logout");
         toLogout.addActionListener(e ->
-                ChoiceMenu.this.dispatchEvent(new WindowEvent(ChoiceMenu.this, WindowEvent.WINDOW_CLOSING)));
+                MainMenu.this.dispatchEvent(new WindowEvent(MainMenu.this, WindowEvent.WINDOW_CLOSING)));
 
         initializeButtons();
 
@@ -25,11 +27,11 @@ public abstract class ChoiceMenu extends JDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (JOptionPane.showConfirmDialog(ChoiceMenu.this,
+                if (JOptionPane.showConfirmDialog(MainMenu.this,
                         "Are you sure to logout & quit?", "Confirmation",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                    ChoiceMenu.this.dispose();
+                    MainMenu.this.dispose();
                     new LoginTypeSelection(manager);
                 }
             }
