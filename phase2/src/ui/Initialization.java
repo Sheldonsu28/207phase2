@@ -66,19 +66,17 @@ public class Initialization extends JDialog {
 
     private void initializeLayout() {
         container.setLayout(new GridLayout(2, 1));
-
-        JPanel inputPanel = new JPanel();
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
         flowLayout.setVgap(20);
         flowLayout.setHgap(20);
-        inputPanel.setLayout(flowLayout);
+
+        JPanel inputPanel = new JPanel(flowLayout);
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10));
         inputPanel.add(new JLabel(
                 String.format("Please enter system initial time in format of %s:", AtmTime.FORMAT_STRING)));
         inputPanel.add(dateInput);
 
-        JPanel submitPanel = new JPanel();
-        submitPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         submitPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         submitPanel.add(submitButton);
 

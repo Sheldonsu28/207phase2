@@ -25,6 +25,7 @@ public class MainFrame {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> fileHandler.saveManagerData(manager)));
 
+
         isRunning = false;
         start();
     }
@@ -40,6 +41,7 @@ public class MainFrame {
 
     private static void start() {
         initFrame();
+        isRunning = true;
         new LoginTypeSelection(manager);
     }
 

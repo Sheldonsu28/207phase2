@@ -12,8 +12,8 @@ public class UserCreationMenu extends SubMenu {
     private JTextField usernameField;
     private JButton submitButton;
 
-    UserCreationMenu(BankManager manager, JDialog parent) {
-        super(manager, "User Creation", parent);
+    UserCreationMenu(BankManager manager) {
+        super("User Creation");
 
         usernameField = new JTextField(10);
         submitButton = new JButton("Submit");
@@ -29,7 +29,8 @@ public class UserCreationMenu extends SubMenu {
 
             JOptionPane.showMessageDialog(MainFrame.mainFrame, "Your password: " + password,
                     "Creation Successful", JOptionPane.INFORMATION_MESSAGE);
-            backToParent();
+
+            UserCreationMenu.this.dispose();
         });
 
         initializeLayout();
@@ -39,14 +40,13 @@ public class UserCreationMenu extends SubMenu {
 
     private void initializeLayout() {
         container.setLayout(new GridLayout(2, 1));
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
 
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel infoPanel = new JPanel(flowLayout);
         infoPanel.add(new JLabel("Enter desired username: "));
         infoPanel.add(usernameField);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel buttonPanel = new JPanel(flowLayout);
         buttonPanel.add(submitButton);
 
         container.add(infoPanel);

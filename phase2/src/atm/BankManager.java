@@ -112,6 +112,10 @@ public class BankManager implements Serializable {
         return userDatabase.getUserList();
     }
 
+    public boolean hasUser(String username) {
+        return userDatabase.hasUser(username);
+    }
+
     /**
      * Private method that checks if the manager account is in a correct state.
      *

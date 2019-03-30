@@ -5,10 +5,7 @@ import account.*;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * Produces account object with given specifications.
@@ -60,7 +57,12 @@ final class AccountFactory implements Serializable {
 //        return false;
 //    }
 
-    <T extends Account> boolean generateDefaultAccount(List<User> owners, Class<T> accountType, AtmTime time, boolean isPrimary) {
+
+    <T extends Account> boolean generateDefaultAccount(List<User> owners, Class<T> accountType, AtmTime time,
+                                                       boolean isPrimary) {
+        if (!Arrays.asList(Account.OWNABLE_ACCOUNT_TYPES).contains(accountType))
+            throw new IllegalArgumentException("Class type given is not an ownable account type");
+
         T account = null;
 
         try {
