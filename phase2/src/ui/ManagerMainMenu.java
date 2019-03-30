@@ -35,14 +35,16 @@ public class ManagerMainMenu extends MainMenu {
 
             if (source == toAlerts) {
                 JOptionPane.showMessageDialog(this,
-                        new FileHandler().readFrom(ExternalFiles.CASH_ALERT_FILE), "Alerts",
-                        JOptionPane.INFORMATION_MESSAGE);
+                        new FileHandler().readFrom(ExternalFiles.CASH_ALERT_FILE),
+                        "Alerts", JOptionPane.INFORMATION_MESSAGE);
             } else if (source == toCreateUser) {
                 new UserCreationMenu(manager, this);
             } else if (source == toAccountRequest) {
-
+                JOptionPane.showMessageDialog(this,
+                        new FileHandler().readFrom(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE),
+                        "Account Creation Requests", JOptionPane.INFORMATION_MESSAGE);
             } else if (source == toCreateAccount) {
-
+                new AccountCreationMenu(manager, this);
             } else if (source == toCancelTransactions) {
 
             } else if (source == toRestock) {
