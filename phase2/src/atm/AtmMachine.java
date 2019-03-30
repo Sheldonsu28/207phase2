@@ -1,6 +1,7 @@
 package atm;
 
 import java.util.List;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -47,6 +48,10 @@ public class AtmMachine {
         return id;
     }
 
+    public SortedMap<Integer, Integer> getStock() {
+        return cashHandler.getCashStock();
+    }
+
     /**
      * Decrease the stock of this atm machine (i.e. cash being taken out).
      *
@@ -81,6 +86,6 @@ public class AtmMachine {
      * @see CashHandler#toString()
      */
     public String toString() {
-        return String.format("ID %s STOCK %s", id, cashHandler);
+        return String.format("ID %s STOCK %s", getId(), cashHandler);
     }
 }
