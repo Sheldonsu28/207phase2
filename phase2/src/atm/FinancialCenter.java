@@ -1,11 +1,13 @@
 package atm;
 
+import account.WithdrawException;
 import transaction.Transaction;
 import account.ChequingAccount;
 
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Date;
+import java.util.Calendar;
 
 public class FinancialCenter implements Observer {
 
@@ -13,12 +15,15 @@ public class FinancialCenter implements Observer {
     private double amount;
     private Transaction register;
     private double duration;
+    private double growthRate = 0.01;
+    private Date depositTime;
 
     public FinancialCenter(ChequingAccount withdrawAccount, double amount, Transaction register, double duration){
         this.withdrawAccount = withdrawAccount;
         this.amount = amount;
         this.register = register;
         this.duration = duration;
+        this.depositTime = new Date();
     }
 
     @Override
@@ -29,14 +34,28 @@ public class FinancialCenter implements Observer {
         }
     }
 
+    public void buyProduct() throws WithdrawException {
+        withdrawAccount.withdraw(amount, register);
+    }
+
     public boolean canWithdraw(Date currTime) {
-        double timePass = 365*(Integer.parseInt(date.substring(0,3))-Integer.parseInt(depositTime.substring(0,3)))
-                +30*(Integer.parseInt(date.substring(4,5))-Integer.parseInt(depositTime.substring(4,5)))+
-                (Integer.parseInt(date.substring(6,7))-Integer.parseInt(depositTime.substring(6,7)));
-        return timePass <= duration;
+        Calendar currTimeCal = Calendar.getInstance();
+        Calendar depositTimeCal = Calendar.getInstance();
+        currTimeCal.setTime(depositTime);
+        depositTimeCal.setTime(currTime);
+        int currYear = currTimeCal.get(Calendar.YEAR);
+        int currMonth = currTimeCal.get(Calendar.MONTH);
+        int currDay = currTimeCal.get(Calendar.DAY_OF_MONTH);
+        int depositYear = depositTimeCal.get(Calendar.YEAR);
+        int depositMonth = depositTimeCal.get(Calendar.MONTH);
+        int depositDay = depositTimeCal.get(Calendar.DAY_OF_MONTH);
+        double timePass = 365*(currYear - depositYear) +30*(currMonth - depositMonth)+
+                (currDay - depositDay);
+        return timePass >= duration;
     }
 
     public void deposit(){
+        amount += amount*(growthRate + duration * 0.001);
         withdrawAccount.deposit(amount, register);
     }
 }
