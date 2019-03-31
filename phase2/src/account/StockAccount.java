@@ -8,45 +8,45 @@ import java.io.IOException;
 import java.util.*;
 
 public class StockAccount extends AssetAccount implements Observer {
-    private double cash;
+    private double accountNetBalance;
     private HashMap<String, Integer> stocks = new HashMap<>();
     private int dayOfWeek;
 
     private StockInfoGetter quoteGetter = new StockInfoGetter();
 
-    StockAccount(Date time, List<User> owner) {
+    public StockAccount(Date time, List<User> owner) {
         super(time, owner);
     }
 
     @Override
     public double getNetBalance() {
-        double stockNetValue = 0;
+        double stockValue = 0;
         for (String stockSymbol: stocks.keySet()) {
             try {
                 double currStockQuote = quoteGetter.getQuote(stockSymbol);
-                stockNetValue += stocks.get(stockSymbol) * currStockQuote;
+                stockValue += stocks.get(stockSymbol) * currStockQuote;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        balance = cash + stockNetValue;
-        return balance;
+        accountNetBalance += balance + stockValue;
+        return accountNetBalance;
     }
 
     @Override
     public void deposit(double amount ,Transaction register){
-        cash += amount;
+        balance += amount;
 
         registerTransaction(register);
     }
 
     @Override
     public void withdraw(double amount, Transaction register) throws WithdrawException{
-        if(cash < amount){
+        if(balance < amount){
             throw new InsufficientFundException(this, amount);
         }
 
-        cash -= amount;
+        balance -= amount;
 
         registerTransaction(register);
     }
@@ -63,8 +63,6 @@ public class StockAccount extends AssetAccount implements Observer {
         stocks.put(stockSymbol, stocks.getOrDefault(stockSymbol, 0) + stockAmount);
 
         withdraw(moneyWithdraw, register);
-
-        registerTransaction(register);
     }
 
     public void sellStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register) throws InsufficientSharesException, IncorrectTimeException {
@@ -85,8 +83,6 @@ public class StockAccount extends AssetAccount implements Observer {
         }
 
         deposit(moneyDeposit, register);
-
-        registerTransaction(register);
     }
 
 
