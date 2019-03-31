@@ -50,17 +50,21 @@ public class WithdrawTransaction extends Transaction {
     @Override
     protected boolean doPerform() {
         try {
-            targetAccount.withdraw(withdrawAmount, this);
-        } catch (WithdrawException e) {
+            withdrawStock = machine.reduceStock(withdrawAmount);
+        } catch (EmptyStockException | CashShortageException | IllegalWithdrawAmount e) {
             MainFrame.showErrorMessage(e.getMessage());
             return false;
         }
 
         try {
-            withdrawStock = machine.reduceStock(withdrawAmount);
-        } catch (EmptyStockException | CashShortageException | IllegalWithdrawAmount e) {
+            targetAccount.withdraw(withdrawAmount, this);
+        } catch (WithdrawException e) {
             MainFrame.showErrorMessage(e.getMessage());
-            targetAccount.cancelWithdraw(withdrawAmount);
+            try {
+                machine.increaseStock(withdrawStock);
+            } catch (InvalidCashTypeException ex) {
+                ex.printStackTrace();
+            }
             return false;
         }
 

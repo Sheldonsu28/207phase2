@@ -8,19 +8,20 @@ import java.io.IOException;
 import java.util.*;
 
 public class StockAccount extends AssetAccount implements Observer {
-    private double accountNetBalance;
     private HashMap<String, Integer> stocks = new HashMap<>();
     private int dayOfWeek;
-
     private StockInfoGetter quoteGetter = new StockInfoGetter();
 
     public StockAccount(Date time, List<User> owner) {
         super(time, owner);
+
+        updateDayOfWeek(time);
     }
 
     @Override
     public double getNetBalance() {
         double stockValue = 0;
+
         for (String stockSymbol: stocks.keySet()) {
             try {
                 double currStockQuote = quoteGetter.getQuote(stockSymbol);
@@ -29,8 +30,8 @@ public class StockAccount extends AssetAccount implements Observer {
                 e.printStackTrace();
             }
         }
-        accountNetBalance += balance + stockValue;
-        return accountNetBalance;
+
+        return balance + stockValue;
     }
 
     @Override
@@ -86,17 +87,20 @@ public class StockAccount extends AssetAccount implements Observer {
         deposit(moneyDeposit, register);
     }
 
-
-    @Override
-    public void cancelWithdraw(double amount) {
-
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        Date currTime = (Date) arg;
+    private void updateDayOfWeek(Date currTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currTime);
         dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    @Override
+    public void cancelWithdraw(double amount) {
+        throw new IllegalStateException("THIS CAN NOT BE CANCELLED");
+    }
+
+
+    @Override
+    public void update(Observable o, Object arg) {
+        updateDayOfWeek((Date) arg);
     }
 }
