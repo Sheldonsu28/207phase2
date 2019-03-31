@@ -52,7 +52,7 @@ public class StockAccount extends AssetAccount implements Observer {
     }
 
     public void buyStock(int stockAmount, double stockPrice, String stockSymbol, Transaction register)
-            throws WithdrawException {
+            throws IncorrectTimeException, WithdrawException {
 
         double moneyWithdraw = stockAmount*stockPrice;
 
