@@ -5,8 +5,6 @@ import account.ChequingAccount;
 import atm.ExternalFiles;
 import atm.FileHandler;
 import atm.User;
-import com.sun.org.apache.bcel.internal.generic.Select;
-import com.sun.xml.internal.messaging.saaj.soap.JpegDataContentHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,38 +23,39 @@ public class OpenAccountMenu extends SubMenu {
         setPrimary = new JCheckBox("Set Primary");
         setPrimary.setEnabled(false);
 
-
         accountSelection = new JComboBox<>(Account.OWNABLE_ACCOUNT_TYPES);
-            accountSelection.addActionListener(e -> {
-                Class selectedAccount = (Class) accountSelection.getSelectedItem();
-                if (selectedAccount == ChequingAccount.class) {
-                    setPrimary.setEnabled(true);
-                } else {
-                    setPrimary.setEnabled(false);
-                }
-            });
 
-            request.addActionListener(e -> {
-                boolean primary = false;
-                Class<Account> accountType = (Class<Account>) accountSelection.getSelectedItem();
-                if (setPrimary.isSelected()) {
-                    primary = true;
-                }
+        accountSelection.addActionListener(e -> {
+            Class selectedAccount = (Class) accountSelection.getSelectedItem();
 
-                if (accountType != null) {
-                    if (JOptionPane.showConfirmDialog(this,
-                            "Are you sure to request to create a " + accountType.getSimpleName() + "?",
-                            "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ==
-                            JOptionPane.YES_OPTION) {
-                        fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
-                                String.format("%s %s %s", user.getUserName(), accountType, primary));
+            if (selectedAccount == ChequingAccount.class) {
+                setPrimary.setEnabled(true);
+            } else {
+                setPrimary.setEnabled(false);
+            }
+        });
 
-                        JOptionPane.showMessageDialog(
-                                this, "Account creation successfully requested!",
-                                "Success", JOptionPane.INFORMATION_MESSAGE);
-                    }
+        request.addActionListener(e -> {
+            boolean primary = false;
+            Class<Account> accountType = (Class<Account>) accountSelection.getSelectedItem();
+            if (setPrimary.isSelected()) {
+                primary = true;
+            }
+
+            if (accountType != null) {
+                if (JOptionPane.showConfirmDialog(this,
+                        "Are you sure to request to create a " + accountType.getSimpleName() + "?",
+                        "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ==
+                        JOptionPane.YES_OPTION) {
+                            fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
+                            String.format("%s %s %s", user.getUserName(), accountType, primary));
+
+                    JOptionPane.showMessageDialog(
+                            this, "Account creation successfully requested!",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
                 }
-            });
+            }
+        });
         initializeLayout();
         setVisible(true);
     }
