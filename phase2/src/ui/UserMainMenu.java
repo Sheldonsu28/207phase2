@@ -36,11 +36,11 @@ public class UserMainMenu extends MainMenu {
 
 
         toDepositMenu.addActionListener(e -> {
-
+            new DepositeMenu(user,manager);
         });
 
         toWithdrawMenu.addActionListener(e -> {
-
+            new WithdrawMenu(user,manager);
         });
 
         toTransferMenu.addActionListener(e -> {
