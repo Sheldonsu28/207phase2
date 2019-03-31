@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class Account implements Serializable {
 
     public static final Class[] OWNABLE_ACCOUNT_TYPES = {ChequingAccount.class, CreditCardAccount.class,
-            FinancialAccount.class, LineOfCreditAccount.class, SavingsAccount.class, StockAccount.class};
+            LineOfCreditAccount.class, SavingsAccount.class, StockAccount.class};
 
     /**
      * Counts the number of account instances created to keep uniqueness of each id.

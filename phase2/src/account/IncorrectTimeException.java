@@ -1,6 +1,6 @@
 package account;
 
-public class IncorrectTimeException extends WithdrawException{
+public class IncorrectTimeException extends Exception{
     IncorrectTimeException() {
         super();
     }
@@ -10,6 +10,6 @@ public class IncorrectTimeException extends WithdrawException{
      */
     @Override
     public String getMessage() {
-        return String.format("This is incorrect time for stock market to complete your action");
+        return String.format("The stock market is not open for weekend");
     }
 }

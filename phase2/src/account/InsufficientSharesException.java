@@ -1,6 +1,6 @@
 package account;
 
-public class InsufficientSharesException extends Throwable {
+public class InsufficientSharesException extends WithdrawException {
     InsufficientSharesException() {
         super();
     }
