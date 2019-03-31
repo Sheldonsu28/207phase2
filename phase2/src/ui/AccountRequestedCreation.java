@@ -37,7 +37,7 @@ public class AccountRequestedCreation extends SubMenu {
             try {
                 request = new Request(requestStr, manager);
             } catch (IllegalFileFormatException | UserNotExistException e) {
-                MainFrame.showInfoMessage(e.getMessage());
+                MainFrame.showErrorMessage(e.getMessage());
                 continue;
             }
 

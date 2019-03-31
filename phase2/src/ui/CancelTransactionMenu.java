@@ -19,7 +19,7 @@ public class CancelTransactionMenu extends SubMenu {
     CancelTransactionMenu(BankManager manager) {
         super("Transaction Cancellation");
 
-        userSelection = getUserSelectionBox(manager.getAllUsers());
+        userSelection = new JComboBox<>(manager.getAllUsers().toArray(new User[0]));
         userSelection.addActionListener(e -> {
             User selectedUser = (User) userSelection.getSelectedItem();
             accountSelection.removeAllItems();
@@ -35,7 +35,7 @@ public class CancelTransactionMenu extends SubMenu {
 
         User defaultUser = (User) userSelection.getSelectedItem();
         if (defaultUser != null) {
-            accountSelection = getAccountSelectionBox(defaultUser.getAllAccounts());
+            accountSelection = new JComboBox<>(defaultUser.getAllAccounts().toArray(new Account[0]));
         } else {
             accountSelection = new JComboBox<>();
         }

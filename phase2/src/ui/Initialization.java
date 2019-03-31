@@ -19,7 +19,8 @@ public class Initialization extends JDialog {
     Initialization(BankManager manager) {
         super(MainFrame.mainFrame, "Initialization", true);
 
-        MainFrame.showInfoMessage("System not initialized. Please login as manager to initialize.");
+        MainFrame.showInfoMessage("System not initialized. Please login as manager to initialize.",
+                "Initialization");
         new LoginValidation(null, LoginType.MANAGER, manager, true);
 
         container = getContentPane();
@@ -34,11 +35,11 @@ public class Initialization extends JDialog {
             try {
                 result = format.parse(dateText);
             } catch (ParseException ex) {
-                MainFrame.showInfoMessage("Invalid time format!");
+                MainFrame.showErrorMessage("Invalid time format!");
             }
 
             if (result != null) {
-                MainFrame.showInfoMessage("Date successfully set to " + result);
+                MainFrame.showInfoMessage("Date successfully set to " + result, "Date Initialized");
                 manager.initialize(result);
                 this.dispose();
             }

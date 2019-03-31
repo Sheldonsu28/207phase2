@@ -59,13 +59,13 @@ public class LoginValidation extends JDialog {
                     }
 
                 } catch (WrongPasswordException | UserNotExistException ex) {
-                    MainFrame.showInfoMessage(ex.getMessage());
+                    MainFrame.showErrorMessage(ex.getMessage());
                 }
 
             }
 
             private void successLogin() {
-                MainFrame.showInfoMessage("Login success!");
+                MainFrame.showInfoMessage("Login success!", "Loggedin");
                 LoginValidation.this.dispose();
 
                 if (parent != null) {

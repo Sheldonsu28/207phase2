@@ -18,7 +18,7 @@ public class AccountManualCreation extends SubMenu {
     AccountManualCreation(BankManager manager) {
         super("Account Manual Creation");
 
-        userSelection = getUserSelectionBox(manager.getAllUsers());
+        userSelection = new JComboBox<>(manager.getAllUsers().toArray(new User[0]));
 
         accountTypeSelection = new JComboBox<>(Account.OWNABLE_ACCOUNT_TYPES);
         accountTypeSelection.addActionListener(e -> {

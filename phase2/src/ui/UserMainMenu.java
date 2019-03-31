@@ -39,7 +39,21 @@ public class UserMainMenu extends MainMenu {
             UserMainMenu.this.setVisible(false);
 
             if (source == toDepositMenu) {
-                new DepositeMenu(manager, user);
+                int choice = getDepositMethod(new String[]{"From Deposit File", "Manual"});
+
+                switch (choice) {
+                    case 0:
+                        new ExternalDepositMenu(manager, user);
+                        break;
+
+                    case 1:
+                        new ManualDepositMenu(manager, user);
+                        break;
+
+                    default:
+                        throw new IllegalStateException("Unregistered account creation choice type!");
+                }
+
             } else if (source == toWithdrawMenu) {
                 new WithdrawMenu(manager, user);
             } else if (source == toTransferMenu) {
@@ -64,5 +78,11 @@ public class UserMainMenu extends MainMenu {
         toInfoMenu.addActionListener(listener);
         toOpenAccountMenu.addActionListener(listener);
         toBuySellStockMenu.addActionListener(listener);
+    }
+
+    private int getDepositMethod(String[] options) {
+        return JOptionPane.showOptionDialog(this, "Choose how to deposit",
+                "Deposit Method", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
     }
 }

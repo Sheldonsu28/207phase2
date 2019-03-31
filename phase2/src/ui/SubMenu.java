@@ -1,13 +1,14 @@
 package ui;
 
-import account.Account;
-import atm.User;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SubMenu extends JDialog {
     Container container;
@@ -32,14 +33,56 @@ public class SubMenu extends JDialog {
         setBounds(100, 100, 400, 400);
     }
 
-    JComboBox<User> getUserSelectionBox(List<User> allUsers) {
-        User[] userOptions = allUsers.toArray(new User[0]);
-        return new JComboBox<>(userOptions);
+    JTextField getPositiveIntegerOnlyField() {
+        JTextField input = new JTextField(10);
+        input.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                inputCheck();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+
+            private void inputCheck() {
+                if (!input.getText().matches("\\d*")) {
+                    MainFrame.showErrorMessage("Invalid input detected! Positive integers only!");
+                    SwingUtilities.invokeLater(() -> input.setText(""));
+                }
+            }
+        });
+
+        return input;
     }
 
-    JComboBox<Account> getAccountSelectionBox(List<Account> allAccounts) {
-        Account[] userOptions = allAccounts.toArray(new Account[0]);
-        return new JComboBox<>(userOptions);
+    void defaultRowsLayout(LinkedHashMap<JComponent, String> components) {
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
+        flowLayout.setVgap(10);
+        flowLayout.setHgap(10);
+
+        container.setLayout(new GridLayout(components.size(), 1));
+
+        for (Map.Entry<JComponent, String> entry : components.entrySet()) {
+            JComponent component = entry.getKey();
+            String label = entry.getValue();
+
+            JPanel sectionPanel = new JPanel(flowLayout);
+            if (label != null && !label.equals("")) {
+                sectionPanel.add(new JLabel(label));
+            }
+            sectionPanel.add(component);
+
+            container.add(sectionPanel);
+        }
+
     }
+
+
 
 }

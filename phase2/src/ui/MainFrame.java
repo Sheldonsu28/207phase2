@@ -30,8 +30,8 @@ public class MainFrame {
         start();
     }
 
-    public static void showInfoMessage(String message) {
-        JOptionPane.showMessageDialog(mainFrame, message, "Info", JOptionPane.INFORMATION_MESSAGE);
+    public static void showInfoMessage(String message, String title) {
+        JOptionPane.showMessageDialog(mainFrame, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void showErrorMessage(String message) {

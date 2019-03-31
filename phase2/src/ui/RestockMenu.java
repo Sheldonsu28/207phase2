@@ -5,6 +5,7 @@ import atm.BankManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -39,47 +40,24 @@ public class RestockMenu extends SubMenu {
 
                 manager.restockMachine(restockInfo);
 
-                JOptionPane.showMessageDialog(RestockMenu.this, "Restock successful!",
-                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                MainFrame.showInfoMessage("Restock successful!", "Success");
             } else {
-                JOptionPane.showMessageDialog(RestockMenu.this,
-                        "Cash type or amount not selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                MainFrame.showErrorMessage("Cash type or amount not selected!");
             }
 
             updateStockInfo();
         });
 
         updateStockInfo();
-        initializeLayout();
+
+        defaultRowsLayout(new LinkedHashMap<JComponent, String>() {{
+            put(stockInfo, null);
+            put(cashTypeSelection, "Select cash type: ");
+            put(amountSelection, "Select restock amount: ");
+            put(restockButton, null);
+        }});
 
         setVisible(true);
-    }
-
-    private void initializeLayout() {
-        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
-        flowLayout.setHgap(5);
-        flowLayout.setVgap(5);
-
-        JPanel stockInfoPanel = new JPanel(flowLayout);
-        stockInfoPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-        stockInfoPanel.add(stockInfo);
-
-        JPanel cashTypePanel = new JPanel(flowLayout);
-        cashTypePanel.add(new JLabel("Select cash type: "));
-        cashTypePanel.add(cashTypeSelection);
-
-        JPanel amountPanel = new JPanel(flowLayout);
-        amountPanel.add(new JLabel("Select restock amount: "));
-        amountPanel.add(amountSelection);
-
-        JPanel buttonPanel = new JPanel(flowLayout);
-        buttonPanel.add(restockButton);
-
-        container.setLayout(new GridLayout(4, 1));
-        container.add(stockInfoPanel);
-        container.add(cashTypePanel);
-        container.add(amountPanel);
-        container.add(buttonPanel);
     }
 
     private void updateStockInfo() {

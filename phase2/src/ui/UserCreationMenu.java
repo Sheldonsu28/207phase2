@@ -7,6 +7,7 @@ import atm.UsernameOutOfRangeException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
+import java.util.LinkedHashMap;
 
 public class UserCreationMenu extends SubMenu {
 
@@ -31,11 +32,11 @@ public class UserCreationMenu extends SubMenu {
                     password = manager.createUser(username);
                 }
             } catch (UsernameAlreadyExistException | UsernameOutOfRangeException ex) {
-                MainFrame.showInfoMessage(ex.getMessage());
+                MainFrame.showErrorMessage(ex.getMessage());
                 return;
             }
 
-            MainFrame.showInfoMessage("Password(copied to clipboard): " + password);
+            MainFrame.showInfoMessage("Password(copied to clipboard): " + password, "Creation Success");
 
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(password), null);
 
@@ -48,20 +49,13 @@ public class UserCreationMenu extends SubMenu {
     }
 
     private void initializeLayout() {
-        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
-        flowLayout.setVgap(10);
-        flowLayout.setHgap(10);
-
-        JPanel infoPanel = new JPanel(flowLayout);
-        infoPanel.add(new JLabel("Enter desired username: "));
+        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         infoPanel.add(usernameField);
         infoPanel.add(employeeBox);
 
-        JPanel buttonPanel = new JPanel(flowLayout);
-        buttonPanel.add(submitButton);
-
-        container.setLayout(new GridLayout(2, 1));
-        container.add(infoPanel);
-        container.add(buttonPanel);
+        defaultRowsLayout(new LinkedHashMap<JComponent, String>() {{
+            put(infoPanel, "Enter desired username: ");
+            put(submitButton, null);
+        }});
     }
 }

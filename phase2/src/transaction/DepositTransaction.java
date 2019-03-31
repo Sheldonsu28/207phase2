@@ -2,6 +2,7 @@ package transaction;
 
 import account.Depositable;
 import atm.*;
+import ui.MainFrame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,18 @@ import java.util.TreeMap;
  * This class is responsible for deposit money to the accounts.
  */
 public class DepositTransaction extends Transaction {
-    private enum DepositType {CHEQUE, CASH}
+    public DepositTransaction(User user, AtmMachine machine, Depositable account, int depositAmount) {
+        super(user);
+
+        targetAccount = account;
+        this.machine = machine;
+        depositStock = new TreeMap<>();
+        file = null;
+
+        depositType = DepositType.MANUAL;
+
+        this.depositAmount = depositAmount;
+    }
 
     private final DepositType depositType;
     private final TreeMap<Integer, Integer> depositStock;
@@ -37,6 +49,24 @@ public class DepositTransaction extends Transaction {
         file = ExternalFiles.DEPOSIT_FILE;
 
         depositType = interpretDepositInfo();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean doPerform() {
+        if (depositType == DepositType.CASH) {
+            try {
+                machine.increaseStock(depositStock);
+            } catch (InvalidCashTypeException e) {
+                MainFrame.showErrorMessage(e.getMessage());
+                return false;
+            }
+        }
+
+        targetAccount.deposit(depositAmount, this);
+        return true;
     }
 
     /**
@@ -142,23 +172,7 @@ public class DepositTransaction extends Transaction {
                 String.format("User %s's Account %s DEPOSIT $%d", getFromUser(), targetAccount, depositAmount);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean doPerform() {
-        if (depositType == DepositType.CASH) {
-            try {
-                machine.increaseStock(depositStock);
-            } catch (InvalidCashTypeException e) {
-                System.out.println(e.getMessage());
-                return false;
-            }
-        }
-
-        targetAccount.deposit(depositAmount, this);
-        return true;
-    }
+    private enum DepositType {CHEQUE, CASH, MANUAL}
 
     /**
      * {@inheritDoc}
