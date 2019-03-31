@@ -4,6 +4,7 @@ import atm.BankManager;
 import atm.FileHandler;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MainFrame {
 
@@ -12,6 +13,8 @@ public class MainFrame {
     private static boolean isRunning;
 
     public static void main(String[] args) {
+        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.PLAIN, 15));
+
         FileHandler fileHandler = new FileHandler();
         BankManager readData = fileHandler.readManagerData();
 

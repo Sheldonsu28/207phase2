@@ -63,6 +63,8 @@ public class UserMainMenu extends MainMenu {
 
             } else if (source == toInfoMenu) {
 
+                new AccountInfoMenu(user);
+
             } else if (source == toOpenAccountMenu) {
                 new RequestAccountCreationMenu(user);
             } else if (source == toBuySellStockMenu) {

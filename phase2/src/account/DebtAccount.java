@@ -17,7 +17,7 @@ public abstract class DebtAccount extends Account implements Depositable, Indebt
     /**
      * The debt limit of this account. It should be positive. Default value is {@link #DEFAULT_DEBT_LIMIT}.
      */
-    double debtLimit;
+    int debtLimit;
 
     /**
      * Create a default debt account with a default debt limit of {@link #DEFAULT_DEBT_LIMIT}.
@@ -38,7 +38,7 @@ public abstract class DebtAccount extends Account implements Depositable, Indebt
      * @param owner     owner user
      * @param debtLimit the debt limit of this account
      */
-    DebtAccount(Date time, List<User> owner, double debtLimit) {
+    DebtAccount(Date time, List<User> owner, int debtLimit) {
         super(time, owner);
         this.debtLimit = debtLimit;
     }
@@ -53,19 +53,19 @@ public abstract class DebtAccount extends Account implements Depositable, Indebt
 
     /**
      * {@inheritDoc}
-     * Absolute value will be taken if given debt limit is negative.
      */
     @Override
-    public void setDebtLimit(double debtLimit) {
-        this.debtLimit = Math.abs(debtLimit);
+    public int getDebtLimit() {
+        return debtLimit;
     }
 
     /**
      * {@inheritDoc}
+     * Absolute value will be taken if given debt limit is negative.
      */
     @Override
-    public double getDebtLimit() {
-        return debtLimit;
+    public void setDebtLimit(int debtLimit) {
+        this.debtLimit = Math.abs(debtLimit);
     }
 
     /**

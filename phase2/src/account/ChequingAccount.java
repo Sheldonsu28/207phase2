@@ -17,12 +17,12 @@ public class ChequingAccount extends AssetAccount implements Indebtable {
     /**
      * A constant represents the default debt limit of a chequing account.
      */
-    public static final double DEFAULT_CHEQUING_DEBT_LIMIT = 100;
+    public static final int DEFAULT_CHEQUING_DEBT_LIMIT = 100;
 
     /**
      * The debt limit of this account. It should be positive. Default value is {@link #DEFAULT_CHEQUING_DEBT_LIMIT}.
      */
-    private double debtLimit;
+    private int debtLimit;
 
     /**
      * Create a default chequing account with {@link #DEFAULT_CHEQUING_DEBT_LIMIT}.
@@ -58,7 +58,7 @@ public class ChequingAccount extends AssetAccount implements Indebtable {
      * @param debtLimit      the debt limit of this account
      * @see Account#Account(Date, List, double)
      */
-    public ChequingAccount(Date time, List<User> owner, double initialBalance, double debtLimit) {
+    public ChequingAccount(Date time, List<User> owner, double initialBalance, int debtLimit) {
         super(time, owner, initialBalance);
         this.debtLimit = debtLimit;
     }
@@ -95,7 +95,7 @@ public class ChequingAccount extends AssetAccount implements Indebtable {
      * {@inheritDoc}
      */
     @Override
-    public double getDebtLimit() {
+    public int getDebtLimit() {
         return debtLimit;
     }
 
@@ -104,7 +104,7 @@ public class ChequingAccount extends AssetAccount implements Indebtable {
      * Absolute value will be taken if given debt limit is negative.
      */
     @Override
-    public void setDebtLimit(double debtLimit) {
+    public void setDebtLimit(int debtLimit) {
         this.debtLimit = Math.abs(debtLimit);
     }
 }
