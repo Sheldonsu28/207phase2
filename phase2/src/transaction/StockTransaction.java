@@ -7,13 +7,13 @@ public class StockTransaction extends Transaction{
 
     private String stockName;
     private int stockAmount;
-    private int stockPrice;
+    private double stockPrice;
     private StockAccount fromAccount;
     private boolean buy;
     //if True, buy; if
 
 
-    public StockTransaction(User user, StockAccount account, int Amount, int price, String stockName, boolean buy){
+    public StockTransaction(User user, StockAccount account, int Amount, double price, String stockName, boolean buy){
         super(user);
         this.stockAmount = Amount;
         this.stockPrice = price;
