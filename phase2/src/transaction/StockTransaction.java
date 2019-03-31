@@ -1,10 +1,8 @@
 package transaction;
 
-import account.IncorrectTimeException;
-import account.InsufficientSharesException;
-import account.StockAccount;
-import account.WithdrawException;
+import account.*;
 import atm.User;
+import ui.MainFrame;
 
 public class StockTransaction extends Transaction{
 
@@ -13,7 +11,7 @@ public class StockTransaction extends Transaction{
     private double stockPrice;
     private StockAccount fromAccount;
     private boolean buy;
-    //if True, buy; if
+    //if True, buy;
 
 
     public StockTransaction(User user, StockAccount account, int Amount, double price, String stockName, boolean buy){
@@ -41,14 +39,22 @@ public class StockTransaction extends Transaction{
         if(buy) {
             try {
                 fromAccount.buyStock(stockAmount, stockPrice, stockName, this);
-            } catch (WithdrawException e) {
+            } catch (IncorrectTimeException e) {
+                MainFrame.showErrorMessage(e.getMessage());
+                return false;
+            } catch (WithdrawException e){
+                MainFrame.showErrorMessage(e.getMessage());
                 return false;
             }
             return true;
         } else {
             try {
                 fromAccount.sellStock(stockAmount, stockPrice, stockName, this);
-            } catch (InsufficientSharesException | IncorrectTimeException e) {
+            }catch (IncorrectTimeException e) {
+                    MainFrame.showErrorMessage(e.getMessage());
+                    return false;
+            } catch (InsufficientSharesException e) {
+                MainFrame.showErrorMessage(e.getMessage());
                 return false;
             }
             return true;
