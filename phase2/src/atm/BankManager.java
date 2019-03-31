@@ -66,10 +66,6 @@ public class BankManager implements Serializable {
         return commonTime;
     }
 
-    public boolean hasInitialized() {
-        return hasInitialized;
-    }
-
     public boolean isValidPassword(String password) {
         return passwordManager.isValidPassword(password);
     }
@@ -92,16 +88,6 @@ public class BankManager implements Serializable {
             throw new UserNotExistException(username);
         }
 
-    }
-
-    /**
-     * Check if the manager has logged in ot not.
-     *
-     * @return Log in states of the manager.
-     */
-
-    public boolean hasLoggedin() {
-        return hasLoggedin;
     }
 
     public void logout() {
