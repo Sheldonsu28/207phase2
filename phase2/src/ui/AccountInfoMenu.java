@@ -53,7 +53,7 @@ public class AccountInfoMenu extends SubMenu {
             }
         });
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         infoTable.setDefaultRenderer(String.class, centerRenderer);
 
         initializeLayout();

@@ -14,7 +14,7 @@ public class StockAccount extends AssetAccount implements Observer {
 
     private StockInfoGetter quoteGetter = new StockInfoGetter();
 
-    StockAccount(Date time, List<User> owner) {
+    public StockAccount(Date time, List<User> owner) {
         super(time, owner);
     }
 
