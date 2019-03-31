@@ -1,5 +1,5 @@
 package ui;
 
 public enum LoginType {
-    USER, MANAGER
+    USER, MANAGER, EMPLOYEE
 }
