@@ -27,11 +27,9 @@ public class OpenAccountMenu extends SubMenu {
 
 
         accountSelection = new JComboBox<>(Account.OWNABLE_ACCOUNT_TYPES);
-        Class<Account> selectedAccount = (Class<Account>) accountSelection.getSelectedItem();
-
-        if (selectedAccount != null) {
             accountSelection.addActionListener(e -> {
-                if (selectedAccount.equals(ChequingAccount.class)) {
+                Class selectedAccount = (Class) accountSelection.getSelectedItem();
+                if (selectedAccount == ChequingAccount.class) {
                     setPrimary.setEnabled(true);
                 } else {
                     setPrimary.setEnabled(false);
@@ -40,22 +38,25 @@ public class OpenAccountMenu extends SubMenu {
 
             request.addActionListener(e -> {
                 boolean primary = false;
+                Class<Account> accountType = (Class<Account>) accountSelection.getSelectedItem();
                 if (setPrimary.isSelected()) {
                     primary = true;
                 }
-                if (JOptionPane.showConfirmDialog(this,
-                        "Are you sure to request to create a " + selectedAccount.getSimpleName() + "?",
-                        "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ==
-                        JOptionPane.YES_OPTION) {
-                    fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
-                            String.format("%s %s %s", user.getUserName(), selectedAccount, primary));
 
-                    JOptionPane.showMessageDialog(
-                            this, "Account creation successfully requested!",
-                            "Success", JOptionPane.INFORMATION_MESSAGE);
+                if (accountType != null) {
+                    if (JOptionPane.showConfirmDialog(this,
+                            "Are you sure to request to create a " + accountType.getSimpleName() + "?",
+                            "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ==
+                            JOptionPane.YES_OPTION) {
+                        fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
+                                String.format("%s %s %s", user.getUserName(), accountType, primary));
+
+                        JOptionPane.showMessageDialog(
+                                this, "Account creation successfully requested!",
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             });
-        }
         initializeLayout();
         setVisible(true);
     }
