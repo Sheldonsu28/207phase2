@@ -11,7 +11,7 @@ import java.awt.event.WindowEvent;
 public class LoginTypeSelection extends JDialog {
 
     private Container container;
-    private JButton userButton, managerButton;
+    private JButton userButton, managerButton, employeeButton;
 
     LoginTypeSelection(BankManager manager) {
         super(MainFrame.mainFrame, "Login Type", true);
@@ -23,6 +23,8 @@ public class LoginTypeSelection extends JDialog {
                 new LoginValidation(this, LoginType.USER, manager, false);
             } else if (managerButton == pressed) {
                 new LoginValidation(this, LoginType.MANAGER, manager, false);
+            } else if (employeeButton == pressed) {
+                new LoginValidation(this, LoginType.EMPLOYEE, manager, false);
             }
         };
 
@@ -30,13 +32,16 @@ public class LoginTypeSelection extends JDialog {
         userButton.addActionListener(actionListener);
         managerButton = new JButton("Manager");
         managerButton.addActionListener(actionListener);
-        userButton.setSize(managerButton.getSize());
+        employeeButton = new JButton("Employee");
+        employeeButton.addActionListener(actionListener);
+        userButton.setSize(employeeButton.getSize());
+        managerButton.setSize(employeeButton.getSize());
 
         container = getContentPane();
 
         initializeLayout();
 
-        setBounds(10, 10, 250, 200);
+        setBounds(10, 10, 400, 200);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -48,7 +53,7 @@ public class LoginTypeSelection extends JDialog {
                 }
             }
         });
-        setMinimumSize(new Dimension(250, 200));
+        setMinimumSize(new Dimension(400, 200));
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setVisible(true);
     }
@@ -61,6 +66,7 @@ public class LoginTypeSelection extends JDialog {
         JPanel selectionPanel = new JPanel();
         selectionPanel.setLayout(flowLayout);
         selectionPanel.add(userButton);
+        selectionPanel.add(employeeButton);
         selectionPanel.add(managerButton);
 
         JPanel instructionPanel = new JPanel();

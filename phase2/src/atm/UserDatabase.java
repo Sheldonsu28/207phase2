@@ -35,15 +35,6 @@ final class UserDatabase implements Serializable {
         return users.containsKey(username);
     }
 
-    void registerEmployeeFromExternal(Employee employee) throws UsernameAlreadyExistException {
-        String username = employee.getUserName();
-
-        if (users.containsKey(username))
-            throw new UsernameAlreadyExistException(username);
-
-        users.put(username, employee);
-    }
-
     /**
      * Return a list containing all user instances saved in this class
      *

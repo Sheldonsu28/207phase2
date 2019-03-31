@@ -12,17 +12,24 @@ public class UserCreationMenu extends SubMenu {
 
     private JTextField usernameField;
     private JButton submitButton;
+    private JCheckBox employeeBox;
 
     UserCreationMenu(BankManager manager) {
         super("User Creation");
 
         usernameField = new JTextField(10);
+        employeeBox = new JCheckBox("isEmployee");
         submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
+            String username = usernameField.getText();
             String password;
 
             try {
-                password = manager.createUser(usernameField.getText());
+                if (employeeBox.isSelected()) {
+                    password = manager.createEmployee(username);
+                } else {
+                    password = manager.createUser(username);
+                }
             } catch (UsernameAlreadyExistException | UsernameOutOfRangeException ex) {
                 MainFrame.showMessage(ex.getMessage());
                 return;
@@ -42,16 +49,19 @@ public class UserCreationMenu extends SubMenu {
     }
 
     private void initializeLayout() {
-        container.setLayout(new GridLayout(2, 1));
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
+        flowLayout.setVgap(10);
+        flowLayout.setHgap(10);
 
         JPanel infoPanel = new JPanel(flowLayout);
         infoPanel.add(new JLabel("Enter desired username: "));
         infoPanel.add(usernameField);
+        infoPanel.add(employeeBox);
 
         JPanel buttonPanel = new JPanel(flowLayout);
         buttonPanel.add(submitButton);
 
+        container.setLayout(new GridLayout(2, 1));
         container.add(infoPanel);
         container.add(buttonPanel);
     }
