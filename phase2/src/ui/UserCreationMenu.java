@@ -31,12 +31,11 @@ public class UserCreationMenu extends SubMenu {
                     password = manager.createUser(username);
                 }
             } catch (UsernameAlreadyExistException | UsernameOutOfRangeException ex) {
-                MainFrame.showMessage(ex.getMessage());
+                MainFrame.showInfoMessage(ex.getMessage());
                 return;
             }
 
-            JOptionPane.showMessageDialog(MainFrame.mainFrame, "Password(copied to clipboard): " + password,
-                    "Creation Successful", JOptionPane.INFORMATION_MESSAGE);
+            MainFrame.showInfoMessage("Password(copied to clipboard): " + password);
 
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(password), null);
 

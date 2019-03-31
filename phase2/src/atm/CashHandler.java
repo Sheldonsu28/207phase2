@@ -95,9 +95,11 @@ class CashHandler {
      * @throws EmptyStockException When the stock is empty, this exception is thrown.
      * @throws CashShortageException When there is not enough cash, this exception is thrown.
      */
-    TreeMap<Integer, Integer> takeAmountOfCash(int amount) throws EmptyStockException, CashShortageException {
-        if (amount % 5 != 0)
-            throw new IllegalArgumentException("Can't produce amount that is not a multiplier of 5!");
+    TreeMap<Integer, Integer> takeAmountOfCash(int amount)
+            throws EmptyStockException, CashShortageException, IllegalWithdrawAmount {
+        int minCashType = cashStock.firstKey();
+        if (amount % minCashType != 0)
+            throw new IllegalWithdrawAmount(minCashType);
 
         if (getTotalBalance() < amount)
             throw new EmptyStockException(this);

@@ -4,6 +4,7 @@ import atm.BankManager;
 import atm.User;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
 public class UserMainMenu extends MainMenu {
 
@@ -33,34 +34,35 @@ public class UserMainMenu extends MainMenu {
         toOpenAccountMenu = new JButton("Request New Account");
         toBuySellStockMenu = new JButton("Buy/Sell Stocks");
 
+        ActionListener listener = e -> {
+            JButton source = (JButton) e.getSource();
+            UserMainMenu.this.setVisible(false);
 
+            if (source == toDepositMenu) {
+                new DepositeMenu(manager, user);
+            } else if (source == toWithdrawMenu) {
+                new WithdrawMenu(manager, user);
+            } else if (source == toTransferMenu) {
 
-        toDepositMenu.addActionListener(e -> {
-            new DepositeMenu(user,manager);
-        });
+            } else if (source == toPayBillMenu) {
 
-        toWithdrawMenu.addActionListener(e -> {
-            new WithdrawMenu(user,manager);
-        });
+            } else if (source == toInfoMenu) {
 
-        toTransferMenu.addActionListener(e -> {
+            } else if (source == toOpenAccountMenu) {
 
-        });
+            } else if (source == toBuySellStockMenu) {
 
-        toPayBillMenu.addActionListener(e -> {
+            }
 
-        });
+            UserMainMenu.this.setVisible(true);
+        };
 
-        toInfoMenu.addActionListener(e -> {
-
-        });
-
-        toOpenAccountMenu.addActionListener(e -> {
-            new OpenAccountMenu(user);
-        });
-
-        toBuySellStockMenu.addActionListener(e -> {
-            new StockExchangeMenu(user);
-        });
+        toDepositMenu.addActionListener(listener);
+        toWithdrawMenu.addActionListener(listener);
+        toTransferMenu.addActionListener(listener);
+        toPayBillMenu.addActionListener(listener);
+        toInfoMenu.addActionListener(listener);
+        toOpenAccountMenu.addActionListener(listener);
+        toBuySellStockMenu.addActionListener(listener);
     }
 }

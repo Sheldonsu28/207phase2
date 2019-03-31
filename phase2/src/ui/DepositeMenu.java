@@ -5,6 +5,7 @@ import atm.BankManager;
 import atm.IllegalFileFormatException;
 import atm.User;
 import transaction.DepositTransaction;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,7 +14,7 @@ public class DepositeMenu extends SubMenu {
     private JButton confirmationButton;
     private DepositTransaction transaction;
 
-    DepositeMenu(User user, BankManager manager) {
+    DepositeMenu(BankManager manager, User user) {
         super("Account Selection");
 
 

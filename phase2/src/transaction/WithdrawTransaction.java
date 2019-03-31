@@ -3,6 +3,7 @@ package transaction;
 import account.WithdrawException;
 import account.Withdrawable;
 import atm.*;
+import ui.MainFrame;
 
 import java.util.TreeMap;
 
@@ -51,14 +52,14 @@ public class WithdrawTransaction extends Transaction {
         try {
             targetAccount.withdraw(withdrawAmount, this);
         } catch (WithdrawException e) {
-            System.out.println(e.getMessage());
+            MainFrame.showErrorMessage(e.getMessage());
             return false;
         }
 
         try {
             withdrawStock = machine.reduceStock(withdrawAmount);
-        } catch (EmptyStockException | CashShortageException e) {
-            System.out.println(e.getMessage());
+        } catch (EmptyStockException | CashShortageException | IllegalWithdrawAmount e) {
+            MainFrame.showErrorMessage(e.getMessage());
             targetAccount.cancelWithdraw(withdrawAmount);
             return false;
         }
@@ -75,7 +76,7 @@ public class WithdrawTransaction extends Transaction {
         try {
             machine.increaseStock(withdrawStock);
         } catch (InvalidCashTypeException e) {
-            e.printStackTrace();
+            MainFrame.showErrorMessage(e.getMessage());
         }
         return true;
     }
