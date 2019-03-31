@@ -56,11 +56,11 @@ public class UserMainMenu extends MainMenu {
         });
 
         toOpenAccountMenu.addActionListener(e -> {
-
+            new OpenAccountMenu(user);
         });
 
         toBuySellStockMenu.addActionListener(e -> {
-
+            new StockExchangeMenu(user);
         });
     }
 }
