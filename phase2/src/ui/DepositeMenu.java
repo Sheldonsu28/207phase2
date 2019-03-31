@@ -20,7 +20,7 @@ public class DepositeMenu extends SubMenu {
         accountSelection = new JComboBox<>(user.getAccountListOfType(Depositable.class).toArray(new Depositable[0]));
 
 
-        confirmationButton = new JButton("Confirm Withdraw");
+        confirmationButton = new JButton("Confirm Deposit");
         confirmationButton.addActionListener(e -> {
             Depositable selectedAccount = (Depositable) accountSelection.getSelectedItem();
 
