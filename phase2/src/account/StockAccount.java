@@ -65,14 +65,15 @@ public class StockAccount extends AssetAccount implements Observer {
         withdraw(moneyWithdraw, register);
     }
 
-    public void sellStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register) throws InsufficientSharesException, IncorrectTimeException {
+    public void sellStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register)
+            throws InsufficientSharesException, IncorrectTimeException {
         double moneyDeposit = stockAmount*stockPrice;
 
         if(dayOfWeek == 7 || dayOfWeek == 1){
             throw new IncorrectTimeException();
         }
 
-        if (stockAmount > stocks.get(stockSymbol)){
+        if (!stocks.containsKey(stockSymbol) || stockAmount > stocks.get(stockSymbol)){
             throw new InsufficientSharesException();
         }
 
