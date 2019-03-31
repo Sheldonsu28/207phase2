@@ -39,9 +39,10 @@ public class IntraTransferMenu extends SubMenu {
             Withdrawable from = (Withdrawable) fromAccountSelection.getSelectedItem();
             Depositable to = (Depositable) toAccountSelection.getSelectedItem();
             TransferTransaction transaction;
+            String amountText = amountField.getText();
 
-            if (from != null && to != null) {
-                transaction = new TransferTransaction(user, from, to, Double.parseDouble(amountField.getText()));
+            if (from != null && to != null && !amountText.equals("")) {
+                transaction = new TransferTransaction(user, from, to, Double.parseDouble(amountText));
             } else {
                 MainFrame.showErrorMessage("Missing information! Unselected attribute detected!");
                 return;

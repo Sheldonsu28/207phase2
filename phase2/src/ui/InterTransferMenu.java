@@ -35,12 +35,13 @@ public class InterTransferMenu extends SubMenu {
             Withdrawable from = (Withdrawable) fromAccountSelection.getSelectedItem();
             Depositable to = (Depositable) toAccountSelection.getSelectedItem();
             User toUser = (User) toUserSelection.getSelectedItem();
+            String amountText = amountField.getText();
 
             TransferTransaction transaction;
 
-            if (from != null && to != null && toUser != null) {
+            if (from != null && to != null && toUser != null && !amountText.equals("")) {
                 transaction = new TransferTransaction(
-                        fromUser, from, toUser, to, Double.parseDouble(amountField.getText()));
+                        fromUser, from, toUser, to, Double.parseDouble(amountText));
             } else {
                 MainFrame.showErrorMessage("Missing information! Unselected attribute detected!");
                 return;

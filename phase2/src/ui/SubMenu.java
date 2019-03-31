@@ -4,6 +4,9 @@ package ui;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -35,57 +38,13 @@ public class SubMenu extends JDialog {
 
     JTextField getPositiveIntegerOnlyField() {
         JTextField input = new JTextField(10);
-        input.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                inputCheck();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-
-            private void inputCheck() {
-                if (!input.getText().matches("\\d*")) {
-                    MainFrame.showErrorMessage("Invalid input detected! Positive integers only!");
-                    SwingUtilities.invokeLater(() -> input.setText(""));
-                }
-            }
-        });
-
+        input.setDocument(new LimitedDocument(input, 8, "\\d*"));
         return input;
     }
 
     JTextField getPositiveTwoDecimalOnlyField() {
         JTextField input = new JTextField(10);
-        input.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                inputCheck();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-
-            private void inputCheck() {
-                if (!input.getText().matches("\\d+\\.?((\\d\\d)?|(\\d?))")) {
-                    MainFrame.showErrorMessage("Invalid input detected! Positive integers only!");
-                    SwingUtilities.invokeLater(() -> input.setText(""));
-                }
-            }
-        });
-
+        input.setDocument(new LimitedDocument(input, 8, "\\d*\\.?((\\d\\d)?|(\\d?))"));
         return input;
     }
 
@@ -111,5 +70,43 @@ public class SubMenu extends JDialog {
 
     }
 
+    private final class LimitedDocument extends PlainDocument {
+        private final int limit;
 
+        private LimitedDocument(JTextField parent, int limit, String regexStr) {
+            super();
+            this.limit = limit;
+            addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    inputCheck();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                }
+
+                private void inputCheck() {
+                    if (!parent.getText().matches(regexStr)) {
+                        MainFrame.showErrorMessage("Invalid input detected! Positive integers only!");
+                        SwingUtilities.invokeLater(() -> parent.setText(""));
+                    }
+                }
+            });
+        }
+
+        public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+            if (str == null)
+                return;
+
+            if (getLength() + str.length() <= limit) {
+                super.insertString(offset, str, attr);
+            }
+        }
+    }
 }
