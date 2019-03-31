@@ -39,7 +39,8 @@ public class UserMainMenu extends MainMenu {
             UserMainMenu.this.setVisible(false);
 
             if (source == toDepositMenu) {
-                int choice = getDepositMethod(new String[]{"From Deposit File", "Manual"});
+                int choice = getBranchChoice("Choose deposit method", "Deposit Method",
+                        new String[]{"From Deposit File", "Manual"});
 
                 switch (choice) {
                     case 0:
@@ -63,7 +64,7 @@ public class UserMainMenu extends MainMenu {
             } else if (source == toInfoMenu) {
 
             } else if (source == toOpenAccountMenu) {
-                new OpenAccountMenu(user);
+                new RequestAccountCreationMenu(user);
             } else if (source == toBuySellStockMenu) {
 
             }
@@ -80,9 +81,4 @@ public class UserMainMenu extends MainMenu {
         toBuySellStockMenu.addActionListener(listener);
     }
 
-    private int getDepositMethod(String[] options) {
-        return JOptionPane.showOptionDialog(this, "Choose how to deposit",
-                "Deposit Method", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                null, options, options[0]);
-    }
 }

@@ -40,19 +40,18 @@ public class ManagerMainMenu extends MainMenu {
             ManagerMainMenu.this.setVisible(false);
 
             if (source == toAlerts) {
-                JOptionPane.showMessageDialog(this, getFormattedMessage(ExternalFiles.CASH_ALERT_FILE),
-                        "Alerts", JOptionPane.INFORMATION_MESSAGE);
+                MainFrame.showInfoMessage(getFormattedMessage(ExternalFiles.CASH_ALERT_FILE), "Alerts");
 
             } else if (source == toCreateUser) {
                 new UserCreationMenu(manager);
 
             } else if (source == toAccountRequest) {
-                JOptionPane.showMessageDialog(this,
-                        getFormattedMessage(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE),
-                        "Account Creation Requests", JOptionPane.INFORMATION_MESSAGE);
+                MainFrame.showInfoMessage(getFormattedMessage(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE),
+                        "Account Creation Requests");
 
             } else if (source == toCreateAccount) {
-                int choice = getAccountCreationMethod(new String[]{"From Request File", "Manual"});
+                int choice = getBranchChoice("Choose creation method", "Creation Method",
+                        new String[]{"From Request File", "Manual"});
 
                 switch (choice) {
                     case 0:
@@ -68,11 +67,11 @@ public class ManagerMainMenu extends MainMenu {
                 }
 
             } else if (source == toCancelTransactions) {
-
                 new CancelTransactionMenu(manager);
 
             } else if (source == toRestock) {
                 new RestockMenu(manager);
+
             }
 
             ManagerMainMenu.this.setVisible(true);
@@ -94,13 +93,6 @@ public class ManagerMainMenu extends MainMenu {
         }
 
         return msg.toString();
-    }
-
-    private int getAccountCreationMethod(String[] options) {
-
-        return JOptionPane.showOptionDialog(this, "Choose how to create account",
-                "Account Creation Method", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                null, options, options[0]);
     }
 
 }

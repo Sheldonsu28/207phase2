@@ -56,4 +56,8 @@ public abstract class MainMenu extends JDialog {
         container.add(toLogout);
     }
 
+    int getBranchChoice(String message, String title, String[] options) {
+        return JOptionPane.showOptionDialog(this, message, title, JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+    }
 }
