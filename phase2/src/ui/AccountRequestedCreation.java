@@ -6,6 +6,8 @@ import atm.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -54,6 +56,20 @@ public class AccountRequestedCreation extends SubMenu {
         setVisible(true);
     }
 
+    void setClosingAction() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (JOptionPane.showConfirmDialog(AccountRequestedCreation.this,
+                        "Are you sure to end current action and go back to previous menu?",
+                        "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) ==
+                        JOptionPane.YES_OPTION) {
+                    AccountRequestedCreation.this.dispose();
+                    new FileHandler().clearFile(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE);
+                }
+            }
+        });
+    }
 
     private void initializeLayout() {
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);

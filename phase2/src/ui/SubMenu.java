@@ -22,6 +22,13 @@ public class SubMenu extends JDialog {
         container = getContentPane();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        setClosingAction();
+
+        setBounds(100, 100, 400, 400);
+    }
+
+    void setClosingAction() {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -33,7 +40,6 @@ public class SubMenu extends JDialog {
                 }
             }
         });
-        setBounds(100, 100, 400, 400);
     }
 
     JTextField getPositiveIntegerOnlyField() {
