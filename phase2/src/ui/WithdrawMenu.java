@@ -24,9 +24,9 @@ public class WithdrawMenu extends SubMenu {
         UserInputAmount = new JComboBox<>(new Integer[]{5, 10, 20, 50, 100, 150, 200, 250});
         int amount =(int) UserInputAmount.getSelectedItem();
 
-        Withdrawable selectedAccount = (Withdrawable) accountSelection.getSelectedItem();
         confirmationButton = new JButton("Confirm Withdraw");
         confirmationButton.addActionListener(e ->{
+            Withdrawable selectedAccount = (Withdrawable) accountSelection.getSelectedItem();
             this.transaction = new WithdrawTransaction(user, manager.getMachineList().get(0), selectedAccount,amount);
             if(selectedAccount != null && amount != 0){
                 if (transaction.perform()) {
@@ -35,7 +35,7 @@ public class WithdrawMenu extends SubMenu {
                             JOptionPane.INFORMATION_MESSAGE);
                 }else{
                     JOptionPane.showMessageDialog(this,
-                            "The Action is not perform because some Thing went wrong", "Success",
+                            "The Action is not perform because something went wrong", "Withdraw Failed",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             }
