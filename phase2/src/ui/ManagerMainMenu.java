@@ -10,15 +10,21 @@ import java.awt.event.ActionListener;
 public class ManagerMainMenu extends MainMenu {
     private JButton toAlerts, toCreateUser, toAccountRequest, toCreateAccount, toCancelTransactions, toRestock;
 
-    ManagerMainMenu(BankManager manager) {
+    ManagerMainMenu(BankManager manager, LoginType loginType) {
         super(manager, "Manager Main Menu");
 
         initializeLayout(new JButton[]{toAlerts, toCreateUser, toAccountRequest, toCreateAccount,
                 toCancelTransactions, toRestock});
 
+        if (loginType == LoginType.EMPLOYEE) {
+            toCreateAccount.setEnabled(false);
+            toCreateUser.setEnabled(false);
+        } else if (loginType != LoginType.MANAGER) {
+            throw new IllegalArgumentException("Can not access manager menu if you do not have manager access!");
+        }
+
         setVisible(true);
     }
-
 
     @Override
     void initializeButtons() {

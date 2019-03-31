@@ -20,7 +20,7 @@ public class BankManager implements Serializable {
     private AccountFactory accountFactory;
     private UserDatabase userDatabase;
     private List<BillingAccount> payeeList;
-    private TreeMap<String, Employee> employeeList;
+    private TreeMap<String, User> employeeList;
     private boolean hasLoggedin;
     private String username, password;
     private PasswordManager passwordManager;
@@ -214,14 +214,9 @@ public class BankManager implements Serializable {
     }
 
     public String createEmployee(String username) throws UsernameAlreadyExistException, UsernameOutOfRangeException {
-        String password = userCreationValidation(username);
-        Employee employee = new Employee(username, password, this);
+        String password = createUser(username);
 
-        userDatabase.registerEmployeeFromExternal(employee);
-        employeeList.put(username, employee);
-
-        accountFactory.generateDefaultAccount(Collections.singletonList(employee),
-                ChequingAccount.class, commonTime, true);
+        employeeList.put(username, userDatabase.getUser(username));
 
         return password;
     }
@@ -243,18 +238,25 @@ public class BankManager implements Serializable {
      * @param password User's password.
      * @return The user account correspond to the username.
      */
-    public User validateUserLogin(String username, String password) {
+    public User validateUserLogin(String username, String password)
+            throws WrongPasswordException, UserNotExistException {
         checkState(false);
 
-        User user = null;
+        return userDatabase.loginUser(username, password);
+    }
 
-        try {
-            user = userDatabase.loginUser(username, password);
-        } catch (WrongPasswordException | UserNotExistException e) {
-            System.out.println(e.getMessage());
+    public void validateEmployeeLogin(String username, String password)
+            throws WrongPasswordException, UserNotExistException {
+        checkState(false);
+
+        if (employeeList.containsKey(username)) {
+            if (!employeeList.get(username).verifyPassword(password)) {
+                throw new WrongPasswordException(username);
+            }
+        } else {
+            throw new UserNotExistException(username);
         }
 
-        return user;
     }
 
     /**
@@ -279,8 +281,8 @@ public class BankManager implements Serializable {
     /**
      * This method is responsible for cancelling multiple recent transactions.
      *
-     * @param targetAccount        User account that the cancellation wil be perform on.
-     * @param amount Numbers of transaction you want to cancel.
+     * @param targetAccount User account that the cancellation wil be perform on.
+     * @param amount        Numbers of transaction you want to cancel.
      * @return Whether the cancellation is performed or not.
      */
     public boolean cancelTransactions(Account targetAccount, int amount) {

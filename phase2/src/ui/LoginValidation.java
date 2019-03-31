@@ -7,6 +7,8 @@ import atm.WrongPasswordException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -21,41 +23,54 @@ public class LoginValidation extends JDialog {
         usernameField = new JTextField(10);
         passwordField = new JTextField(10);
         loginButton = new JButton("login");
-        loginButton.addActionListener(e -> {
-            String username = usernameField.getText(), password = passwordField.getText();
-            switch (type) {
-                case USER:
-                    User user = manager.validateUserLogin(username, password);
-                    if (user != null) {
-                        MainFrame.showMessage("Login success!");
-                        this.dispose();
-                        if (parent != null) {
-                            parent.dispose();
-                        }
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText(), password = passwordField.getText();
 
-                        if (!onlyValidate) {
-                            new UserMainMenu(manager, user);
-                        }
+                try {
+                    switch (type) {
+                        case USER:
+                            User user = manager.validateUserLogin(username, password);
+                            successLogin();
 
+                            if (!onlyValidate) {
+                                new UserMainMenu(manager, user);
+                            }
+                            break;
+
+                        case MANAGER:
+                            manager.login(username, password);
+                            successLogin();
+
+                            if (!onlyValidate) {
+                                new ManagerMainMenu(manager, LoginType.MANAGER);
+                            }
+                            break;
+
+                        case EMPLOYEE:
+                            manager.validateEmployeeLogin(username, password);
+                            successLogin();
+
+                            if (!onlyValidate) {
+                                new ManagerMainMenu(manager, LoginType.EMPLOYEE);
+                            }
+                            break;
                     }
-                    break;
 
-                case MANAGER:
-                    try {
-                        manager.login(username, password);
-                        this.dispose();
+                } catch (WrongPasswordException | UserNotExistException ex) {
+                    MainFrame.showMessage(ex.getMessage());
+                }
 
-                        if (parent != null) {
-                            parent.dispose();
-                        }
+            }
 
-                        if (!onlyValidate) {
-                            new ManagerMainMenu(manager);
-                        }
-                    } catch (WrongPasswordException | UserNotExistException ex) {
-                        MainFrame.showMessage(ex.getMessage());
-                    }
-                    break;
+            private void successLogin() {
+                MainFrame.showMessage("Login success!");
+                LoginValidation.this.dispose();
+
+                if (parent != null) {
+                    parent.dispose();
+                }
             }
         });
 
