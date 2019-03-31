@@ -78,6 +78,8 @@ public class CancelTransactionMenu extends SubMenu {
         updateTransactions();
         initializeLayout();
 
+        setSize(900, 300);
+        setMinimumSize(getSize());
         setVisible(true);
     }
 
@@ -88,34 +90,23 @@ public class CancelTransactionMenu extends SubMenu {
 
         JPanel transactionPanel = new JPanel(flowLayout);
         transactionPanel.add(transactionLog);
-//        JScrollPane scrollPane = new JScrollPane(transactionLog,
-//                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-        JPanel userSelectionPanel = new JPanel(flowLayout);
-        userSelectionPanel.add(new JLabel("Select User: "));
-        userSelectionPanel.add(userSelection);
-
-        JPanel accountSelectionPanel = new JPanel(flowLayout);
-        accountSelectionPanel.add(new JLabel("Select Account: "));
-        accountSelectionPanel.add(accountSelection);
-
-        JPanel numOfCancellationPanel = new JPanel(flowLayout);
-        numOfCancellationPanel.add(new JLabel("Number of cancellation: "));
-        numOfCancellationPanel.add(numOfCancellation);
+        JPanel selectionPanel = new JPanel(flowLayout);
+        selectionPanel.add(new JLabel("Select User: "));
+        selectionPanel.add(userSelection);
+        selectionPanel.add(new JLabel("Select Account: "));
+        selectionPanel.add(accountSelection);
+        selectionPanel.add(new JLabel("Cancellation Num: "));
+        selectionPanel.add(numOfCancellation);
 
         JPanel submitPanel = new JPanel(flowLayout);
         submitPanel.add(submitButton);
 
-        JPanel infoPanel = new JPanel(new GridLayout(4, 1));
-        infoPanel.add(userSelectionPanel);
-        infoPanel.add(accountSelectionPanel);
-        infoPanel.add(numOfCancellationPanel);
-        infoPanel.add(submitPanel);
-
-        Box box = Box.createHorizontalBox();
+        Box box = Box.createVerticalBox();
         box.add(transactionPanel);
         box.add(Box.createHorizontalStrut(10));
-        box.add(infoPanel);
+        box.add(selectionPanel);
+        box.add(submitPanel);
 
         container.add(box);
     }

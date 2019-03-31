@@ -126,7 +126,19 @@ public abstract class Transaction {
      * @return The String representation of the transaction.
      */
     public String toString() {
-        return String.format("ID %s\tCAN_BE_CANCELLED %s\tIS_CANCELLED %s\t", getId(), isCancellable(), isCancelled());
+        String cancelText;
+
+        if (isCancellable()) {
+            if (isCancelled()) {
+                cancelText = "IS-CANCELLED";
+            } else {
+                cancelText = "IS-CANCLABLE";
+            }
+        } else {
+            cancelText = "NT-CANCLABLE";
+        }
+
+        return String.format("%s %s ", getId(), cancelText);
     }
 
     /**

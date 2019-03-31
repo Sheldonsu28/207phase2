@@ -127,6 +127,19 @@ public class FileHandler implements Serializable {
 
     }
 
+    public void deleteFirstLine(ExternalFiles file) {
+        ArrayList<String> data = readFrom(file);
+        data.remove(0);
+        clearFile(file);
+
+        StringBuilder strData = new StringBuilder();
+        for (String line : data) {
+            strData.append(line).append("\n");
+        }
+
+        saveTo(file, strData.toString());
+    }
+
     public boolean checkFileExist(String filename) {
         File file = new File(path + filename);
         return file.exists();

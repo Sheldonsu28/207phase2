@@ -7,6 +7,7 @@ import atm.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedHashMap;
 
 public class AccountManualCreation extends SubMenu {
     private JComboBox<User> userSelection;
@@ -67,28 +68,16 @@ public class AccountManualCreation extends SubMenu {
         flowLayout.setVgap(5);
         flowLayout.setHgap(10);
 
-        JPanel userSelectionPanel = new JPanel(flowLayout);
-        userSelectionPanel.add(new JLabel("Owner: "));
-        userSelectionPanel.add(userSelection);
-
         JPanel accountTypeSelectionPanel = new JPanel(flowLayout);
         accountTypeSelectionPanel.add(new JLabel("Account type: "));
         accountTypeSelectionPanel.add(accountTypeSelection);
         accountTypeSelectionPanel.add(primaryCheck);
 
-        JPanel infoPanel = new JPanel(flowLayout);
-        infoPanel.add(userSelectionPanel);
-        infoPanel.add(accountTypeSelectionPanel);
-
-        JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        submitPanel.add(submitButton);
-
-        Box box = Box.createVerticalBox();
-        box.add(infoPanel);
-        box.add(Box.createVerticalStrut(10));
-        box.add(submitPanel);
-
-        container.add(box);
+        defaultRowsLayout(new LinkedHashMap<JComponent, String>() {{
+            put(userSelection, "Select User: ");
+            put(accountTypeSelectionPanel, null);
+            put(submitButton, null);
+        }});
     }
 
 

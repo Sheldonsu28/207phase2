@@ -1,5 +1,6 @@
 package transaction;
 
+import account.Account;
 import account.WithdrawException;
 import account.Withdrawable;
 import atm.*;
@@ -40,8 +41,8 @@ public class WithdrawTransaction extends Transaction {
      */
     @Override
     public String toString() {
-        return super.toString() +
-                String.format("User %s's Account %s WITHDRAW $%d", getFromUser(), targetAccount, withdrawAmount);
+        return super.toString() + String.format("%s-%s WITHDRAW $%d", getFromUser(), ((Account) targetAccount).getId(),
+                withdrawAmount);
     }
 
     /**

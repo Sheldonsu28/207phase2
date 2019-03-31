@@ -18,6 +18,10 @@ public class StockAccount extends AssetAccount implements Observer {
         updateDayOfWeek(time);
     }
 
+    public Map<String, Integer> getBoughtStocks() {
+        return Collections.unmodifiableMap(stocks);
+    }
+
     @Override
     public double getNetBalance() {
         double stockValue = 0;
@@ -52,31 +56,40 @@ public class StockAccount extends AssetAccount implements Observer {
         registerTransaction(register);
     }
 
+    private void checkState() throws IncorrectTimeException {
+        if (dayOfWeek == 7 || dayOfWeek == 1) {
+            throw new IncorrectTimeException();
+        }
+    }
+
     public void buyStock(int stockAmount, double stockPrice, String stockSymbol, Transaction register)
             throws IncorrectTimeException, WithdrawException {
+        checkState();
 
         double moneyWithdraw = stockAmount*stockPrice;
 
-        if(dayOfWeek == 7 || dayOfWeek == 1){
-            throw new IncorrectTimeException();
+        if (balance < moneyWithdraw) {
+            throw new InsufficientFundException(this, moneyWithdraw);
         }
+
+        balance -= moneyWithdraw;
 
         stocks.put(stockSymbol, stocks.getOrDefault(stockSymbol, 0) + stockAmount);
 
-        withdraw(moneyWithdraw, register);
+        registerTransaction(register);
     }
 
     public void sellStock(int stockAmount, double stockPrice, String stockSymbol ,Transaction register)
             throws InsufficientSharesException, IncorrectTimeException {
-        double moneyDeposit = stockAmount*stockPrice;
+        checkState();
 
-        if(dayOfWeek == 7 || dayOfWeek == 1){
-            throw new IncorrectTimeException();
-        }
+        double moneyDeposit = stockAmount*stockPrice;
 
         if (!stocks.containsKey(stockSymbol) || stockAmount > stocks.get(stockSymbol)){
             throw new InsufficientSharesException();
         }
+
+        balance += moneyDeposit;
 
         stocks.put(stockSymbol, stocks.get(stockSymbol) - stockAmount);
 
@@ -84,18 +97,13 @@ public class StockAccount extends AssetAccount implements Observer {
             stocks.remove(stockSymbol);
         }
 
-        deposit(moneyDeposit, register);
+        registerTransaction(register);
     }
 
     private void updateDayOfWeek(Date currTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currTime);
         dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-    }
-
-    @Override
-    public void cancelWithdraw(double amount) {
-        throw new IllegalStateException("THIS CAN NOT BE CANCELLED");
     }
 
 

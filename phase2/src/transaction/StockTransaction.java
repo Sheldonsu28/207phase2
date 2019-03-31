@@ -1,6 +1,9 @@
 package transaction;
 
-import account.*;
+import account.IncorrectTimeException;
+import account.InsufficientSharesException;
+import account.StockAccount;
+import account.WithdrawException;
 import atm.User;
 import ui.MainFrame;
 
@@ -66,9 +69,8 @@ public class StockTransaction extends Transaction{
      */
     @Override
     public String toString(){
-        return super.toString() +
-                String.format("User %s's Account %s\t BUY IN %s With amount %d At price %.2f",
-                        getFromUser(),fromAccount,stockName, stockAmount, stockPrice);
+        return super.toString() + String.format("%s-%s BUY IN %d %s STOCK %.2f/share",
+                getFromUser(), fromAccount.getId(), stockAmount, stockName, stockPrice);
     }
 
     /**

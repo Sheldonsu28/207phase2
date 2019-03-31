@@ -25,10 +25,12 @@ public class AccountRequestedCreation extends SubMenu {
 
             requestList.get(source).approveRequest();
 
-            JOptionPane.showMessageDialog(this, "Account successfully created!", "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+            MainFrame.showInfoMessage("Account successfully created!", "Success");
 
-            AccountRequestedCreation.this.dispose();
+            requestList.remove(source);
+
+            container.removeAll();
+            initializeLayout();
         };
 
         for (String requestStr : requests) {

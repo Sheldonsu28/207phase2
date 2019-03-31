@@ -1,5 +1,6 @@
 package transaction;
 
+import account.Account;
 import account.Depositable;
 import atm.*;
 import ui.MainFrame;
@@ -169,8 +170,8 @@ public class DepositTransaction extends Transaction {
      */
     @Override
     public String toString() {
-        return super.toString() +
-                String.format("User %s's Account %s DEPOSIT $%.2f", getFromUser(), targetAccount, depositAmount);
+        return super.toString() + String.format("%s-%s DEPOSIT $%.2f",
+                getFromUser(), ((Account) targetAccount).getId(), depositAmount);
     }
 
     private enum DepositType {CHEQUE, CASH, MANUAL}

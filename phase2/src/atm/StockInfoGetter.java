@@ -45,13 +45,4 @@ public class StockInfoGetter {
         throw new SymbolNotFoundException(companyName);
     }
 
-
-    public static void main(String[] args) throws IOException {
-        StockInfoGetter getter = new StockInfoGetter();
-        try {
-            System.out.println(getter.getQuote(getter.getSymbol("alib")));
-        } catch (SymbolNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }

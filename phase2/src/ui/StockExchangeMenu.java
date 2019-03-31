@@ -1,8 +1,6 @@
 package ui;
 
-import account.Account;
 import account.StockAccount;
-import account.Withdrawable;
 import atm.StockInfoGetter;
 import atm.SymbolNotFoundException;
 import atm.User;
@@ -12,153 +10,156 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class StockExchangeMenu extends SubMenu {
     private JComboBox<StockAccount> accountSelection;
-    private JTextField searchBox;
-    private JTextField quantityBox;
-    private JLabel stockPrice;
-    private JButton search;
-    private JButton buy;
-    private JButton sell;
+    private JTextField searchField, quantityField;
+    private JLabel stockPriceLabel;
+    private JButton searchButton, buyButton, sellButton;
+    private JTextArea stockSummaryText;
 
     private StockInfoGetter stockInfoGetter = new StockInfoGetter();
 
     StockExchangeMenu(User user) {
         super("Stock Exchange Center");
-        ArrayList<Withdrawable> withdrawables = user.getAccountListOfType(Withdrawable.class);
-        ArrayList<StockAccount> stockAccounts = new ArrayList<>();
 
-        searchBox = new JTextField(15);
-        quantityBox = new JTextField(5);
-        stockPrice = new JLabel("/");
-        search = new JButton("Search");
-        buy = new JButton("Buy");
-        sell = new JButton("Sell");
-        buy.setEnabled(false);
-        sell.setEnabled(false);
-
-        for (Withdrawable w: withdrawables) {
-            if (w instanceof StockAccount)
-                stockAccounts.add((StockAccount) w);
-        }
+        ArrayList<StockAccount> stockAccounts = user.getAccountListOfType(StockAccount.class);
 
         if (stockAccounts.isEmpty()) {
-            MainFrame.showInfoMessage("You don't have a Stock Account yet! " +
-                    "You can trade after you opened a Stock Account.", "Attention");
+            MainFrame.showErrorMessage("You don't have a Stock Account yet! " +
+                    "You can trade after you opened a Stock Account.");
+            this.dispose();
+            return;
         }
 
+        searchField = new JTextField(15);
+        quantityField = getPositiveIntegerOnlyField();
+        stockPriceLabel = new JLabel();
         accountSelection = new JComboBox<>(stockAccounts.toArray(new StockAccount[0]));
-        accountSelection.addActionListener(e -> {
-            StockAccount selectedAccount = (StockAccount) accountSelection.getSelectedItem();
 
-            if (selectedAccount != null) {
-                buy.setEnabled(true);
-                sell.setEnabled(true);
-            } else {
-                buy.setEnabled(false);
-                sell.setEnabled(false);
-            }
-        });
+        stockSummaryText = new JTextArea();
+        stockSummaryText.setLineWrap(false);
+        stockSummaryText.setBorder(BorderFactory.createLineBorder(Color.black));
+        stockSummaryText.setFont(new Font("Serif", Font.PLAIN, 18));
+        stockSummaryText.setEditable(false);
 
-        search.addActionListener(e -> {
+        updateStockSummary();
+
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(e -> {
             try {
-                String stockSymbol = stockInfoGetter.getSymbol(searchBox.getText());
+                String stockSymbol = stockInfoGetter.getSymbol(searchField.getText());
                 double price = stockInfoGetter.getQuote(stockSymbol);
-                stockPrice.setText(String.valueOf(price));
+                stockPriceLabel.setText(String.format("%s: $%.2f", stockSymbol, price));
             } catch (SymbolNotFoundException | IOException e2) {
                 MainFrame.showErrorMessage("Stock Info not found!");
             }
         });
 
-        buy.addActionListener(e -> {
-            stockExchange(user, true);
+        buyButton = new JButton("Buy");
+        buyButton.addActionListener(e -> {
+            StockAccount selectedAccount = (StockAccount) accountSelection.getSelectedItem();
+
+            if (selectedAccount != null && !quantityField.getText().equals("")) {
+                stockExchange(user, selectedAccount, true);
+            } else {
+                MainFrame.showErrorMessage("Account not selected!");
+            }
+
+            accountSelection.updateUI();
+            updateStockSummary();
         });
 
-        sell.addActionListener(e -> {
-            stockExchange(user, false);
+        sellButton = new JButton("Sell");
+        sellButton.addActionListener(e -> {
+            StockAccount selectedAccount = (StockAccount) accountSelection.getSelectedItem();
+
+            if (selectedAccount != null && !quantityField.getText().equals("")) {
+                stockExchange(user, selectedAccount, false);
+            } else {
+                MainFrame.showErrorMessage("Account not selected!");
+            }
+
+            accountSelection.updateUI();
+            updateStockSummary();
         });
 
         initializeLayout();
+
         setVisible(true);
-    }
-
-    private void stockExchange(User user, boolean buy) {
-        int shares;
-        double price = 0;
-        String action;
-        String companyName = searchBox.getText();
-        String stockSymbol;
-        StockTransaction stockTransaction;
-
-        if (buy) action = "Buy";
-            else action = "Sell";
-
-        try {
-            shares = Integer.parseInt(quantityBox.getText() );
-        } catch (NumberFormatException e1) {
-            shares = 0;
-        }
-
-        if (shares != 0) {
-            try {
-                stockSymbol = stockInfoGetter.getSymbol(searchBox.getText());
-                price = stockInfoGetter.getQuote(stockSymbol);
-            } catch (SymbolNotFoundException | IOException e2) {
-                MainFrame.showErrorMessage("Stock Info not found!");
-            }
-
-            StockAccount selectedAccount = (StockAccount) accountSelection.getSelectedItem();
-            stockTransaction = new StockTransaction(user, selectedAccount, shares, price, companyName, buy);
-
-            if (JOptionPane.showConfirmDialog(this,
-                    "Are you sure to " + action + " " + shares + " shares of " + companyName + " stocks?\nTotal: $"
-                            + price * shares, "Confirmation",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                if (stockTransaction.perform()) {
-                    MainFrame.showInfoMessage(action + " successful!\n" + stockTransaction, "Success");
-                } else {
-                    MainFrame.showErrorMessage(action + " failed because something went wrong");
-                }
-
-            }
-        } else {
-            MainFrame.showErrorMessage("Please enter number larger than 0!");
-        }
     }
 
     private void initializeLayout() {
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
-        flowLayout.setVgap(10);
-        flowLayout.setHgap(10);
 
-        JPanel accountSelectionPanel = new JPanel(flowLayout);
-        accountSelectionPanel.add(new JLabel("Select Account: "));
-        accountSelectionPanel.add(accountSelection);
+        JPanel searchPanel = new JPanel(flowLayout);
+        searchPanel.add(new JLabel("Stock Symbol: "));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        searchPanel.add(stockPriceLabel);
 
-        JPanel stockSearchPanel = new JPanel(flowLayout);
-        stockSearchPanel.add(new JLabel("Enter company name "));
-        stockSearchPanel.add(searchBox);
-        stockSearchPanel.add(search);
+        JPanel actionPanel = new JPanel(flowLayout);
+        actionPanel.add(new JLabel("Amount to sell/buy: "));
+        actionPanel.add(quantityField);
+        actionPanel.add(buyButton);
+        actionPanel.add(sellButton);
 
-        JPanel stockInfoPanel = new JPanel(flowLayout);
-        stockInfoPanel.add(stockPrice);
-        stockInfoPanel.add(new JLabel("Quantity "));
-        stockInfoPanel.add(quantityBox);
-        stockInfoPanel.add(buy);
-        stockInfoPanel.add(sell);
+        defaultRowsLayout(new LinkedHashMap<JComponent, String>() {{
+            put(accountSelection, "Select Stock Account:");
+            put(stockSummaryText, null);
+            put(searchPanel, null);
+            put(actionPanel, null);
+        }});
+    }
 
-        JPanel upperPanel = new JPanel(new GridLayout(1, 2));
-        upperPanel.add(accountSelectionPanel);
-        upperPanel.add(stockSearchPanel);
+    private void updateStockSummary() {
+        StockAccount stockAccount = (StockAccount) accountSelection.getSelectedItem();
 
-        JPanel mainPanel = new JPanel(new GridLayout(2, 1));
-        mainPanel.add(upperPanel);
-        mainPanel.add(stockInfoPanel);
+        if (stockAccount != null) {
+            StringBuilder info = new StringBuilder();
 
-        container.add(mainPanel);
+            for (Map.Entry<String, Integer> entry : stockAccount.getBoughtStocks().entrySet())
+                info.append(entry.getKey()).append(" ").append(entry.getValue()).append("\n");
 
+            stockSummaryText.setText(info.toString());
+        } else {
+            stockSummaryText.setText("");
+        }
+    }
+
+    private void stockExchange(User user, StockAccount selectedAccount, boolean buy) {
+        int shares = Integer.parseInt(quantityField.getText());
+        double price;
+        String companyName = searchField.getText();
+        String action, stockSymbol;
+        StockTransaction stockTransaction;
+
+        if (buy) action = "Buy";
+        else action = "Sell";
+
+        try {
+            stockSymbol = stockInfoGetter.getSymbol(searchField.getText());
+            price = stockInfoGetter.getQuote(stockSymbol);
+        } catch (SymbolNotFoundException | IOException e2) {
+            MainFrame.showErrorMessage("Stock Info not found!");
+            return;
+        }
+
+        stockTransaction = new StockTransaction(user, selectedAccount, shares, price, companyName, buy);
+
+        if (JOptionPane.showConfirmDialog(this,
+                String.format("Are you sure to %s %d shares of %s stocks (Total: $%.2f)",
+                        action, shares, companyName, price * shares), "Confirmation",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            if (stockTransaction.perform()) {
+                MainFrame.showInfoMessage(action + " successful!\n" + stockTransaction, "Success");
+            } else {
+                MainFrame.showErrorMessage(action + " failed because something went wrong");
+            }
+
+        }
     }
 
 }

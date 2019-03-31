@@ -58,4 +58,12 @@ public abstract class AssetAccount extends Account implements Depositable, Withd
     public void cancelDeposit(double amount) {
         balance -= amount;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cancelWithdraw(double amount) {
+        balance += amount;
+    }
 }

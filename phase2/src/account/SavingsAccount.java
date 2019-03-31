@@ -127,13 +127,6 @@ public class SavingsAccount extends AssetAccount implements Growable {
         registerTransaction(register);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void cancelWithdraw(double amount) {
-        balance += amount;
-    }
 
     /**
      * The implementation of the observer design pattern for timed growth.

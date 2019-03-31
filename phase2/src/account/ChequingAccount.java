@@ -87,14 +87,6 @@ public class ChequingAccount extends AssetAccount implements Indebtable {
      * {@inheritDoc}
      */
     @Override
-    public void cancelWithdraw(double amount) {
-        balance += amount;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public int getDebtLimit() {
         return debtLimit;
     }

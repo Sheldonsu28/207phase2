@@ -1,5 +1,6 @@
 package transaction;
 
+import account.Account;
 import account.Depositable;
 import account.WithdrawException;
 import account.Withdrawable;
@@ -77,9 +78,8 @@ public class TransferTransaction extends Transaction {
      */
     @Override
     public String toString() {
-        return super.toString() +
-                String.format("User %s's Account %s TRANSFERRED $%.2f TO User %s's Account %s",
-                        getFromUser(), fromAccount, transferAmount, getToUser(), toAccount);
+        return super.toString() + String.format("%s-%s TRANSFERRED $%.2f TO %s-%s", getFromUser(), ((Account) fromAccount).getId(),
+                transferAmount, getToUser(), ((Account) toAccount).getId());
     }
 
     /**

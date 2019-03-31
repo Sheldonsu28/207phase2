@@ -46,8 +46,11 @@ public class ExternalDepositMenu extends SubMenu {
                 MainFrame.showInfoMessage("Deposit successful!\n" + transaction, "Success");
             } else {
                 MainFrame.showErrorMessage("Deposit failed because something went wrong");
+                return;
             }
 
+            new FileHandler().deleteFirstLine(ExternalFiles.DEPOSIT_FILE);
+            depositInfoText.setText(getDepositFileText());
             accountSelection.updateUI();
         });
 
