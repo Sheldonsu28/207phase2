@@ -91,36 +91,40 @@ public class StockExchangeMenu extends SubMenu {
         String stockSymbol;
         StockTransaction stockTransaction;
 
-        if (buy) action = "buy";
-            else action = "sell";
+        if (buy) action = "Buy";
+            else action = "Sell";
 
         try {
-            shares = Integer.parseInt(quantityBox.getText());
+            shares = Integer.parseInt(quantityBox.getText() );
         } catch (NumberFormatException e1) {
             shares = 0;
         }
 
-        try {
-            stockSymbol = stockInfoGetter.getSymbol(searchBox.getText());
-            price = stockInfoGetter.getQuote(stockSymbol);
-        } catch (SymbolNotFoundException | IOException e2) {
-            MainFrame.showErrorMessage("Stock Info not found!");
-        }
-
-        StockAccount selectedAccount = (StockAccount) accountSelection.getSelectedItem();
-        stockTransaction = new StockTransaction(user, selectedAccount, shares, price, companyName, buy);
-
-        if (JOptionPane.showConfirmDialog(this,
-                "Are you sure to " + action + " " + shares + " shares of " + companyName + "stocks?\n Total: "
-                        + price*shares, "Confirmation",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-            if (stockTransaction.perform()) {
-                MainFrame.showInfoMessage(action + "successful!\n" + stockTransaction, "Success");
-            } else {
-                MainFrame.showErrorMessage(action + " stock failed because something went wrong");
+        if (shares != 0) {
+            try {
+                stockSymbol = stockInfoGetter.getSymbol(searchBox.getText());
+                price = stockInfoGetter.getQuote(stockSymbol);
+            } catch (SymbolNotFoundException | IOException e2) {
+                MainFrame.showErrorMessage("Stock Info not found!");
             }
 
+            StockAccount selectedAccount = (StockAccount) accountSelection.getSelectedItem();
+            stockTransaction = new StockTransaction(user, selectedAccount, shares, price, companyName, buy);
+
+            if (JOptionPane.showConfirmDialog(this,
+                    "Are you sure to " + action + " " + shares + " shares of " + companyName + " stocks?\nTotal: $"
+                            + price * shares, "Confirmation",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                if (stockTransaction.perform()) {
+                    MainFrame.showInfoMessage(action + " successful!\n" + stockTransaction, "Success");
+                } else {
+                    MainFrame.showErrorMessage(action + " failed because something went wrong");
+                }
+
+            }
+        } else {
+            MainFrame.showErrorMessage("Please enter number larger than 0!");
         }
     }
 

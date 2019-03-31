@@ -45,15 +45,14 @@ public class StockTransaction extends Transaction{
                 return false;
             }
             return true;
+        } else {
+            try {
+                fromAccount.sellStock(stockAmount, stockPrice, stockName, this);
+            } catch (InsufficientSharesException | IncorrectTimeException e) {
+                return false;
+            }
+            return true;
         }
-
-        try {
-            fromAccount.sellStock(stockAmount, stockPrice, stockName, this);
-        } catch (InsufficientSharesException | IncorrectTimeException e) {
-            return false;
-        }
-        return true;
-
     }
 
     /**
