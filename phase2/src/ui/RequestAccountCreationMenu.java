@@ -14,8 +14,6 @@ public class RequestAccountCreationMenu extends SubMenu {
     private JButton request;
     private JCheckBox setPrimary;
 
-    private FileHandler fileHandler = new FileHandler();
-
     @SuppressWarnings("unchecked")
     RequestAccountCreationMenu(User user) {
         super("Open Account");
@@ -41,7 +39,7 @@ public class RequestAccountCreationMenu extends SubMenu {
             Class<Account> accountType = (Class<Account>) accountSelection.getSelectedItem();
 
             if (accountType != null) {
-                fileHandler.saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
+                new FileHandler().saveTo(ExternalFiles.ACCOUNT_CREATION_REQUEST_FILE,
                         String.format("%s %s %s", user.getUserName(), accountType.getSimpleName(), isPrimary));
 
                 MainFrame.showInfoMessage("Your request has been sent to the manager!",

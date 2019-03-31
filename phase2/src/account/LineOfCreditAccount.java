@@ -27,9 +27,9 @@ public class LineOfCreditAccount extends DebtAccount implements Withdrawable {
      * @param time      time of creation
      * @param owner     owner user
      * @param debtLimit the debt limit of this account
-     * @see DebtAccount#DebtAccount(Date, List, double)
+     * @see DebtAccount#DebtAccount(Date, List, int)
      */
-    public LineOfCreditAccount(Date time, List<User> owner, double debtLimit) {
+    public LineOfCreditAccount(Date time, List<User> owner, int debtLimit) {
         super(time, owner, debtLimit);
     }
 

@@ -25,9 +25,9 @@ public class CreditCardAccount extends DebtAccount {
      * @param time      time of creation
      * @param owner     owner user
      * @param debtLimit the debt limit of this account
-     * @see DebtAccount#DebtAccount(Date, List, double)
+     * @see DebtAccount#DebtAccount(Date, List, int)
      */
-    public CreditCardAccount(Date time, List<User> owner, double debtLimit) {
+    public CreditCardAccount(Date time, List<User> owner, int debtLimit) {
         super(time, owner, debtLimit);
     }
 

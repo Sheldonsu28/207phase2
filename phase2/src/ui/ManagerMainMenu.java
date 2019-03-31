@@ -61,9 +61,6 @@ public class ManagerMainMenu extends MainMenu {
                     case 1:
                         new AccountManualCreation(manager);
                         break;
-
-                    default:
-                        throw new IllegalStateException("Unregistered account creation choice type!");
                 }
 
             } else if (source == toCancelTransactions) {
