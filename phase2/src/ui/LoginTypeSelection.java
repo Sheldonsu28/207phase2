@@ -16,6 +16,8 @@ public class LoginTypeSelection extends JDialog {
     LoginTypeSelection(BankManager manager) {
         super(MainFrame.mainFrame, "Login Type", true);
 
+        manager.logout();
+
         ActionListener actionListener = e -> {
             JButton pressed = (JButton) e.getSource();
 

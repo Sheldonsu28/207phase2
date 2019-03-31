@@ -7,7 +7,8 @@ import javax.swing.*;
 
 public class UserMainMenu extends MainMenu {
 
-    private JButton toDepositMenu, toWithdrawMenu, toTransferMenu, toPayBillMenu, toInfoMenu, toOpenAccountMenu;
+    private JButton toDepositMenu, toWithdrawMenu, toTransferMenu,
+            toPayBillMenu, toInfoMenu, toOpenAccountMenu, toBuySellStockMenu;
     private final User user;
 
     UserMainMenu(BankManager manager, User user) {
@@ -16,7 +17,7 @@ public class UserMainMenu extends MainMenu {
         this.user = user;
 
         initializeLayout(new JButton[]{toDepositMenu, toWithdrawMenu, toTransferMenu, toPayBillMenu,
-                toInfoMenu, toOpenAccountMenu});
+                toInfoMenu, toOpenAccountMenu, toBuySellStockMenu});
 
         setVisible(true);
     }
@@ -30,6 +31,8 @@ public class UserMainMenu extends MainMenu {
         toPayBillMenu = new JButton("Pay Bill");
         toInfoMenu = new JButton("Account Info");
         toOpenAccountMenu = new JButton("Request New Account");
+        toBuySellStockMenu = new JButton("Buy/Sell Stocks");
+
 
 
         toDepositMenu.addActionListener(e -> {
@@ -53,6 +56,10 @@ public class UserMainMenu extends MainMenu {
         });
 
         toOpenAccountMenu.addActionListener(e -> {
+
+        });
+
+        toBuySellStockMenu.addActionListener(e -> {
 
         });
     }
