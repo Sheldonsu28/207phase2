@@ -66,7 +66,7 @@ public class UserMainMenu extends MainMenu {
             } else if (source == toOpenAccountMenu) {
                 new RequestAccountCreationMenu(user);
             } else if (source == toBuySellStockMenu) {
-
+                new StockExchangeMenu(user);
             }
 
             UserMainMenu.this.setVisible(true);
