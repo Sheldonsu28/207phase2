@@ -22,7 +22,7 @@ public class StockExchangeMenu extends SubMenu {
     private JButton buy;
     private JButton sell;
 
-    StockInfoGetter stockInfoGetter = new StockInfoGetter();
+    private StockInfoGetter stockInfoGetter = new StockInfoGetter();
 
     StockExchangeMenu(User user) {
         super("Stock Exchange Center");
@@ -86,16 +86,22 @@ public class StockExchangeMenu extends SubMenu {
     private void stockExchange(User user, boolean buy) {
         int shares;
         double price = 0;
+        String action;
+        String companyName = searchBox.getText();
+        String stockSymbol;
         StockTransaction stockTransaction;
 
+        if (buy) action = "buy";
+            else action = "sell";
+
         try {
-            shares = Integer.parseInt(quantityBox.getText());
+            shares = Integer.parseInt(companyName);
         } catch (NumberFormatException e1) {
             shares = 0;
         }
 
         try {
-            String stockSymbol = stockInfoGetter.getSymbol(searchBox.getText());
+            stockSymbol = stockInfoGetter.getSymbol(searchBox.getText());
             price = stockInfoGetter.getQuote(stockSymbol);
         } catch (SymbolNotFoundException | IOException e2) {
             MainFrame.showErrorMessage("Stock Info not found!");
@@ -103,10 +109,18 @@ public class StockExchangeMenu extends SubMenu {
 
         StockAccount selectedAccount = (StockAccount) accountSelection.getSelectedItem();
         stockTransaction = new StockTransaction(user, selectedAccount, shares, price, searchBox.getText(), buy);
-        if (stockTransaction.perform()) {
-            MainFrame.showInfoMessage("Deposit successful!\n" + stockTransaction, "Success");
-        } else {
-            MainFrame.showErrorMessage("Buy stock failed because something went wrong");
+
+        if (JOptionPane.showConfirmDialog(this,
+                "Are you sure to " + action + " " + shares + " shares of " + companyName + "stocks?\n Total: "
+                        + price*shares, "Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            if (stockTransaction.perform()) {
+                MainFrame.showInfoMessage(action + "successful!\n" + stockTransaction, "Success");
+            } else {
+                MainFrame.showErrorMessage(action + " stock failed because something went wrong");
+            }
+
         }
     }
 
