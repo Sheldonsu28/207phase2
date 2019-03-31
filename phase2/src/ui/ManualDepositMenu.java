@@ -19,17 +19,16 @@ public class ManualDepositMenu extends SubMenu {
 
         accountSelection = new JComboBox<>(user.getAccountListOfType(Depositable.class).toArray(new Depositable[0]));
 
-        userInputAmount = getPositiveIntegerOnlyField();
+        userInputAmount = getPositiveTwoDecimalOnlyField();
 
         submitButton = new JButton("Submit Deposit");
         submitButton.addActionListener(e -> {
             Depositable selectedAccount = (Depositable) accountSelection.getSelectedItem();
-            String inputStr = userInputAmount.getText();
+            String amountText = userInputAmount.getText();
 
-            if (selectedAccount != null || inputStr.equals("")) {
-                int amount = Integer.parseInt(inputStr);
-                DepositTransaction transaction =
-                        new DepositTransaction(user, manager.getMachineList().get(0), selectedAccount, amount);
+            if (selectedAccount != null && !amountText.equals("")) {
+                DepositTransaction transaction = new DepositTransaction(
+                        user, manager.getMachineList().get(0), selectedAccount, Integer.parseInt(amountText));
 
                 if (transaction.perform()) {
                     MainFrame.showInfoMessage("Deposit Successful!\n" + transaction, "Success");

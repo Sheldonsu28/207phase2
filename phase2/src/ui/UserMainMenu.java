@@ -55,7 +55,6 @@ public class UserMainMenu extends MainMenu {
             } else if (source == toWithdrawMenu) {
                 new WithdrawMenu(manager, user);
             } else if (source == toTransferMenu) {
-
                 int choice = getBranchChoice("Choose type of transfer", "Transfer Type",
                         new String[]{"Intra-user", "Inter-user"});
 
@@ -70,13 +69,14 @@ public class UserMainMenu extends MainMenu {
                 }
 
             } else if (source == toPayBillMenu) {
+                new PayBillMenu(manager, user);
 
             } else if (source == toInfoMenu) {
-
                 new AccountInfoMenu(user);
 
             } else if (source == toOpenAccountMenu) {
                 new RequestAccountCreationMenu(user);
+
             } else if (source == toBuySellStockMenu) {
                 new StockExchangeMenu(user);
             }
