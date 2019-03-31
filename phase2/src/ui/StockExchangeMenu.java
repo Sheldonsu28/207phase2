@@ -95,7 +95,7 @@ public class StockExchangeMenu extends SubMenu {
             else action = "sell";
 
         try {
-            shares = Integer.parseInt(companyName);
+            shares = Integer.parseInt(quantityBox.getText());
         } catch (NumberFormatException e1) {
             shares = 0;
         }
@@ -108,7 +108,7 @@ public class StockExchangeMenu extends SubMenu {
         }
 
         StockAccount selectedAccount = (StockAccount) accountSelection.getSelectedItem();
-        stockTransaction = new StockTransaction(user, selectedAccount, shares, price, searchBox.getText(), buy);
+        stockTransaction = new StockTransaction(user, selectedAccount, shares, price, companyName, buy);
 
         if (JOptionPane.showConfirmDialog(this,
                 "Are you sure to " + action + " " + shares + " shares of " + companyName + "stocks?\n Total: "
