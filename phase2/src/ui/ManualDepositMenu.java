@@ -19,7 +19,7 @@ public class ManualDepositMenu extends SubMenu {
 
         accountSelection = new JComboBox<>(user.getAccountListOfType(Depositable.class).toArray(new Depositable[0]));
 
-        userInputAmount = getPositiveIntegerOnlyField();
+        userInputAmount = getPositiveTwoDecimalOnlyField();
 
         submitButton = new JButton("Submit Deposit");
         submitButton.addActionListener(e -> {

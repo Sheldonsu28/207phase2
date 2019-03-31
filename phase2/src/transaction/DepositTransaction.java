@@ -12,7 +12,13 @@ import java.util.TreeMap;
  * This class is responsible for deposit money to the accounts.
  */
 public class DepositTransaction extends Transaction {
-    public DepositTransaction(User user, AtmMachine machine, Depositable account, int depositAmount) {
+    private double depositAmount;
+
+    private final DepositType depositType;
+    private final TreeMap<Integer, Integer> depositStock;
+    private final ExternalFiles file;
+
+    public DepositTransaction(User user, AtmMachine machine, Depositable account, double depositAmount) {
         super(user);
 
         targetAccount = account;
@@ -24,11 +30,6 @@ public class DepositTransaction extends Transaction {
 
         this.depositAmount = depositAmount;
     }
-
-    private final DepositType depositType;
-    private final TreeMap<Integer, Integer> depositStock;
-    private final ExternalFiles file;
-    private int depositAmount;
     private final Depositable targetAccount;
     private final AtmMachine machine;
 
@@ -160,7 +161,7 @@ public class DepositTransaction extends Transaction {
         if (depositInfo.length != 2)
             throw new IllegalFileFormatException(file);
 
-        depositAmount = Integer.parseInt(depositInfo[1]);
+        depositAmount = Double.parseDouble(depositInfo[1]);
     }
 
     /**
@@ -169,7 +170,7 @@ public class DepositTransaction extends Transaction {
     @Override
     public String toString() {
         return super.toString() +
-                String.format("User %s's Account %s DEPOSIT $%d", getFromUser(), targetAccount, depositAmount);
+                String.format("User %s's Account %s DEPOSIT $%.2f", getFromUser(), targetAccount, depositAmount);
     }
 
     private enum DepositType {CHEQUE, CASH, MANUAL}

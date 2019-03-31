@@ -61,6 +61,34 @@ public class SubMenu extends JDialog {
         return input;
     }
 
+    JTextField getPositiveTwoDecimalOnlyField() {
+        JTextField input = new JTextField(10);
+        input.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                inputCheck();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+
+            private void inputCheck() {
+                if (!input.getText().matches("\\d+\\.?((\\d\\d)?|(\\d?))")) {
+                    MainFrame.showErrorMessage("Invalid input detected! Positive integers only!");
+                    SwingUtilities.invokeLater(() -> input.setText(""));
+                }
+            }
+        });
+
+        return input;
+    }
+
     void defaultRowsLayout(LinkedHashMap<JComponent, String> components) {
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
         flowLayout.setVgap(10);
