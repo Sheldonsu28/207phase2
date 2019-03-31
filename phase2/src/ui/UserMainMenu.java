@@ -50,14 +50,24 @@ public class UserMainMenu extends MainMenu {
                     case 1:
                         new ManualDepositMenu(manager, user);
                         break;
-
-                    default:
-                        throw new IllegalStateException("Unregistered account creation choice type!");
                 }
 
             } else if (source == toWithdrawMenu) {
                 new WithdrawMenu(manager, user);
             } else if (source == toTransferMenu) {
+
+                int choice = getBranchChoice("Choose type of transfer", "Transfer Type",
+                        new String[]{"Intra-user", "Inter-user"});
+
+                switch (choice) {
+                    case 0:
+                        new IntraTransferMenu(user);
+                        break;
+
+                    case 1:
+                        new InterTransferMenu(manager, user);
+                        break;
+                }
 
             } else if (source == toPayBillMenu) {
 
