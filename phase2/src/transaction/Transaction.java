@@ -132,7 +132,7 @@ public abstract class Transaction {
     /**
      * Verify that the transaction is performed.
      *
-     * @return Whether the transaction is perform or not.
+     * @return Whether the transaction is performed or not.
      */
     protected abstract boolean doPerform();
 

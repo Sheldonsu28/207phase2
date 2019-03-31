@@ -61,7 +61,8 @@ public class AtmMachine {
      * @throws CashShortageException when the amount requested can only be partially produced
      * @throws EmptyStockException   when there is no cash at all left in the machine
      */
-    public TreeMap<Integer, Integer> reduceStock(int amount) throws CashShortageException, EmptyStockException {
+    public TreeMap<Integer, Integer> reduceStock(int amount)
+            throws CashShortageException, EmptyStockException, IllegalWithdrawAmount {
         return cashHandler.takeAmountOfCash(amount);
     }
 

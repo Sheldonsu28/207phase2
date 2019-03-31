@@ -1,80 +1,103 @@
 package ui;
 
 import account.Withdrawable;
+import atm.AtmMachine;
 import atm.BankManager;
 import atm.User;
 import transaction.WithdrawTransaction;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 
 public class WithdrawMenu extends SubMenu {
     private JComboBox<Withdrawable> accountSelection;
     private JButton confirmationButton;
-    private JComboBox<Integer> UserInputAmount;
-    private WithdrawTransaction transaction;
+    private JTextField userInputAmount;
+    private AtmMachine machine;
 
-    WithdrawMenu(User user, BankManager manager) {
+    WithdrawMenu(BankManager manager, User user) {
         super("Account Selection");
 
+        machine = manager.getMachineList().get(0);
 
         accountSelection = new JComboBox<>(user.getAccountListOfType(Withdrawable.class).toArray(new Withdrawable[0]));
 
-        UserInputAmount = new JComboBox<>(new Integer[]{5, 10, 20, 50, 100, 150, 200, 250});
-        int amount =(int) UserInputAmount.getSelectedItem();
+        userInputAmount = new JTextField(10);
+        userInputAmount.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                inputCheck();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                inputCheck();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                inputCheck();
+            }
+
+
+        });
 
         confirmationButton = new JButton("Confirm Withdraw");
-        confirmationButton.addActionListener(e ->{
+        confirmationButton.addActionListener(e -> {
             Withdrawable selectedAccount = (Withdrawable) accountSelection.getSelectedItem();
-            this.transaction = new WithdrawTransaction(user, manager.getMachineList().get(0), selectedAccount,amount);
-            if(selectedAccount != null && amount != 0){
+            String inputStr = userInputAmount.getText();
+
+            if (selectedAccount != null || inputStr.equals("")) {
+                int amount = Integer.parseInt(inputStr);
+                WithdrawTransaction transaction = new WithdrawTransaction(user, machine, selectedAccount, amount);
+
                 if (transaction.perform()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Withdraw Performed!", "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }else{
-                    JOptionPane.showMessageDialog(this,
-                            "The Action is not perform because something went wrong", "Withdraw Failed",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    MainFrame.showInfoMessage("Withdraw Successful!\n" + transaction);
+                } else {
+                    MainFrame.showErrorMessage("Withdraw failed because something went wrong");
                 }
+
+                accountSelection.updateUI();
+            } else {
+                MainFrame.showErrorMessage("Account not selected or invalid/missing withdraw amount!");
             }
 
         });
 
 
-    initializeLayout();
-    setVisible(true);
+        initializeLayout();
+        setVisible(true);
 
     }
 
-    private void initializeLayout(){
+    private void inputCheck() {
+        if (!userInputAmount.getText().matches("\\d*")) {
+            MainFrame.showErrorMessage("Invalid input detected! Positive integers only!");
+            userInputAmount.setText("");
+        }
+    }
+
+    private void initializeLayout() {
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
         flowLayout.setVgap(10);
-        flowLayout.setHgap(10);
-
 
         JPanel accountSelectionPanel = new JPanel(flowLayout);
-        accountSelectionPanel.add(new JLabel("Select Account: "));
+        accountSelectionPanel.add(new JLabel("Withdraw From: "));
         accountSelectionPanel.add(accountSelection);
 
-        JPanel withdrawAmount = new JPanel(flowLayout);
-        withdrawAmount.add(new JLabel("Withdraw Amount: "));
-        withdrawAmount.add(UserInputAmount);
+        JPanel amountPanel = new JPanel(flowLayout);
+        amountPanel.add(new JLabel("Withdraw Amount: "));
+        amountPanel.add(userInputAmount);
 
         JPanel confirmPanel = new JPanel(flowLayout);
         confirmPanel.add(confirmationButton);
 
-        JPanel infoPanel = new JPanel(new GridLayout(12, 1));
-        infoPanel.add(accountSelectionPanel);
-        infoPanel.add(withdrawAmount);
-        infoPanel.add(confirmPanel);
-
-        Box box = Box.createHorizontalBox();
-        box.add(accountSelectionPanel);
-        box.add(Box.createHorizontalStrut(10));
-        box.add(infoPanel);
-
-        container.add(box);
+        container.setLayout(new GridLayout(3, 1));
+        container.add(accountSelectionPanel);
+        container.add(amountPanel);
+        container.add(confirmPanel);
     }
 }

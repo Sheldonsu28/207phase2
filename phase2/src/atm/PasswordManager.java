@@ -47,7 +47,7 @@ public class PasswordManager implements Serializable {
                 password.append(c);
             }
         }
-        System.out.println(password);
+
         return password.toString();
     }
 
