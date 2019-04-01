@@ -7,11 +7,24 @@ import transaction.Transaction;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Defines behaviours of savings account.
+ */
 public class StockAccount extends AssetAccount implements Observer {
+    /**
+     * HashMap stores stock transactions.
+     */
     private final HashMap<String, Integer> stocks = new HashMap<>();
     private int dayOfWeek;
     private final StockInfoGetter quoteGetter = new StockInfoGetter();
 
+    /**
+     * Construct a stock account.
+     *
+     * @param time  time of creation
+     * @param owner owner user
+     * @see Account#Account(Date, List)
+     */
     public StockAccount(Date time, List<User> owner) {
         super(time, owner);
 
@@ -38,6 +51,9 @@ public class StockAccount extends AssetAccount implements Observer {
         return balance + stockValue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deposit(double amount ,Transaction register){
         balance += amount;
@@ -45,6 +61,9 @@ public class StockAccount extends AssetAccount implements Observer {
         registerTransaction(register);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void withdraw(double amount, Transaction register) throws WithdrawException{
         if(balance < amount){
@@ -56,6 +75,10 @@ public class StockAccount extends AssetAccount implements Observer {
         registerTransaction(register);
     }
 
+    /**
+     * Check if the weekday of given time is during weekdays.
+     * @throws IncorrectTimeException Throws when it's weekend.
+     */
     private void checkState() throws IncorrectTimeException {
         if (dayOfWeek == 7 || dayOfWeek == 1) {
             throw new IncorrectTimeException();
