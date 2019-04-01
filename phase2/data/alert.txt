@@ -1,3 +1,0 @@
-null	Stock shortage: $20: 0 left	$50: 0 left	
-null	Stock shortage: $50: 0 left	
-null	Stock shortage: $50: 0 left	
