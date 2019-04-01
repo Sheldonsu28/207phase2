@@ -7,14 +7,15 @@ import atm.FileHandler;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public class ManagerMainMenu extends MainMenu {
-    private JButton toAlerts, toCreateUser, toAccountRequest, toCreateAccount, toCancelTransactions, toRestock;
+class ManagerMainMenu extends MainMenu {
+    private JButton toAlerts, toCreateUser, toAccountRequest, toCreateAccount, toCancelTransactions, toRestock,
+            toJoinAccount;
 
     ManagerMainMenu(BankManager manager, LoginType loginType) {
         super(manager, "Manager Main Menu");
 
         initializeLayout(new JButton[]{toAlerts, toCreateUser, toAccountRequest, toCreateAccount,
-                toCancelTransactions, toRestock});
+                toCancelTransactions, toRestock, toJoinAccount});
 
         if (loginType == LoginType.EMPLOYEE) {
             toCreateAccount.setEnabled(false);
@@ -34,6 +35,7 @@ public class ManagerMainMenu extends MainMenu {
         toCreateAccount = new JButton("Create Account");
         toCancelTransactions = new JButton("Cancel Transactions");
         toRestock = new JButton("Restock Machine");
+        toJoinAccount = new JButton("Join Accounts");
 
         ActionListener listener = e -> {
             JButton source = (JButton) e.getSource();
@@ -69,6 +71,9 @@ public class ManagerMainMenu extends MainMenu {
             } else if (source == toRestock) {
                 new RestockMenu(manager);
 
+            } else if (source == toJoinAccount) {
+                new JoinAccountMenu(manager);
+
             }
 
             ManagerMainMenu.this.setVisible(true);
@@ -80,6 +85,7 @@ public class ManagerMainMenu extends MainMenu {
         toCreateAccount.addActionListener(listener);
         toCancelTransactions.addActionListener(listener);
         toRestock.addActionListener(listener);
+        toJoinAccount.addActionListener(listener);
     }
 
     private String getFormattedMessage(ExternalFiles file) {

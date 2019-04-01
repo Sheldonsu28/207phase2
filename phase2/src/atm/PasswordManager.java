@@ -7,13 +7,14 @@ import java.util.regex.Pattern;
 /**
  * This class generate Random passwords for account's default password when the account is been created.
  */
-public class PasswordManager implements Serializable {
+class PasswordManager implements Serializable {
     //Maximum and minimum length of the password.
-    private int leastDigit, mostDigit;
+    private final int leastDigit;
+    private final int mostDigit;
     //The regex representation of characters that are allowed in the password.
-    private Pattern regexPattern;
+    private final Pattern regexPattern;
     // Random number.
-    private Random random;
+    private final Random random;
     private final char[] randomPool;
 
     /**

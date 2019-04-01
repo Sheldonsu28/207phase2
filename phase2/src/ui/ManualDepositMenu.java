@@ -8,11 +8,11 @@ import transaction.DepositTransaction;
 import javax.swing.*;
 import java.util.LinkedHashMap;
 
-public class ManualDepositMenu extends SubMenu {
+class ManualDepositMenu extends SubMenu {
 
-    private JComboBox<Depositable> accountSelection;
-    private JTextField userInputAmount;
-    private JButton submitButton;
+    private final JComboBox<Depositable> accountSelection;
+    private final JTextField userInputAmount;
+    private final JButton submitButton;
 
     ManualDepositMenu(BankManager manager, User user) {
         super("Manual Deposit");

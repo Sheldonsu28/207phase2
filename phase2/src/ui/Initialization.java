@@ -11,10 +11,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Initialization extends JDialog {
-    private Container container;
-    private JTextField dateInput;
-    private JButton submitButton;
+class Initialization extends JDialog {
+    private final Container container;
+    private final JTextField dateInput;
+    private final JButton submitButton;
+    private final JButton setToCurrentButton;
 
     Initialization(BankManager manager) {
         super(MainFrame.mainFrame, "Initialization", true);
@@ -25,6 +26,9 @@ public class Initialization extends JDialog {
 
         container = getContentPane();
         dateInput = new JTextField(15);
+        setToCurrentButton = new JButton("Set to Current Time");
+        setToCurrentButton.addActionListener(e -> finishInitialization(new Date(System.currentTimeMillis()), manager));
+
         submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String dateText = dateInput.getText();
@@ -39,9 +43,7 @@ public class Initialization extends JDialog {
             }
 
             if (result != null) {
-                MainFrame.showInfoMessage("Date successfully set to " + result, "Date Initialized");
-                manager.initialize(result);
-                this.dispose();
+                finishInitialization(result, manager);
             }
         });
 
@@ -76,6 +78,7 @@ public class Initialization extends JDialog {
         inputPanel.add(new JLabel(
                 String.format("Please enter system initial time in format of %s:", AtmTime.FORMAT_STRING)));
         inputPanel.add(dateInput);
+        inputPanel.add(setToCurrentButton);
 
         JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         submitPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
@@ -85,7 +88,9 @@ public class Initialization extends JDialog {
         container.add(submitPanel);
     }
 
-    BankManager getManager() {
-        return null;
+    private void finishInitialization(Date date, BankManager manager) {
+        MainFrame.showInfoMessage("Date successfully set to " + date, "Date Initialized");
+        manager.initialize(date);
+        this.dispose();
     }
 }

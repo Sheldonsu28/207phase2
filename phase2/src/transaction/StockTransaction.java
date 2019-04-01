@@ -9,12 +9,11 @@ import ui.MainFrame;
 
 public class StockTransaction extends Transaction{
 
-    private String stockName;
-    private int stockAmount;
-    private double stockPrice;
-    private StockAccount fromAccount;
-    private boolean buy;
-    //if True, buy;
+    private final String stockName;
+    private final int stockAmount;
+    private final double stockPrice;
+    private final StockAccount fromAccount;
+    private final boolean buy;
 
 
     public StockTransaction(User user, StockAccount account, int Amount, double price, String stockName, boolean buy){

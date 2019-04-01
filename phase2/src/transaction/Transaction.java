@@ -2,10 +2,12 @@ package transaction;
 
 import atm.User;
 
+import java.io.Serializable;
+
 /**
  * This class defines the behavior of a transaction class.
  */
-public abstract class Transaction {
+public abstract class Transaction implements Serializable {
 
     private boolean performed, cancelled;
     private final String id;
@@ -49,7 +51,7 @@ public abstract class Transaction {
      *
      * @returnThe user that will be withdraw from.
      */
-    public User getFromUser() {
+    User getFromUser() {
         return fromUser;
     }
     /**
@@ -57,7 +59,7 @@ public abstract class Transaction {
      *
      * @returnThe user that will receive the transaction.
      */
-    public User getToUser() {
+    User getToUser() {
         return toUser;
     }
 
@@ -65,7 +67,7 @@ public abstract class Transaction {
      * Return the ID of the transaction.
      * @return ID of the transaction.
      */
-    public String getId() {
+    private String getId() {
         return id;
     }
 

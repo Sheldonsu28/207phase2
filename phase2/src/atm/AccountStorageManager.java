@@ -3,6 +3,7 @@ package atm;
 import account.Account;
 import account.ChequingAccount;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +14,8 @@ import java.util.Map;
  * @author zhaojuna
  * @version 1.0
  */
-final class AccountStorageManager {
-    private Map<Class, ArrayList<Object>> accountMapByType;
+final class AccountStorageManager implements Serializable {
+    private final Map<Class, ArrayList<Object>> accountMapByType;
     private ChequingAccount primaryAccount;
     private final User owner;
 

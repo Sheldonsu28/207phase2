@@ -15,12 +15,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class AccountInfoMenu extends SubMenu {
+class AccountInfoMenu extends SubMenu {
 
     private final User user;
-    private JButton showOverallBrief;
-    private ArrayList<Account> accounts;
-    private JTable infoTable;
+    private final JButton showOverallBrief;
+    private final ArrayList<Account> accounts;
+    private final JTable infoTable;
     private Object[][] data;
     private String[] columnName;
 

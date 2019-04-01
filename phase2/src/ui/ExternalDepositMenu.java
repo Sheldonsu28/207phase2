@@ -8,10 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
 
-public class ExternalDepositMenu extends SubMenu {
-    private JComboBox<Depositable> accountSelection;
-    private JTextArea depositInfoText;
-    private JButton submitButton;
+class ExternalDepositMenu extends SubMenu {
+    private final JComboBox<Depositable> accountSelection;
+    private final JTextArea depositInfoText;
+    private final JButton submitButton;
 
     ExternalDepositMenu(BankManager manager, User user) {
         super("Account Selection");

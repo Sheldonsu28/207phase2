@@ -10,6 +10,6 @@ public class IncorrectTimeException extends Exception{
      */
     @Override
     public String getMessage() {
-        return String.format("The stock market is not open for weekend");
+        return "The stock market is not open for weekend";
     }
 }

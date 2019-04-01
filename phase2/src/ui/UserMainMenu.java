@@ -6,7 +6,7 @@ import atm.User;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public class UserMainMenu extends MainMenu {
+class UserMainMenu extends MainMenu {
 
     private JButton toDepositMenu, toWithdrawMenu, toTransferMenu,
             toPayBillMenu, toInfoMenu, toOpenAccountMenu, toBuySellStockMenu;

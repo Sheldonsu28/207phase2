@@ -9,11 +9,11 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.LinkedHashMap;
 
-public class UserCreationMenu extends SubMenu {
+class UserCreationMenu extends SubMenu {
 
-    private JTextField usernameField;
-    private JButton submitButton;
-    private JCheckBox employeeBox;
+    private final JTextField usernameField;
+    private final JButton submitButton;
+    private final JCheckBox employeeBox;
 
     UserCreationMenu(BankManager manager) {
         super("User Creation");
@@ -39,8 +39,6 @@ public class UserCreationMenu extends SubMenu {
             MainFrame.showInfoMessage("Password(copied to clipboard): " + password, "Creation Success");
 
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(password), null);
-
-            UserCreationMenu.this.dispose();
         });
 
         initializeLayout();

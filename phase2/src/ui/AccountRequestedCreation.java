@@ -8,12 +8,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-public class AccountRequestedCreation extends SubMenu {
-    private HashMap<JButton, Request> requestList;
+class AccountRequestedCreation extends SubMenu {
+    private final HashMap<JButton, Request> requestList;
 
     AccountRequestedCreation(BankManager manager) {
         super("Account Creation");
@@ -87,7 +88,7 @@ public class AccountRequestedCreation extends SubMenu {
 
     }
 
-    private final class Request {
+    private final class Request implements Serializable {
         private final String username;
         private final boolean isPrimary;
         private final Class<Account> accountType;

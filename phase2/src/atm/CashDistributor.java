@@ -1,11 +1,12 @@
 package atm;
 
+import java.io.Serializable;
 import java.util.TreeMap;
 
 /**
  * Defines the Behaviors of CashDistributors.
  */
-abstract class CashDistributor {
+abstract class CashDistributor implements Serializable {
     abstract TreeMap<Integer, Integer> distribute(TreeMap<Integer, Integer> cashStock, int amount)
             throws CashShortageException;
 

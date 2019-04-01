@@ -7,10 +7,10 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public abstract class MainMenu extends JDialog {
-    private Container container;
-    private JButton toLogout;
-    BankManager manager;
+abstract class MainMenu extends JDialog {
+    final BankManager manager;
+    private final Container container;
+    private final JButton toLogout;
 
     MainMenu(BankManager manager, String title) {
         super(MainFrame.mainFrame, title, true);

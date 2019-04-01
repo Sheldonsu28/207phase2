@@ -7,5 +7,5 @@ package account;
  * @author zhaojuna
  * @version 1.0
  */
-public interface Cancellable {
+interface Cancellable {
 }

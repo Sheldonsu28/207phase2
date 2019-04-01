@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 final class UserDatabase implements Serializable {
-    private TreeMap<String, User> users;
+    private final TreeMap<String, User> users;
 
     UserDatabase() {
         users = new TreeMap<>();
@@ -37,8 +37,6 @@ final class UserDatabase implements Serializable {
 
     /**
      * Return a list containing all user instances saved in this class
-     *
-     * @return
      */
     List<User> getUserList() {
         return new ArrayList<>(users.values());
@@ -50,7 +48,7 @@ final class UserDatabase implements Serializable {
 
         User targetUser = users.get(username);
 
-        if (!targetUser.verifyPassword(password))
+        if (targetUser.verifyPassword(password))
             throw new WrongPasswordException(username);
 
         return targetUser;

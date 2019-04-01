@@ -8,13 +8,13 @@ import transaction.TransferTransaction;
 import javax.swing.*;
 import java.util.LinkedHashMap;
 
-public class IntraTransferMenu extends SubMenu {
+class IntraTransferMenu extends SubMenu {
 
-    private JComboBox<Withdrawable> fromAccountSelection;
-    private JComboBox<Depositable> toAccountSelection;
-    private JTextField amountField;
-    private JButton submitButton;
-    private User user;
+    private final JComboBox<Withdrawable> fromAccountSelection;
+    private final JComboBox<Depositable> toAccountSelection;
+    private final JTextField amountField;
+    private final JButton submitButton;
+    private final User user;
 
     IntraTransferMenu(User user) {
         super("Intra-User Transfer Menu");
@@ -24,9 +24,7 @@ public class IntraTransferMenu extends SubMenu {
         fromAccountSelection = new JComboBox<>(
                 user.getAccountListOfType(Withdrawable.class).toArray(new Withdrawable[0]));
 
-        fromAccountSelection.addActionListener(e -> {
-            updateSelection();
-        });
+        fromAccountSelection.addActionListener(e -> updateSelection());
 
         toAccountSelection = new JComboBox<>();
 

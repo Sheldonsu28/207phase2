@@ -16,8 +16,8 @@ public enum Currency {
      * Initializer if the currency is CAD.
      */
     CAD(0.76);
-    public double rateToUsd;
-    public DecimalFormat decimalFormat;
+    private final double rateToUsd;
+    private final DecimalFormat decimalFormat;
 
     /**
      * Initialize the Currency object with conversation to USD rate.

@@ -8,7 +8,7 @@ import java.util.Scanner;
  * This class is responsible for handling that need to be save to files outside.
  */
 public class FileHandler implements Serializable {
-    private String path;
+    private final String path;
 
     public FileHandler() {
         path = new File("phase2/data/").getAbsolutePath() + '\\';

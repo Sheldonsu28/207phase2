@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class StockExchangeMenu extends SubMenu {
+class StockExchangeMenu extends SubMenu {
     private JComboBox<StockAccount> accountSelection;
     private JTextField searchField, quantityField;
     private JLabel stockPriceLabel;
     private JButton searchButton, buyButton, sellButton;
     private JTextArea stockSummaryText;
 
-    private StockInfoGetter stockInfoGetter = new StockInfoGetter();
+    private final StockInfoGetter stockInfoGetter = new StockInfoGetter();
 
     StockExchangeMenu(User user) {
         super("Stock Exchange Center");

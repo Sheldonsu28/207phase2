@@ -9,12 +9,12 @@ import transaction.PayBillTransaction;
 import javax.swing.*;
 import java.util.LinkedHashMap;
 
-public class PayBillMenu extends SubMenu {
+class PayBillMenu extends SubMenu {
 
-    private JComboBox<BillingAccount> payeeSelection;
-    private JComboBox<Withdrawable> fromAccountSelection;
-    private JTextField amountField;
-    private JButton submitButton;
+    private final JComboBox<BillingAccount> payeeSelection;
+    private final JComboBox<Withdrawable> fromAccountSelection;
+    private final JTextField amountField;
+    private final JButton submitButton;
 
     PayBillMenu(BankManager manager, User user) {
         super("Pay Bill Menu");

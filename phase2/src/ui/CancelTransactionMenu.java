@@ -9,12 +9,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class CancelTransactionMenu extends SubMenu {
-    private JComboBox<User> userSelection;
+class CancelTransactionMenu extends SubMenu {
+    private final JComboBox<User> userSelection;
     private JComboBox<Account> accountSelection;
-    private JTextArea transactionLog;
-    private JComboBox<Integer> numOfCancellation;
-    private JButton submitButton;
+    private final JTextArea transactionLog;
+    private final JComboBox<Integer> numOfCancellation;
+    private final JButton submitButton;
 
     CancelTransactionMenu(BankManager manager) {
         super("Transaction Cancellation");
@@ -40,9 +40,7 @@ public class CancelTransactionMenu extends SubMenu {
             accountSelection = new JComboBox<>();
         }
 
-        accountSelection.addActionListener(e -> {
-            updateTransactions();
-        });
+        accountSelection.addActionListener(e -> updateTransactions());
 
         transactionLog = new JTextArea();
         transactionLog.setEditable(false);
@@ -66,8 +64,6 @@ public class CancelTransactionMenu extends SubMenu {
                                     "(transaction already cancelled / transaction not cancellable)",
                             "Partial Failure", JOptionPane.WARNING_MESSAGE);
                 }
-
-                CancelTransactionMenu.this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "No account selected!", "Error",
                         JOptionPane.ERROR_MESSAGE);

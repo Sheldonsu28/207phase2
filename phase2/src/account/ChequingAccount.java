@@ -17,7 +17,7 @@ public class ChequingAccount extends AssetAccount implements Indebtable {
     /**
      * A constant represents the default debt limit of a chequing account.
      */
-    public static final int DEFAULT_CHEQUING_DEBT_LIMIT = 100;
+    private static final int DEFAULT_CHEQUING_DEBT_LIMIT = 100;
 
     /**
      * The debt limit of this account. It should be positive. Default value is {@link #DEFAULT_CHEQUING_DEBT_LIMIT}.

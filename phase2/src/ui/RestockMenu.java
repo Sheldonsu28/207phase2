@@ -9,11 +9,12 @@ import java.util.LinkedHashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class RestockMenu extends SubMenu {
+class RestockMenu extends SubMenu {
     private final AtmMachine machine;
-    private JTextField stockInfo;
-    private JComboBox<Integer> cashTypeSelection, amountSelection;
-    private JButton restockButton;
+    private final JTextField stockInfo;
+    private final JComboBox<Integer> cashTypeSelection;
+    private final JComboBox<Integer> amountSelection;
+    private final JButton restockButton;
 
     RestockMenu(BankManager manager) {
         super("Restock Menu");

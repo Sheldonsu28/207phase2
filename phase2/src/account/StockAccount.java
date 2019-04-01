@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class StockAccount extends AssetAccount implements Observer {
-    private HashMap<String, Integer> stocks = new HashMap<>();
+    private final HashMap<String, Integer> stocks = new HashMap<>();
     private int dayOfWeek;
-    private StockInfoGetter quoteGetter = new StockInfoGetter();
+    private final StockInfoGetter quoteGetter = new StockInfoGetter();
 
     public StockAccount(Date time, List<User> owner) {
         super(time, owner);

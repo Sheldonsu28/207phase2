@@ -9,10 +9,10 @@ import atm.User;
 import javax.swing.*;
 import java.awt.*;
 
-public class RequestAccountCreationMenu extends SubMenu {
-    private JComboBox<Class<Account>> accountSelection;
-    private JButton request;
-    private JCheckBox setPrimary;
+class RequestAccountCreationMenu extends SubMenu {
+    private final JComboBox<Class<Account>> accountSelection;
+    private final JButton request;
+    private final JCheckBox setPrimary;
 
     @SuppressWarnings("unchecked")
     RequestAccountCreationMenu(User user) {

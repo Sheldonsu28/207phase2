@@ -1,14 +1,15 @@
 package atm;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.Map.Entry;
 
-class CashHandler {
-    private TreeMap<Integer, Integer> cashStock;
-    private Currency currency;
-    private int alertLevel;
-    private AtmTime time;
-    private CashDistributor cashDistributor;
+class CashHandler implements Serializable {
+    private final TreeMap<Integer, Integer> cashStock;
+    private final Currency currency;
+    private final int alertLevel;
+    private final AtmTime time;
+    private final CashDistributor cashDistributor;
 
     /**
      * Create a default Cash Handler that
@@ -58,7 +59,7 @@ class CashHandler {
      * Return the total amount of cash available in the cash stock.
      * @return The total balance available in the cash stock.
      */
-    int getTotalBalance() {
+    private int getTotalBalance() {
         int balance = 0;
 
         for (Entry<Integer, Integer> entry : cashStock.entrySet())
@@ -118,7 +119,7 @@ class CashHandler {
      * Go through the cash stock and check the amount of cash in the stock, if the cash is lower than
      * the threshold set by alertLevel, write the alert into the file called alert.txt.
      */
-    public void stockCheck() {
+    private void stockCheck() {
         StringBuilder alertMsg = new StringBuilder(time + "\tStock shortage: ");
         boolean hasAlert = false;
 

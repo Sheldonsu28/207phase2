@@ -1,5 +1,6 @@
 package atm;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -10,10 +11,10 @@ import java.util.TreeMap;
  * @author zhaojuna
  * @version 1.0
  */
-public class AtmMachine {
+public class AtmMachine implements Serializable {
     private static int prev_id = 0;
-    private CashHandler cashHandler;
-    private AtmTime time;
+    private final CashHandler cashHandler;
+    private final AtmTime time;
     private final String id;
 
     /**
@@ -44,7 +45,7 @@ public class AtmMachine {
     /**
      * @return the unique id of this atm machine in format of "ATM####"
      */
-    public String getId() {
+    private String getId() {
         return id;
     }
 

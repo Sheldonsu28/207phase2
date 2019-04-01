@@ -5,12 +5,14 @@ import atm.FileHandler;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-public class MainFrame {
+public class MainFrame implements Serializable {
 
     static JFrame mainFrame;
     private static BankManager manager;
     private static boolean isRunning;
+    private static JDialog shutdownDialog;
 
     public static void main(String[] args) {
         UIManager.put("OptionPane.messageFont", new Font("Arial", Font.PLAIN, 15));
@@ -56,9 +58,14 @@ public class MainFrame {
         if (isRunning) {
             isRunning = false;
             mainFrame.dispose();
+
+            for (Window window : JDialog.getWindows()) {
+                window.dispose();
+            }
+
             initFrame();
 
-            JDialog shutdownDialog = new JDialog(mainFrame);
+            shutdownDialog = new JDialog(mainFrame);
 
             shutdownDialog.getContentPane().add(new JLabel("---SYSTEM IS CURRENTLY UNAVAILABLE---"));
 
@@ -73,6 +80,7 @@ public class MainFrame {
     public static void restart() {
         if (!isRunning) {
             isRunning = true;
+            shutdownDialog.dispose();
             mainFrame.dispose();
             start();
         } else {

@@ -24,10 +24,9 @@ public final class AtmTime extends Observable implements Serializable {
     public static final String FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
     private static boolean hasRunningInstance = false;
     private SimpleDateFormat dateFormat;
-    private final SimpleDateFormat dayFormat, hmsFormat;
-    private Timer timer;
+    private final SimpleDateFormat dayFormat, hmFormat;
+    transient private Timer timer;
     private final Date initialTime;
-    //change to public
     private Date currentTime;
     private long prevMills, currMills;
 
@@ -40,7 +39,7 @@ public final class AtmTime extends Observable implements Serializable {
         dateFormat = new SimpleDateFormat(FORMAT_STRING);
         this.initialTime = initialTime;
         dayFormat = new SimpleDateFormat("dd");
-        hmsFormat = new SimpleDateFormat("HH:mm:ss");
+        hmFormat = new SimpleDateFormat("HH:mm");
         initialize(initialTime);
     }
 
@@ -64,6 +63,8 @@ public final class AtmTime extends Observable implements Serializable {
 
     private TimerTask getTimerTask() {
         return new TimerTask() {
+            private boolean hasShutdown;
+
             @Override
             public void run() {
                 currMills = System.currentTimeMillis();
@@ -77,13 +78,19 @@ public final class AtmTime extends Observable implements Serializable {
                     notifyObservers(getCurrentTime());
                 }
 
-                switch (hmsFormat.format(currentTime)) {
-                    case "23:59:00":
-                        MainFrame.shutdown();
+                switch (hmFormat.format(currentTime)) {
+                    case "23:59":
+                        if (!hasShutdown) {
+                            MainFrame.shutdown();
+                            hasShutdown = true;
+                        }
                         break;
 
-                    case "00:01:00":
-                        MainFrame.restart();
+                    case "00:01":
+                        if (hasShutdown) {
+                            MainFrame.restart();
+                            hasShutdown = false;
+                        }
                         break;
 
                 }

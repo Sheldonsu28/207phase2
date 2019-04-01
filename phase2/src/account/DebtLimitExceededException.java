@@ -8,8 +8,8 @@ package account;
  */
 public class DebtLimitExceededException extends WithdrawException {
 
-    private Indebtable source;
-    private double amountRequested;
+    private final Indebtable source;
+    private final double amountRequested;
 
     /**
      * @param source          the source account

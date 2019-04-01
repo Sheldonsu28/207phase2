@@ -9,8 +9,8 @@ package account;
  */
 public class InsufficientFundException extends WithdrawException {
 
-    private Withdrawable source;
-    private double amountRequested;
+    private final Withdrawable source;
+    private final double amountRequested;
 
     /**
      * @param source          the source account

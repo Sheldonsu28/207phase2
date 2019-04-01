@@ -44,7 +44,7 @@ public abstract class Account implements Serializable {
     /**
      * The list of transaction related to this account.
      */
-    private List<Transaction> transactions;
+    private final List<Transaction> transactions;
 
     /**
      * The apparent balance(not net balance) of the account.
@@ -84,6 +84,12 @@ public abstract class Account implements Serializable {
      */
     public List<User> getOwners() {
         return owners;
+    }
+
+    public void addOwner(User user) {
+        if (!owners.contains(user)) {
+            owners.add(user);
+        }
     }
 
     /**

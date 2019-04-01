@@ -8,9 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class LoginTypeSelection extends JDialog {
+class LoginTypeSelection extends JDialog {
 
-    private Container container;
+    private final Container container;
     private JButton userButton, managerButton, employeeButton;
 
     LoginTypeSelection(BankManager manager) {

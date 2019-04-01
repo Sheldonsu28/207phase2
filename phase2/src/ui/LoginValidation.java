@@ -12,10 +12,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class LoginValidation extends JDialog {
-    private JButton loginButton;
-    private JTextField usernameField, passwordField;
-    private Container container;
+class LoginValidation extends JDialog {
+    private final JButton loginButton;
+    private final JTextField usernameField;
+    private final JTextField passwordField;
+    private final Container container;
 
     LoginValidation(JDialog parent, LoginType type, BankManager manager, boolean onlyValidate) {
         super(MainFrame.mainFrame, "Login as " + type.toString(), true);

@@ -6,7 +6,7 @@ import java.util.Map;
  * Defines the exception happen during taking out currency from cash stock.
  */
 public class EmptyStockException extends Exception {
-    private CashHandler shortageStock;
+    private final CashHandler shortageStock;
 
     EmptyStockException(CashHandler shortageStock) {
         this.shortageStock = shortageStock;

@@ -13,8 +13,8 @@ import java.awt.event.WindowEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SubMenu extends JDialog {
-    Container container;
+class SubMenu extends JDialog {
+    final Container container;
 
     SubMenu(String title) {
         super(MainFrame.mainFrame, title, true);

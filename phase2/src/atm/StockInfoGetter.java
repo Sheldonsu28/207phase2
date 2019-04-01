@@ -3,13 +3,14 @@ package atm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 
 /**
  * This class get the information of given stock.
  */
-public class StockInfoGetter {
+public class StockInfoGetter implements Serializable {
 
     public double getQuote(String stockSymbol) throws IOException {
         String yahooFinance = "https://ca.finance.yahoo.com/quote/";

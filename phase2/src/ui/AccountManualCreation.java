@@ -9,11 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
 
-public class AccountManualCreation extends SubMenu {
-    private JComboBox<User> userSelection;
-    private JComboBox<Class<Account>> accountTypeSelection;
+class AccountManualCreation extends SubMenu {
+    private final JComboBox<User> userSelection;
+    private final JComboBox<Class<Account>> accountTypeSelection;
     private JCheckBox primaryCheck;
-    private JButton submitButton;
+    private final JButton submitButton;
 
     @SuppressWarnings("unchecked")
     AccountManualCreation(BankManager manager) {
@@ -48,8 +48,6 @@ public class AccountManualCreation extends SubMenu {
 
                 JOptionPane.showMessageDialog(this, "Account successfully created!",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
-
-                AccountManualCreation.this.dispose();
 
             } else {
                 JOptionPane.showMessageDialog(this, "You have unselected item!", "Error",

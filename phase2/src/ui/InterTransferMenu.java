@@ -10,15 +10,15 @@ import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class InterTransferMenu extends SubMenu {
+class InterTransferMenu extends SubMenu {
 
-    private JButton submitButton;
+    private final JButton submitButton;
     private JComboBox<User> toUserSelection;
     private JComboBox<Withdrawable> fromAccountSelection;
     private JComboBox<Depositable> toAccountSelection;
-    private JTextField amountField;
-    private User fromUser;
-    private BankManager manager;
+    private final JTextField amountField;
+    private final User fromUser;
+    private final BankManager manager;
 
     InterTransferMenu(BankManager manager, User user) {
         super("Inter-User Transfer Menu");

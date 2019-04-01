@@ -16,14 +16,15 @@ import java.util.*;
  */
 public class BankManager implements Serializable {
     private AtmTime commonTime;
-    private List<AtmMachine> machineList;
-    private AccountFactory accountFactory;
-    private UserDatabase userDatabase;
+    private final List<AtmMachine> machineList;
+    private final AccountFactory accountFactory;
+    private final UserDatabase userDatabase;
     private List<BillingAccount> payeeList;
-    private TreeMap<String, User> employeeList;
+    private final TreeMap<String, User> employeeList;
     private boolean hasLoggedin;
-    private String username, password;
-    private PasswordManager passwordManager;
+    private final String username;
+    private final String password;
+    private final PasswordManager passwordManager;
 
     private boolean hasInitialized;
 
@@ -130,9 +131,8 @@ public class BankManager implements Serializable {
     /**
      * Add a new ATM Machine with stock to the manager.
      *
-     * @return The new ATM machine that has been created.
      */
-    private AtmMachine addMachine() {
+    private void addMachine() {
         TreeMap<Integer, Integer> initialStock = new TreeMap<>();
         initialStock.put(5, 100);
         initialStock.put(10, 100);
@@ -141,22 +141,20 @@ public class BankManager implements Serializable {
 
         AtmMachine machine = new AtmMachine(commonTime, initialStock, new StepCashDistributor());
         machineList.add(machine);
-        return machine;
     }
 
     /**
      * Create new account to the correspond user.
      *
+     * @param <T>         Any account type.
      * @param username    The user that account need to be added to.
      * @param accountType The type of the account.
      * @param isPrimary   if the account is the primary account of the user or not.
-     * @param <T>         Any account type.
-     * @return Return the account created.
      */
-    public <T extends Account> boolean createAccount(String username, Class<T> accountType, boolean isPrimary) {
+    public <T extends Account> void createAccount(String username, Class<T> accountType, boolean isPrimary) {
         checkState(true);
 
-        return accountFactory.generateDefaultAccount(
+        accountFactory.generateDefaultAccount(
                 new ArrayList<>(Collections.singletonList(userDatabase.getUser(username))),
                 accountType, commonTime, isPrimary);
     }
@@ -236,7 +234,7 @@ public class BankManager implements Serializable {
         checkState(false);
 
         if (employeeList.containsKey(username)) {
-            if (!employeeList.get(username).verifyPassword(password)) {
+            if (employeeList.get(username).verifyPassword(password)) {
                 throw new WrongPasswordException(username);
             }
         } else {

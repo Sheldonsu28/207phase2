@@ -9,10 +9,10 @@ import javax.swing.*;
 import java.util.LinkedHashMap;
 
 
-public class WithdrawMenu extends SubMenu {
-    private JComboBox<Withdrawable> accountSelection;
-    private JButton submitButton;
-    private JTextField userInputAmount;
+class WithdrawMenu extends SubMenu {
+    private final JComboBox<Withdrawable> accountSelection;
+    private final JButton submitButton;
+    private final JTextField userInputAmount;
 
     WithdrawMenu(BankManager manager, User user) {
         super("Account Selection");

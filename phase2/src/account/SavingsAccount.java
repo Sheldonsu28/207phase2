@@ -18,12 +18,12 @@ public class SavingsAccount extends AssetAccount implements Growable {
     /**
      * Constant represents default growth rate
      */
-    public static final double DEFAULT_GROWTH_RATE = 0.001;
+    private static final double DEFAULT_GROWTH_RATE = 0.001;
 
     /**
      * Constant represents the default growth day
      */
-    public static final String DEFAULT_GROWTH_DAY = "01";
+    private static final String DEFAULT_GROWTH_DAY = "01";
 
     private double growthRate;
     private String growthDay;
@@ -56,7 +56,7 @@ public class SavingsAccount extends AssetAccount implements Growable {
         if (growthRate < 0)
             throw new IllegalArgumentException("Monthly rate can not be negative!");
 
-        if (!isInDayFormat(growthDay))
+        if (isInDayFormat(growthDay))
             throw new IllegalArgumentException("Growth day must be 2-digit number in range 01-28");
 
         this.growthRate = growthRate;
@@ -64,7 +64,7 @@ public class SavingsAccount extends AssetAccount implements Growable {
     }
 
     private boolean isInDayFormat(String day) {
-        return day.matches("\\d\\d") && Integer.parseInt(day) >= 1 && Integer.parseInt(day) <= 28;
+        return !day.matches("\\d\\d") || Integer.parseInt(day) < 1 || Integer.parseInt(day) > 28;
     }
 
     /**
@@ -81,7 +81,7 @@ public class SavingsAccount extends AssetAccount implements Growable {
      * {@inheritDoc}
      */
     public void changeGrowthDay(String newGrowthDay) {
-        if (!isInDayFormat(newGrowthDay))
+        if (isInDayFormat(newGrowthDay))
             throw new IllegalArgumentException("Illegal format of day. Proper format is \"1\" - \"28\"");
 
         growthDay = newGrowthDay;

@@ -3,6 +3,7 @@ package atm;
 import account.Account;
 import account.ChequingAccount;
 
+import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
@@ -10,9 +11,10 @@ import java.util.ArrayList;
  * The user class represent a user, responsible for storing accounts of the user and the interaction between the user
  * and the accounts.
  */
-public class User {
-    private String username, password;
-    private AccountStorageManager accountVaults;
+public class User implements Serializable {
+    private final String username;
+    private final AccountStorageManager accountVaults;
+    private String password;
     static final int MAX_NAME_LENGTH = 15;
     static final int MIN_NAME_LENGTH = 5;
 
@@ -72,7 +74,7 @@ public class User {
      * @return True if the input is equal to the password, else return false.
      */
     boolean verifyPassword(String password) {
-        return this.password.equals(password);
+        return !this.password.equals(password);
     }
 
     /**
@@ -105,7 +107,7 @@ public class User {
      * @param account Any bank account.
      * @param <T>     Any classes that extends Account.
      */
-    <T extends Account> void addAccount(T account) {
+    public <T extends Account> void addAccount(T account) {
         accountVaults.addAccount(account);
     }
 
