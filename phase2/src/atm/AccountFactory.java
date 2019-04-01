@@ -1,6 +1,7 @@
 package atm;
 
 import account.*;
+import ui.MainFrame;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -20,37 +21,33 @@ final class AccountFactory implements Serializable {
         if (!Arrays.asList(Account.OWNABLE_ACCOUNT_TYPES).contains(accountType))
             throw new IllegalArgumentException("Class type given is not an ownable account type");
 
-        T account = null;
+        T account;
 
         try {
             Constructor<T> defaultConstructor = accountType.getDeclaredConstructor(Date.class, List.class);
             account = defaultConstructor.newInstance(time.getCurrentTime(), owners);
         } catch (NoSuchMethodException | InstantiationException |
                 IllegalAccessException | InvocationTargetException e) {
-            System.out.println("Failed to create account due to following reason: ");
-            e.printStackTrace();
+            MainFrame.showErrorMessage("Failed to create account due to following reason: " + e.getMessage());
+            return false;
         }
 
-        if (account != null) {
-            for (User owner : owners) {
-                owner.addAccount(account);
+        for (User owner : owners) {
+            owner.addAccount(account);
 
-                if (accountType == ChequingAccount.class && isPrimary)
-                    owner.setPrimaryAccount((ChequingAccount) account);
-            }
-
-            if (account instanceof Growable)
-                time.addObserver((Observer) account);
-
-            if (account instanceof StockAccount)
-                time.addObserver((Observer) account);
-
-            //  time-related class can have their observer hook here
-
-            return true;
+            if (accountType == ChequingAccount.class && isPrimary)
+                owner.setPrimaryAccount((ChequingAccount) account);
         }
 
-        return false;
+        if (account instanceof Growable)
+            time.addObserver((Observer) account);
+
+        if (account instanceof StockAccount)
+            time.addObserver((Observer) account);
+
+        //  time-related class can have their observer hook here
+
+        return true;
     }
 
     List<BillingAccount> getPayeesFromFile(AtmTime time) throws IllegalFileFormatException {

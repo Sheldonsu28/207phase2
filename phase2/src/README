@@ -9,8 +9,8 @@ USER CREATION
     Password contains only upper-case, lower-case and numbers with a length between 12 and 24 (inclusive)
     Username must have a length between 5 and 15 (inclusive)
 
-ATM MACHINE
-    Bank manager will create a default machine with 100 $5, $10, $20, $50 cash each.
+TO EXIT PROGRAM
+    You need to keep pressing X until the program closes. Force terminated running instances will not be serialized.
 
 FILES
     Program related files are stored in phase1/data.
@@ -26,10 +26,9 @@ FILES
     - testData.txt is used ONLY for TESTING purposes
 
 PROGRAM START
-    The main class is /src/Atm.java. You need to set initial time when there is no serialized manager found.
+    The main class is /src/ui/MainFrame.java. You need to set initial time when there is no serialized manager found.
     The program shuts down every day between 23:59 and 00:01. Between these times, you are unable to perform any
-    actions. After system restarts with a piece of information, you should follow that information and enter the
-    restart key to restart the system.
+    actions and all windows will be force-disposed. The program will restart to login menu after the period ends.
 
 
 There are sufficient guides when errors are thrown. Follow them and you should be okay!

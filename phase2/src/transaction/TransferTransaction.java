@@ -5,6 +5,7 @@ import account.Depositable;
 import account.WithdrawException;
 import account.Withdrawable;
 import atm.User;
+import ui.MainFrame;
 
 /**
  * This class is responsible for Transaction between users and accounts.
@@ -90,7 +91,7 @@ public class TransferTransaction extends Transaction {
         try {
             fromAccount.withdraw(transferAmount, this);
         } catch (WithdrawException exception) {
-            System.out.println(exception.getMessage());
+            MainFrame.showErrorMessage(exception.getMessage());
             return false;
         }
 

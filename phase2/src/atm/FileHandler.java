@@ -1,5 +1,7 @@
 package atm;
 
+import ui.MainFrame;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -48,12 +50,8 @@ public class FileHandler implements Serializable {
             information = (BankManager) input.readObject();
             fileRead.close();
             input.close();
-        } catch (FileNotFoundException f) {
-            System.out.println("File not found, read failed");
-        } catch (IOException i) {
-            System.out.println("There is a problem when reading the file, file information failed to load.");
-        } catch (ClassNotFoundException e) {
-            System.out.println("The require classes is not found. Possible corruption in class file!");
+        } catch (IOException | ClassNotFoundException f) {
+            MainFrame.showErrorMessage("Manager File corrupted / does not exist. Manager recovery failed.");
         }
         return information;
     }
@@ -68,9 +66,8 @@ public class FileHandler implements Serializable {
         String filename = extFile.getFileName();
         ArrayList<String> content;
         File file = new File(path + filename);
-
-        if (file.exists()) {
-            try {
+        try {
+            if (file.exists()) {
                 content = readFrom(extFile);
                 content.add(contents);
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -79,20 +76,17 @@ public class FileHandler implements Serializable {
                     writer.newLine();
                 }
                 writer.close();
-            } catch (IOException e) {
-                System.out.println("Something went wrong, information not saved.");
-            }
-        } else {
-            try {
+
+            } else {
                 FileWriter writer = new FileWriter(file);
                 writer.write(contents);
                 writer.close();
-            } catch (IOException e) {
-                System.out.println("Something went wrong, information not saved.");
+
             }
-
+        } catch (IOException e) {
+            MainFrame.showErrorMessage(String.format("Something went wrong, file %s not saved.",
+                    extFile.getFileName()));
         }
-
     }
 
     /**
@@ -111,7 +105,7 @@ public class FileHandler implements Serializable {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File not found.");
+            MainFrame.showErrorMessage(String.format("File %s not found.", file.getFileName()));
         }
         return content;
     }

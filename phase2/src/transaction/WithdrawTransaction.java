@@ -82,6 +82,7 @@ public class WithdrawTransaction extends Transaction {
             machine.increaseStock(withdrawStock);
         } catch (InvalidCashTypeException e) {
             MainFrame.showErrorMessage(e.getMessage());
+            return false;
         }
         return true;
     }

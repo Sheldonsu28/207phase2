@@ -2,6 +2,7 @@ package ui;
 
 import atm.AtmMachine;
 import atm.BankManager;
+import atm.InvalidCashTypeException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,11 +40,17 @@ class RestockMenu extends SubMenu {
 
                 restockInfo.put(cashType, amount);
 
-                manager.restockMachine(restockInfo);
+                try {
+                    manager.restockMachine(restockInfo);
+                } catch (InvalidCashTypeException ex) {
+                    MainFrame.showErrorMessage(ex.getMessage());
+                    return;
+                }
 
                 MainFrame.showInfoMessage("Restock successful!", "Success");
             } else {
                 MainFrame.showErrorMessage("Cash type or amount not selected!");
+                return;
             }
 
             updateStockInfo();

@@ -66,6 +66,7 @@ class StockExchangeMenu extends SubMenu {
                 stockExchange(user, selectedAccount, true);
             } else {
                 MainFrame.showErrorMessage("Account not selected!");
+                return;
             }
 
             accountSelection.updateUI();
@@ -80,6 +81,7 @@ class StockExchangeMenu extends SubMenu {
                 stockExchange(user, selectedAccount, false);
             } else {
                 MainFrame.showErrorMessage("Account not selected!");
+                return;
             }
 
             accountSelection.updateUI();

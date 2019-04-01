@@ -4,6 +4,7 @@ import account.Account;
 import account.BillingAccount;
 import account.ChequingAccount;
 import transaction.Transaction;
+import ui.MainFrame;
 
 import java.io.Serializable;
 import java.util.*;
@@ -47,11 +48,11 @@ public class BankManager implements Serializable {
 
         try {
             payeeList = accountFactory.getPayeesFromFile(commonTime);
+            hasInitialized = true;
         } catch (IllegalFileFormatException e) {
-            System.out.println(e.getMessage());
+            MainFrame.showErrorMessage(e.getMessage());
         }
 
-        hasInitialized = true;
     }
 
     public List<BillingAccount> getPayeeList() {
@@ -120,12 +121,8 @@ public class BankManager implements Serializable {
         return Collections.unmodifiableList(machineList);
     }
 
-    public void restockMachine(TreeMap<Integer, Integer> stock) {
-        try {
-            machineList.get(0).increaseStock(stock);
-        } catch (InvalidCashTypeException e) {
-            System.out.println(e.getMessage());
-        }
+    public void restockMachine(TreeMap<Integer, Integer> stock) throws InvalidCashTypeException {
+        machineList.get(0).increaseStock(stock);
     }
 
     /**

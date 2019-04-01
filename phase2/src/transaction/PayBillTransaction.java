@@ -7,6 +7,7 @@ import account.Withdrawable;
 import atm.ExternalFiles;
 import atm.FileHandler;
 import atm.User;
+import ui.MainFrame;
 
 /**
  * This class is responsible for transaction that is paying bills.
@@ -54,7 +55,7 @@ public class PayBillTransaction extends Transaction {
         try {
             payer.withdraw(payAmount, this);
         } catch (WithdrawException e) {
-            System.out.println(e.getMessage());
+            MainFrame.showErrorMessage(e.getMessage());
             return false;
         }
 

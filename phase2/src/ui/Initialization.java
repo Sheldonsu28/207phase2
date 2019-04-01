@@ -32,7 +32,7 @@ class Initialization extends JDialog {
         submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String dateText = dateInput.getText();
-            Date result = null;
+            Date result;
 
             SimpleDateFormat format = new SimpleDateFormat(AtmTime.FORMAT_STRING);
 
@@ -40,6 +40,7 @@ class Initialization extends JDialog {
                 result = format.parse(dateText);
             } catch (ParseException ex) {
                 MainFrame.showErrorMessage("Invalid time format!");
+                return;
             }
 
             if (result != null) {
